@@ -6,6 +6,7 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
+    "test:ci": "nx affected:test",
     "prepare": "husky install"
   },
   "private": true,
