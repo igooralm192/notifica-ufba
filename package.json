@@ -1,6 +1,6 @@
 {
   "name": "notifica-ufba",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "start": "nx serve",
@@ -9,7 +9,6 @@
     "test:ci": "nx affected:test",
     "prepare": "husky install"
   },
-  "private": true,
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
