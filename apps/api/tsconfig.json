@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": ["**/*.json"],
+  "compilerOptions": {
+    "paths": {
+      "@notifica-ufba/domain/entities": ["libs/domain/entities/src/index.ts"],
+      "@notifica-ufba/domain/errors": ["libs/domain/errors/src/index.ts"],
+      "@notifica-ufba/domain/mocks": ["libs/domain/mocks/src/index.ts"],
+      "@notifica-ufba/domain/usecases": ["libs/domain/usecases/src/index.ts"],
+      "@notifica-ufba/utils": ["libs/utils/src/index.ts"],
+      "@/*": ["./apps/api/src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

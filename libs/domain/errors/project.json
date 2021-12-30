@@ -1,0 +1,23 @@
+{
+  "root": "libs/domain/errors",
+  "sourceRoot": "libs/domain/errors/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/domain/errors/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/domain/errors"],
+      "options": {
+        "jestConfig": "libs/domain/errors/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

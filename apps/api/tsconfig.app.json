@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "module": "commonjs",
+    "types": [
+      "jest",
+      "node",
+      "express"
+    ]
+  },
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+  ],
+  "include": [
+    "**/*.ts",
+    "../../libs/domain/mocks/src/**/*.ts",
+    "../../libs/domain/entities/src/**/*.ts",
+    "../../libs/domain/errors/src/**/*.ts",
+    "../../libs/domain/usecases/src/**/*.ts",
+    "../../libs/utils/src/**/*.ts",
+  ]
+}

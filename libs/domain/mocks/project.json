@@ -1,0 +1,23 @@
+{
+  "root": "libs/domain/mocks",
+  "sourceRoot": "libs/domain/mocks/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/domain/mocks/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/domain/mocks"],
+      "options": {
+        "jestConfig": "libs/domain/mocks/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

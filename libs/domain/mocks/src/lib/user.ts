@@ -1,0 +1,14 @@
+import { User } from '@notifica-ufba/domain/entities'
+
+import faker from 'faker'
+
+export const mockUser = (): User => {
+  return new User(
+    faker.datatype.number(),
+    faker.internet.userName(),
+    faker.internet.email(),
+    faker.internet.password(),
+    faker.datatype.datetime(),
+    faker.datatype.datetime(),
+  )
+}
