@@ -25,6 +25,16 @@
         }
       }
     },
+    "check-types": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "tsc -p ./apps/api/tsconfig.app.json"
+          }
+        ]
+      }
+    },
     "serve": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

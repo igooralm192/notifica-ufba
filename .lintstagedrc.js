@@ -1,9 +1,4 @@
 module.exports = {
-  "*.{js,jsx,ts,tsx}": [
-    "eslint",
-    "prettier"
-  ],
-  "*.{ts,tsx}": [
-    "tsc"
-  ]
+  "*.{js,jsx,ts,tsx}": () => "yarn lint",
+  "*.{ts,tsx}": () => "yarn check-types"
 }

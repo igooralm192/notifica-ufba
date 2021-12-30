@@ -5,8 +5,9 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test",
-    "test:ci": "nx affected:test",
+    "lint": "nx affected:lint",
+    "test": "nx affected:test",
+    "check-types": "nx affected --target=check-types",
     "prepare": "husky install"
   },
   "dependencies": {

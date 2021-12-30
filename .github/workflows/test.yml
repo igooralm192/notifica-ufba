@@ -22,4 +22,4 @@ jobs:
     - name: Install packages
       run: yarn
     - name: Run tests
-      run: yarn test:ci
+      run: yarn test
