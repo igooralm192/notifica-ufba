@@ -100,3 +100,4 @@ apps/mobile-e2e/artifacts
 ## Nested node_modules
 
 node_modules/
+.vscode
