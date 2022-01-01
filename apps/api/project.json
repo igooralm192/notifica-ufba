@@ -40,7 +40,7 @@
       "options": {
         "commands": [
           {
-            "command": "TS_NODE_PROJECT=./apps/api/tsconfig.app.json ts-node-dev -r tsconfig-paths/register --respawn --transpile-only ./apps/api/src/main/server.ts"
+            "command": "yarn ts-node-dev ./apps/api/src/main/server.ts"
           }
         ]
       }

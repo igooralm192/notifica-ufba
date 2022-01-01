@@ -8,6 +8,8 @@
     "lint": "nx affected:lint",
     "test": "nx test",
     "test:ci": "nx affected:test",
+    "ts-node-dev": "TS_NODE_PROJECT=./apps/api/tsconfig.app.json ts-node-dev -r tsconfig-paths/register --respawn --transpile-only",
+    "typeorm": "yarn ts-node-dev ./node_modules/typeorm/cli.js",
     "check-types": "nx affected --target=check-types",
     "prepare": "husky install"
   },
