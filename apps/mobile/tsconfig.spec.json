@@ -2,9 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "composite": true,
-    "declaration": true
+    "module": "commonjs"
   },
   "include": [
     "**/*.test.ts",
@@ -16,6 +14,7 @@
     "**/*.test.jsx",
     "**/*.spec.jsx",
     "**/*.d.ts",
+    "**/*.ts",
     "jest.setup.ts"
   ]
 }

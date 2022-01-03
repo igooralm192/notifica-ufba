@@ -14,7 +14,8 @@ module.exports = {
     '.svg': '@nrwl/react-native/plugins/jest/svg-mock',
   },
   transform: {
-    '\\.(js|ts|tsx)$': require.resolve('react-native/jest/preprocessor.js'),
+    "^.+\\.(js)$": require.resolve('react-native/jest/preprocessor.js'),
+    "\\.(ts|tsx)$": "ts-jest",
     '^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$': require.resolve(
       'react-native/jest/assetFileTransformer.js'
     ),
