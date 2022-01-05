@@ -1,13 +1,25 @@
-export class UserDoesNotExistError extends Error {
-  constructor() {
-    super('Usuário não encontrado.')
-    this.name = 'UserDoesNotExistError'
+import { BaseError } from './helpers'
+
+export namespace LoginError {
+  export class UserDoesNotExistError extends BaseError {
+    constructor() {
+      super({
+        type: 'UserDoesNotExistError',
+        message: 'Usuário não encontrado.',
+      })
+    }
+  }
+
+  export class WrongPasswordError extends BaseError {
+    constructor() {
+      super({
+        type: 'WrongPasswordError',
+        message: 'Senha incorreta.',
+      })
+    }
   }
 }
 
-export class WrongPasswordError extends Error {
-  constructor() {
-    super('Senha incorreta.')
-    this.name = 'WrongPasswordError'
-  }
-}
+export type LoginErrors =
+  | LoginError.UserDoesNotExistError
+  | LoginError.WrongPasswordError
