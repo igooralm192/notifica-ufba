@@ -1,11 +1,9 @@
+import { CommonError, LoginError } from '@notifica-ufba/domain/errors'
 import { UserMocks } from '@notifica-ufba/domain/mocks'
-import { LoginErrors } from '@notifica-ufba/domain/errors'
-import { left } from '@notifica-ufba/utils'
 
 import { mockLoginParams } from '@/data/mocks'
 import { LoginUseCase } from '@/data/usecases/login'
 import { LoginController } from '@/presentation/controllers/login'
-import { InternalServerError, ValidationError } from '@/presentation/errors'
 
 import { UserTypeORM } from '@/infra/database/typeorm/entities'
 import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
@@ -59,7 +57,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(400)
     expect(response.body).toMatchObject({
-      type: ValidationError.name,
+      type: CommonError.ValidationError.name,
     })
   })
 
@@ -70,7 +68,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(404)
     expect(response.body).toMatchObject({
-      type: LoginErrors.UserDoesNotExistError.name,
+      type: LoginError.UserDoesNotExistError.name,
     })
   })
 
@@ -88,7 +86,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(401)
     expect(response.body).toMatchObject({
-      type: LoginErrors.WrongPasswordError.name,
+      type: LoginError.WrongPasswordError.name,
     })
   })
 
@@ -96,7 +94,7 @@ describe('POST /login', () => {
     jest
       .spyOn(LoginUseCase.prototype, 'run')
       .mockImplementationOnce(async () => {
-        return left(new Error())
+        throw new Error()
       })
 
     const response = await request(app)
@@ -105,7 +103,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
-      type: InternalServerError.name,
+      type: CommonError.UnexpectedError.name,
     })
   })
 
@@ -122,7 +120,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
-      type: InternalServerError.name,
+      type: CommonError.UnexpectedError.name,
     })
   })
 })
