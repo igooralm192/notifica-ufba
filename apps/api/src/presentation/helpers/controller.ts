@@ -1,23 +1,14 @@
-import { InternalServerError, ValidationError } from '@/presentation/errors'
-import {
-  Controller,
-  ControllerErrorResponse,
-  HttpResponse,
-  ValidationControllerErrorResponse,
-} from '@/presentation/protocols'
+import { BaseError, CommonError } from '@notifica-ufba/domain/errors'
+import { IController, IHttpResponse } from '@/presentation/protocols'
 
-const httpResponse = (statusCode: number, body: any): HttpResponse<any> => {
+const httpResponse = (statusCode: number, body: any): IHttpResponse => {
   return { statusCode, body }
 }
 
-const errorResponse = (error: Error): ControllerErrorResponse => {
-  return { type: error.name, message: error.message }
-}
+export abstract class BaseController implements IController {
+  abstract handle(request: any): Promise<IHttpResponse>
 
-export abstract class BaseController implements Controller {
-  abstract handle(request: any): Promise<HttpResponse<any>>
-
-  public async perform(request: any): Promise<HttpResponse<any>> {
+  public async perform(request: any): Promise<IHttpResponse> {
     try {
       const response = await this.handle(request)
 
@@ -27,31 +18,28 @@ export abstract class BaseController implements Controller {
     }
   }
 
-  public static json<T = any>(statusCode: number, data: T): HttpResponse<T> {
+  public static json<T = any>(statusCode: number, data: T): IHttpResponse<T> {
     return httpResponse(statusCode, data)
   }
 
-  public validationError(
-    error: ValidationError,
-  ): HttpResponse<ValidationControllerErrorResponse> {
-    return BaseController.json(400, error.getControllerErrorResponse())
+  public badRequest(error: BaseError) {
+    return BaseController.json(400, error)
   }
 
-  public unauthorized(error: Error): HttpResponse<ControllerErrorResponse> {
-    return BaseController.json(401, errorResponse(error))
+  public unauthorized(error: BaseError) {
+    return BaseController.json(401, error)
   }
 
-  public notFound(error: Error): HttpResponse<ControllerErrorResponse> {
-    return BaseController.json(404, errorResponse(error))
+  public notFound(error: BaseError) {
+    return BaseController.json(404, error)
   }
 
   public ok<T = any>(data: T) {
     return BaseController.json(200, data)
   }
 
-  public fail(error?: Error): HttpResponse<ControllerErrorResponse> {
+  public fail(error?: Error) {
     console.log(error)
-    const internalError = new InternalServerError()
-    return BaseController.json(500, errorResponse(internalError))
+    return BaseController.json(500, new CommonError.UnexpectedError(error))
   }
 }

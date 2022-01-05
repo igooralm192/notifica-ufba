@@ -1,36 +1,37 @@
-import { LoginErrors } from '@notifica-ufba/domain/errors'
-import { LoginUseCase } from '@notifica-ufba/domain/usecases'
+import { LoginError } from '@notifica-ufba/domain/errors'
+import { ILoginUseCase } from '@notifica-ufba/domain/usecases'
 
-import { Controller, HttpResponse, Validation } from '@/presentation/protocols'
+import {
+  IController,
+  IHttpResponse,
+  IValidation,
+} from '@/presentation/protocols'
 import { BaseController } from '@/presentation/helpers'
 
-export class LoginController extends BaseController implements Controller {
+export class LoginController extends BaseController implements IController {
   constructor(
-    private readonly validation: Validation,
-    private readonly loginUseCase: LoginUseCase,
+    private readonly validation: IValidation,
+    private readonly loginUseCase: ILoginUseCase,
   ) {
     super()
   }
 
-  async handle(request: any): Promise<HttpResponse<any>> {
-    const error = await this.validation.validate(request)
+  async handle(request: any): Promise<IHttpResponse<any>> {
+    const validationError = await this.validation.validate(request)
 
-    if (error) {
-      return this.validationError(error)
+    if (validationError) {
+      return this.badRequest(validationError)
     }
 
     const result = await this.loginUseCase.run(request)
 
     if (result.isLeft()) {
       switch (result.value.constructor) {
-        case LoginErrors.UserDoesNotExistError:
+        case LoginError.UserDoesNotExistError:
           return this.notFound(result.value)
 
-        case LoginErrors.WrongPasswordError:
+        case LoginError.WrongPasswordError:
           return this.unauthorized(result.value)
-
-        default:
-          return this.fail(result.value)
       }
     }
 

@@ -1,8 +1,8 @@
-import { Validation } from '@/presentation/protocols'
-import { ValidationError } from '@/presentation/errors'
+import { CommonError } from '@notifica-ufba/domain/errors'
+import { IValidation } from '@/presentation/protocols'
 
-export class FakeValidation implements Validation {
-  async validate(): Promise<ValidationError> {
+export class MockedValidation implements IValidation {
+  async validate(): Promise<CommonError.ValidationError> {
     throw new Error('Method not implemented.')
   }
 }

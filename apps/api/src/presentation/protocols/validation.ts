@@ -1,13 +1,5 @@
-import { ValidationError } from '@/presentation/errors'
-import { ControllerErrorResponse } from '.'
+import { CommonError } from '@notifica-ufba/domain/errors'
 
-export interface ValidationControllerErrorResponse
-  extends ControllerErrorResponse {
-  context: {
-    key: string
-    value: any
-  }
-}
-export interface Validation {
-  validate<T = any>(input: T): Promise<ValidationError | null>
+export interface IValidation {
+  validate<T = any>(input: T): Promise<CommonError.ValidationError | null>
 }

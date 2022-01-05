@@ -1,9 +1,5 @@
-import { HttpResponse } from '@/presentation/protocols'
+import { IHttpResponse } from '@/presentation/protocols'
 
-export interface ControllerErrorResponse {
-  type: string
-  message: string
-}
-export interface Controller<T = any, U = any> {
-  handle(request: T): Promise<HttpResponse<U>>
+export interface IController<T = any, U = any> {
+  handle(request: T): Promise<IHttpResponse<U>>
 }
