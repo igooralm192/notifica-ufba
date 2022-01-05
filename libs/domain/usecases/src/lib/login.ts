@@ -1,4 +1,4 @@
-import { LoginErrors } from '@notifica-ufba/domain/errors'
+import { CommonErrors, LoginErrors } from '@notifica-ufba/domain/errors'
 import { User } from '@notifica-ufba/domain/entities'
 import { UseCase, Either } from '@notifica-ufba/utils'
 
@@ -8,17 +8,15 @@ export namespace LoginUseCase {
     password: string
   }
 
+  export type Errors = LoginErrors | CommonErrors
+
   export type Result = {
     token: string
     user: User
   }
-
-  export type Errors =
-    | LoginErrors.UserDoesNotExistError
-    | LoginErrors.WrongPasswordError
 }
 
-export type LoginUseCase = UseCase<
+export type ILoginUseCase = UseCase<
   LoginUseCase.Params,
   Either<LoginUseCase.Errors, LoginUseCase.Result>
 >

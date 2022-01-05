@@ -1,5 +1,8 @@
 import { LoginError } from '@notifica-ufba/domain/errors'
-import { LoginUseCase as UseCase } from '@notifica-ufba/domain/usecases'
+import {
+  ILoginUseCase,
+  LoginUseCase as UseCase,
+} from '@notifica-ufba/domain/usecases'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import {
@@ -8,7 +11,7 @@ import {
 } from '@/data/protocols/cryptography'
 import { IFindUserByEmailRepository } from '@/data/protocols/database'
 
-export class LoginUseCase implements UseCase {
+export class LoginUseCase implements ILoginUseCase {
   constructor(
     private readonly userRepository: IFindUserByEmailRepository,
     private readonly hashCryptography: ICompareHashCryptography,
