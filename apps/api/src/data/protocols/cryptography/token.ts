@@ -1,5 +1,5 @@
 import { Either } from '@notifica-ufba/utils'
-import * as JwtTokenErrors from '@/infra/cryptography/jwt/errors'
+import { CryptographyError } from '@/data/errors'
 
 export namespace GenerateTokenCryptography {
   export type Params = {
@@ -9,7 +9,7 @@ export namespace GenerateTokenCryptography {
   export type Result = string
 }
 
-export interface GenerateTokenCryptography {
+export interface IGenerateTokenCryptography {
   generate(
     params: GenerateTokenCryptography.Params,
   ): Promise<GenerateTokenCryptography.Result>
@@ -21,13 +21,13 @@ export namespace DecodeTokenCryptography {
   }
 
   export type Errors =
-    | JwtTokenErrors.InvalidJwtTokenError
-    | JwtTokenErrors.ExpiredJwtTokenError
+    | CryptographyError.InvalidTokenError
+    | CryptographyError.ExpiredTokenError
 
   export type Result<T = any> = Either<Errors, T>
 }
 
-export interface DecodeTokenCryptography {
+export interface IDecodeTokenCryptography {
   decode(
     params: DecodeTokenCryptography.Params,
   ): Promise<DecodeTokenCryptography.Result>

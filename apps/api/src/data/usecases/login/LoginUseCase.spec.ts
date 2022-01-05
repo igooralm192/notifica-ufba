@@ -1,10 +1,10 @@
+import { LoginError } from '@notifica-ufba/domain/errors'
 import { UserMocks } from '@notifica-ufba/domain/mocks'
-import { LoginErrors } from '@notifica-ufba/domain/errors'
 
 import {
-  FakeHashCryptography,
-  FakeTokenCryptography,
-  FakeUserRepository,
+  MockedHashCryptography,
+  MockedTokenCryptography,
+  MockedUserRepository,
   mockLoginParams,
   mockLoginResult,
 } from '@/data/mocks'
@@ -16,9 +16,9 @@ const makeSUT = (
   user = UserMocks.mockUser(),
   token = faker.datatype.uuid(),
 ) => {
-  const userRepository = new FakeUserRepository()
-  const hashCryptography = new FakeHashCryptography()
-  const tokenCryptography = new FakeTokenCryptography()
+  const userRepository = new MockedUserRepository()
+  const hashCryptography = new MockedHashCryptography()
+  const tokenCryptography = new MockedTokenCryptography()
   const loginUseCase = new LoginUseCase(
     userRepository,
     hashCryptography,
@@ -69,7 +69,7 @@ describe('LoginUseCase', () => {
     const error = resultOrError.left()
 
     expect(findByEmailSpy).toHaveBeenCalledWith(loginParams.email)
-    expect(error).toBeInstanceOf(LoginErrors.UserDoesNotExistError)
+    expect(error).toBeInstanceOf(LoginError.UserDoesNotExistError)
   })
 
   it('should not be able to login if password is wrong', async () => {
@@ -85,6 +85,6 @@ describe('LoginUseCase', () => {
         payload: loginParams.password,
       }),
     )
-    expect(error).toBeInstanceOf(LoginErrors.WrongPasswordError)
+    expect(error).toBeInstanceOf(LoginError.WrongPasswordError)
   })
 })

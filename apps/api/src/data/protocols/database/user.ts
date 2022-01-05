@@ -6,7 +6,7 @@ export namespace FindUserByEmailRepository {
   export type Result = User | null
 }
 
-export interface FindUserByEmailRepository {
+export interface IFindUserByEmailRepository {
   findByEmail(
     email: FindUserByEmailRepository.Params,
   ): Promise<FindUserByEmailRepository.Result>

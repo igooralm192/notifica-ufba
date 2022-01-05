@@ -1,12 +1,12 @@
 import {
-  GenerateHashCryptography,
-  CompareHashCryptography,
-  GenerateTokenCryptography,
-  DecodeTokenCryptography,
+  IGenerateHashCryptography,
+  ICompareHashCryptography,
+  IGenerateTokenCryptography,
+  IDecodeTokenCryptography,
 } from '@/data/protocols/cryptography'
 
-export class FakeHashCryptography
-  implements GenerateHashCryptography, CompareHashCryptography
+export class MockedHashCryptography
+  implements IGenerateHashCryptography, ICompareHashCryptography
 {
   generate(): Promise<string> {
     throw new Error('Method not implemented.')
@@ -17,8 +17,8 @@ export class FakeHashCryptography
   }
 }
 
-export class FakeTokenCryptography
-  implements GenerateTokenCryptography, DecodeTokenCryptography
+export class MockedTokenCryptography
+  implements IGenerateTokenCryptography, IDecodeTokenCryptography
 {
   generate(): Promise<string> {
     throw new Error('Method not implemented.')

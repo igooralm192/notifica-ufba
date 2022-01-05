@@ -1,18 +1,18 @@
-import { LoginErrors } from '@notifica-ufba/domain/errors'
+import { LoginError } from '@notifica-ufba/domain/errors'
 import { LoginUseCase as UseCase } from '@notifica-ufba/domain/usecases'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import {
-  CompareHashCryptography,
-  GenerateTokenCryptography,
+  ICompareHashCryptography,
+  IGenerateTokenCryptography,
 } from '@/data/protocols/cryptography'
-import { FindUserByEmailRepository } from '@/data/protocols/database'
+import { IFindUserByEmailRepository } from '@/data/protocols/database'
 
 export class LoginUseCase implements UseCase {
   constructor(
-    private readonly userRepository: FindUserByEmailRepository,
-    private readonly hashCryptography: CompareHashCryptography,
-    private readonly tokenCryptography: GenerateTokenCryptography,
+    private readonly userRepository: IFindUserByEmailRepository,
+    private readonly hashCryptography: ICompareHashCryptography,
+    private readonly tokenCryptography: IGenerateTokenCryptography,
   ) {}
 
   async run({
@@ -22,7 +22,7 @@ export class LoginUseCase implements UseCase {
     const user = await this.userRepository.findByEmail(email)
 
     if (!user) {
-      return left(new LoginErrors.UserDoesNotExistError())
+      return left(new LoginError.UserDoesNotExistError())
     }
 
     const passwordMatch = await this.hashCryptography.compare({
@@ -31,7 +31,7 @@ export class LoginUseCase implements UseCase {
     })
 
     if (!passwordMatch) {
-      return left(new LoginErrors.WrongPasswordError())
+      return left(new LoginError.WrongPasswordError())
     }
 
     const token = await this.tokenCryptography.generate({

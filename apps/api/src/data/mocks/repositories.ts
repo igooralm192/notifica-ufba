@@ -1,7 +1,7 @@
 import { User } from '@notifica-ufba/domain/entities'
-import { FindUserByEmailRepository } from '@/data/protocols/database'
+import { IFindUserByEmailRepository } from '@/data/protocols/database'
 
-export class FakeUserRepository implements FindUserByEmailRepository {
+export class MockedUserRepository implements IFindUserByEmailRepository {
   findByEmail(): Promise<User> {
     throw new Error('Method not implemented.')
   }
