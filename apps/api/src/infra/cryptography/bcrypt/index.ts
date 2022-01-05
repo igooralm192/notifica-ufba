@@ -1,12 +1,14 @@
 import {
   GenerateHashCryptography,
+  IGenerateHashCryptography,
   CompareHashCryptography,
+  ICompareHashCryptography,
 } from '@/data/protocols/cryptography'
 
 import bcrypt from 'bcryptjs'
 
 export class BcryptHashCryptography
-  implements GenerateHashCryptography, CompareHashCryptography
+  implements IGenerateHashCryptography, ICompareHashCryptography
 {
   constructor(public readonly SALT = 10) {}
 

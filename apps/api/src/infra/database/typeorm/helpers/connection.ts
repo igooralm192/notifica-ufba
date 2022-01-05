@@ -1,3 +1,4 @@
+import { DatabaseError } from '@/data/errors'
 import 'reflect-metadata'
 import {
   Connection,
@@ -12,8 +13,6 @@ import {
 } from 'typeorm'
 
 import ormConfig from 'ormconfig.json'
-
-import { ConnectionNotFoundError, TransactionNotFoundError } from '../errors'
 
 const [defaultOptions, testOptions] = ormConfig
 
@@ -53,7 +52,8 @@ export class TypeORMConnection {
   }
 
   async disconnect(): Promise<void> {
-    if (this.connection === undefined) throw new ConnectionNotFoundError()
+    if (this.connection === undefined)
+      throw new DatabaseError.ConnectionNotFoundError()
 
     await this.connection.close()
 
@@ -62,32 +62,37 @@ export class TypeORMConnection {
   }
 
   async openTransaction(): Promise<void> {
-    if (this.connection === undefined) throw new ConnectionNotFoundError()
+    if (this.connection === undefined)
+      throw new DatabaseError.ConnectionNotFoundError()
 
     this.query = this.connection.createQueryRunner()
     await this.query.startTransaction()
   }
 
   async closeTransaction(): Promise<void> {
-    if (this.query === undefined) throw new TransactionNotFoundError()
+    if (this.query === undefined)
+      throw new DatabaseError.TransactionNotFoundError()
 
     await this.query.release()
   }
 
   async commitTransaction(): Promise<void> {
-    if (this.query === undefined) throw new TransactionNotFoundError()
+    if (this.query === undefined)
+      throw new DatabaseError.TransactionNotFoundError()
 
     await this.query.commitTransaction()
   }
 
   async rollbackTransaction(): Promise<void> {
-    if (this.query === undefined) throw new TransactionNotFoundError()
+    if (this.query === undefined)
+      throw new DatabaseError.TransactionNotFoundError()
 
     await this.query.rollbackTransaction()
   }
 
   getRepository<Entity>(entity: ObjectType<Entity>): Repository<Entity> {
-    if (this.connection === undefined) throw new ConnectionNotFoundError()
+    if (this.connection === undefined)
+      throw new DatabaseError.ConnectionNotFoundError()
 
     if (this.query !== undefined)
       return this.query.manager.getRepository(entity)

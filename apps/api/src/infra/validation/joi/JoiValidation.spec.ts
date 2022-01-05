@@ -47,7 +47,7 @@ describe('JoiValidation', () => {
 
     const error = await SUT.validate({})
 
-    expect(error.getControllerErrorResponse()).toMatchObject({
+    expect(error).toMatchObject({
       type: expect.any(String),
       message: errorMessage,
       context: {

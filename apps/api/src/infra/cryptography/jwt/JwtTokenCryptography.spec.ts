@@ -1,7 +1,7 @@
 import faker from 'faker'
 import jwt from 'jsonwebtoken'
 
-import { ExpiredJwtTokenError, InvalidJwtTokenError } from './errors'
+import { CryptographyError } from '@/data/errors'
 import { JwtTokenCryptography } from '.'
 
 jest.mock('jsonwebtoken', () => {
@@ -64,7 +64,7 @@ describe('JwtTokenCryptography', () => {
     const resultOrError = await SUT.decode({ token })
     const error = resultOrError.left()
 
-    expect(error).toBeInstanceOf(InvalidJwtTokenError)
+    expect(error).toBeInstanceOf(CryptographyError.InvalidTokenError)
     expect(jwtVerifySpy).toHaveBeenCalledWith(token, secretKey)
   })
 
@@ -83,7 +83,7 @@ describe('JwtTokenCryptography', () => {
     const resultOrError = await SUT.decode({ token })
     const error = resultOrError.left()
 
-    expect(error).toBeInstanceOf(ExpiredJwtTokenError)
+    expect(error).toBeInstanceOf(CryptographyError.ExpiredTokenError)
     expect(jwtVerifySpy).toHaveBeenCalledWith(token, secretKey)
   })
 })

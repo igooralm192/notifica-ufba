@@ -1,18 +1,16 @@
 import { left, right } from '@notifica-ufba/utils'
+import { CryptographyError } from '@/data/errors'
 import {
   GenerateTokenCryptography,
+  IGenerateTokenCryptography,
   DecodeTokenCryptography,
+  IDecodeTokenCryptography,
 } from '@/data/protocols/cryptography'
-
-import {
-  InvalidJwtTokenError,
-  ExpiredJwtTokenError,
-} from '@/infra/cryptography/jwt/errors'
 
 import jwt from 'jsonwebtoken'
 
 export class JwtTokenCryptography
-  implements GenerateTokenCryptography, DecodeTokenCryptography
+  implements IGenerateTokenCryptography, IDecodeTokenCryptography
 {
   private EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d'
 
@@ -25,9 +23,9 @@ export class JwtTokenCryptography
   ): DecodeTokenCryptography.Errors {
     switch (error?.name as string) {
       case 'TokenExpiredError':
-        return new ExpiredJwtTokenError()
+        return new CryptographyError.ExpiredTokenError()
       default:
-        return new InvalidJwtTokenError()
+        return new CryptographyError.InvalidTokenError()
     }
   }
 
