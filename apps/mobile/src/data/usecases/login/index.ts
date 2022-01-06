@@ -1,10 +1,11 @@
-import { IHttpClient } from '@/data/protocols'
 import { LoginError } from '@notifica-ufba/domain/errors'
 import {
-  ILoginUseCase,
   LoginUseCase as UseCase,
+  ILoginUseCase,
 } from '@notifica-ufba/domain/usecases'
 import { Either, left } from '@notifica-ufba/utils'
+
+import { IHttpClient } from '@/data/protocols'
 
 export class LoginUseCase implements ILoginUseCase {
   constructor(
@@ -24,6 +25,8 @@ export class LoginUseCase implements ILoginUseCase {
       switch (response.statusCode) {
         case 404:
           return left(new LoginError.UserDoesNotExistError())
+        case 401:
+          return left(new LoginError.WrongPasswordError())
       }
     }
 
