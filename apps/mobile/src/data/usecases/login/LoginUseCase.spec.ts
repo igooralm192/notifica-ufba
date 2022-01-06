@@ -6,7 +6,8 @@ import {
   mockLoginResult,
   MockedHttpClient,
 } from '@/data/mocks'
-import { LoginUseCase } from '@/data/usecases/login'
+
+import { LoginUseCase } from '.'
 
 import faker from 'faker'
 
@@ -75,11 +76,11 @@ describe('LoginUseCase', () => {
     expect(result).toBeInstanceOf(LoginError.UserDoesNotExistError)
   })
 
-  it('should return error on another statusCode', async () => {
+  it('should return WrongPasswordError error on statusCode 401', async () => {
     const { SUT, loginParams, httpRequestSpy } = makeSUT()
 
     httpRequestSpy.mockResolvedValueOnce({
-      statusCode: 404,
+      statusCode: 401,
       body: left({
         type: faker.random.word(),
         message: faker.random.words(),
@@ -89,6 +90,27 @@ describe('LoginUseCase', () => {
     const resultOrError = await SUT.run(loginParams)
     const result = resultOrError.left()
 
-    expect(result).toBeInstanceOf(LoginError.UserDoesNotExistError)
+    expect(result).toBeInstanceOf(LoginError.WrongPasswordError)
+  })
+
+  it('should return error on another statusCode', async () => {
+    const httpErrorResponseBody = {
+      type: faker.random.word(),
+      message: faker.random.words(),
+    }
+    const { SUT, loginParams, httpRequestSpy } = makeSUT()
+
+    httpRequestSpy.mockResolvedValueOnce({
+      statusCode: faker.datatype.number({
+        min: 401,
+        max: 499,
+      }),
+      body: left(httpErrorResponseBody),
+    })
+
+    const resultOrError = await SUT.run(loginParams)
+    const result = resultOrError.left()
+
+    expect(result).toMatchObject(httpErrorResponseBody)
   })
 })
