@@ -1,6 +1,7 @@
 import { mockHttpRequest } from '@/data/mocks/http'
 import { AxiosHttpClient } from '@/infra/http/axios'
 import { mockAxiosHttpResponse } from '@/infra/mocks'
+import { CommonError } from '@notifica-ufba/domain/errors'
 
 import axios from 'axios'
 import faker from 'faker'
@@ -8,15 +9,13 @@ import { mocked } from 'jest-mock'
 
 jest.mock('axios')
 
-const makeSUT = (httpResponseBody = {}) => {
+const makeSUT = () => {
   const httpRequest = mockHttpRequest()
-  const axiosHttpResponse = mockAxiosHttpResponse(httpResponseBody)
   const httpClient = new AxiosHttpClient()
 
   return {
     SUT: httpClient,
     httpRequest,
-    axiosHttpResponse,
   }
 }
 
@@ -24,9 +23,9 @@ describe('AxiosHttpClient', () => {
   const axiosMocked = mocked(axios)
 
   it('should make axios call with correct params', async () => {
-    const { SUT, httpRequest, axiosHttpResponse } = makeSUT()
+    const { SUT, httpRequest } = makeSUT()
 
-    axiosMocked.mockResolvedValueOnce(axiosHttpResponse as any)
+    axiosMocked.mockResolvedValueOnce(mockAxiosHttpResponse())
 
     await SUT.request(httpRequest)
 
@@ -38,33 +37,82 @@ describe('AxiosHttpClient', () => {
     })
   })
 
-  it('should return correct response on success', async () => {
-    const { SUT, httpRequest, axiosHttpResponse } = makeSUT()
+  it('should return correct response body on status 200', async () => {
+    const axiosHttpResponse = mockAxiosHttpResponse(200)
+    const { SUT, httpRequest } = makeSUT()
 
-    axiosMocked.mockResolvedValueOnce(axiosHttpResponse as any)
+    axiosMocked.mockResolvedValueOnce(axiosHttpResponse)
 
-    const resultOrError = await SUT.request(httpRequest)
-    const httpResponse = resultOrError.right()
+    const httpResponse = await SUT.request(httpRequest)
+    const httpResponseBody = httpResponse.body.right()
 
     expect(httpResponse.statusCode).toBe(axiosHttpResponse.status)
-    expect(httpResponse.body).toMatchObject(axiosHttpResponse.data)
+    expect(httpResponseBody).toMatchObject(axiosHttpResponse.data)
   })
 
-  it('should return error response on failure', async () => {
-    const { SUT, httpRequest, axiosHttpResponse } = makeSUT({
-      type: faker.random.word(),
+  it('should return ValidationError on status 400', async () => {
+    const axiosHttpResponse = mockAxiosHttpResponse(400, {
       message: faker.random.words(),
+      context: {},
     })
+    const { SUT, httpRequest } = makeSUT()
 
     axiosMocked.mockRejectedValueOnce({
       response: axiosHttpResponse,
     })
 
-    const resultOrError = await SUT.request(httpRequest)
-    const httpErrorResponse = resultOrError.left()
+    const httpResponse = await SUT.request(httpRequest)
+    const httpResponseBody = httpResponse.body.left()
 
-    expect(httpErrorResponse.statusCode).toBe(axiosHttpResponse.status)
-    expect(httpErrorResponse.type).toBe(axiosHttpResponse.data.type)
-    expect(httpErrorResponse.message).toBe(axiosHttpResponse.data.message)
+    expect(httpResponse.statusCode).toBe(axiosHttpResponse.status)
+    expect(httpResponseBody.type).toBe(CommonError.ValidationError.name)
+    expect(httpResponseBody.message).toBe(axiosHttpResponse.data.message)
+    expect(httpResponseBody.context).toMatchObject(
+      axiosHttpResponse.data.context,
+    )
+  })
+
+  it('should return UnexpectedError on status 500', async () => {
+    const axiosHttpResponse = mockAxiosHttpResponse(500)
+    const { SUT, httpRequest } = makeSUT()
+
+    axiosMocked.mockRejectedValueOnce({
+      response: axiosHttpResponse,
+    })
+
+    const httpResponse = await SUT.request(httpRequest)
+    const httpResponseBody = httpResponse.body.left()
+
+    expect(httpResponse.statusCode).toBe(axiosHttpResponse.status)
+    expect(httpResponseBody.type).toBe(CommonError.UnexpectedError.name)
+  })
+
+  it('should return error on another status', async () => {
+    const axiosHttpResponse = mockAxiosHttpResponse(
+      faker.datatype.number({
+        min: 401,
+        max: 499,
+      }),
+      {
+        type: faker.random.word(),
+        message: faker.random.words(),
+        context: {},
+      },
+    )
+    const { SUT, httpRequest } = makeSUT()
+
+    axiosMocked.mockRejectedValueOnce({
+      response: axiosHttpResponse,
+    })
+
+    const httpResponse = await SUT.request(httpRequest)
+    const httpResponseBody = httpResponse.body.left()
+
+    expect(httpResponse.statusCode).toBe(axiosHttpResponse.status)
+    expect(httpResponseBody.type).toBe(axiosHttpResponse.data.type)
+    expect(httpResponseBody.message).toBe(axiosHttpResponse.data.message)
+    expect(httpResponseBody.context).toMatchObject(
+      axiosHttpResponse.data.context,
+    )
   })
 })

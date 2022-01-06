@@ -1,36 +1,56 @@
+import { CommonError, IError } from '@notifica-ufba/domain/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
-import {
-  HttpClient,
-  HttpRequest,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@/data/protocols'
+import { IHttpClient, IHttpRequest, IHttpResponse } from '@/data/protocols'
 
 import axios, { AxiosError } from 'axios'
 
-export class AxiosHttpClient implements HttpClient {
+const httpResponse = (statusCode: number, body?: any): IHttpResponse => {
+  return { statusCode, body }
+}
+
+export class AxiosHttpClient implements IHttpClient {
   async request({
     url,
     method,
     body,
     headers,
-  }: HttpRequest): Promise<Either<HttpErrorResponse, HttpResponse>> {
+  }: IHttpRequest): Promise<IHttpResponse<Either<IError, any>>> {
     try {
       const response = await axios({ url, method, data: body, headers })
 
-      return right({
-        statusCode: response.status,
-        body: response.data,
-      })
-    } catch (err: any) {
-      const axiosError = err as AxiosError
+      return httpResponse(response.status, right(response.data))
+    } catch (error: any) {
+      const axiosError = error as AxiosError
 
-      return left({
-        statusCode: axiosError?.response?.status,
-        type: axiosError?.response?.data?.type,
-        message: axiosError?.response?.data?.message,
-        context: axiosError?.response?.data?.context,
-      })
+      // TODO: Handle Network and No-Response cases
+
+      const statusCode = axiosError?.response?.status
+      const errorType = axiosError?.response?.data?.type
+      const errorMessage = axiosError?.response?.data?.message
+      const errorContext = axiosError?.response?.data?.context
+
+      switch (axiosError?.response?.status) {
+        case 400:
+          return httpResponse(
+            statusCode,
+            left(new CommonError.ValidationError(errorMessage, errorContext)),
+          )
+        case 500:
+          return httpResponse(
+            statusCode,
+            left(new CommonError.UnexpectedError(error)),
+          )
+
+        default:
+          return httpResponse(
+            statusCode,
+            left({
+              type: errorType,
+              message: errorMessage,
+              context: errorContext,
+            }),
+          )
+      }
     }
   }
 }
