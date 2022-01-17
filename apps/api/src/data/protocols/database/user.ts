@@ -1,9 +1,9 @@
-import { User } from '@notifica-ufba/domain/entities'
+import { UserEntity } from '@notifica-ufba/domain/entities'
 
 export namespace FindUserByEmailRepository {
   export type Params = string
 
-  export type Result = User | null
+  export type Result = UserEntity | null
 }
 
 export interface IFindUserByEmailRepository {

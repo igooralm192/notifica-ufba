@@ -1,14 +1,16 @@
-import { BaseError, CommonError } from '@notifica-ufba/domain/errors'
+import { BaseError, CommonError, IError } from '@notifica-ufba/domain/errors'
 import { IController, IHttpResponse } from '@/presentation/protocols'
 
 const httpResponse = (statusCode: number, body: any): IHttpResponse => {
   return { statusCode, body }
 }
 
-export abstract class BaseController implements IController {
-  abstract handle(request: any): Promise<IHttpResponse>
+export abstract class BaseController<T = any, U = any>
+  implements IController<T, U>
+{
+  abstract handle(request: T): Promise<IHttpResponse<IError | U>>
 
-  public async perform(request: any): Promise<IHttpResponse> {
+  public async perform(request: any): Promise<IHttpResponse<any>> {
     try {
       const response = await this.handle(request)
 
@@ -22,6 +24,10 @@ export abstract class BaseController implements IController {
     return httpResponse(statusCode, data)
   }
 
+  public ok<T = any>(data: T) {
+    return BaseController.json(200, data)
+  }
+
   public badRequest(error: BaseError) {
     return BaseController.json(400, error)
   }
@@ -32,10 +38,6 @@ export abstract class BaseController implements IController {
 
   public notFound(error: BaseError) {
     return BaseController.json(404, error)
-  }
-
-  public ok<T = any>(data: T) {
-    return BaseController.json(200, data)
   }
 
   public fail(error?: Error) {

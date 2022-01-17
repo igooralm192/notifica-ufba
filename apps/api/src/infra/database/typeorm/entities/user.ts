@@ -1,5 +1,3 @@
-import { User } from '@notifica-ufba/domain/entities'
-import { Exclude } from 'class-transformer'
 import {
   Entity,
   BaseEntity,
@@ -10,7 +8,7 @@ import {
 } from 'typeorm'
 
 @Entity('users')
-export class UserTypeORM extends BaseEntity implements User {
+export class TypeORMUserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number
 
@@ -21,7 +19,6 @@ export class UserTypeORM extends BaseEntity implements User {
   email: string
 
   @Column()
-  @Exclude()
   password: string
 
   @CreateDateColumn({ name: 'created_at' })

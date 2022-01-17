@@ -1,10 +1,10 @@
 import { LoginUseCase } from '@/data/usecases/login'
 import { BcryptHashCryptography } from '@/infra/cryptography/bcrypt'
 import { JwtTokenCryptography } from '@/infra/cryptography/jwt'
-import { UserTypeORMRepository } from '@/infra/database/typeorm/repositories'
+import { TypeORMUserRepository } from '@/infra/database/typeorm/repositories'
 
 export const makeLoginUseCase = () => {
-  const userRepository = new UserTypeORMRepository()
+  const userRepository = new TypeORMUserRepository()
   const hashCryptography = new BcryptHashCryptography()
   const tokenCryptography = new JwtTokenCryptography()
 

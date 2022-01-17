@@ -1,14 +1,15 @@
 import { CommonError, LoginError } from '@notifica-ufba/domain/errors'
+import { LoginMocks } from '@notifica-ufba/domain/mocks'
 import { left, right } from '@notifica-ufba/utils'
 
-import { mockLoginParams, mockLoginResult } from '@/data/mocks'
+import { UserMapper } from '@/presentation/mappers'
 import { MockedValidation, MockedLoginUseCase } from '@/presentation/mocks'
 
 import faker from 'faker'
 
 import { LoginController } from '.'
 
-const makeSUT = (loginResult = mockLoginResult()) => {
+const makeSUT = (loginResult = LoginMocks.mockLoginResult().right()) => {
   const loginValidation = new MockedValidation()
   const loginUseCase = new MockedLoginUseCase()
   const loginController = new LoginController(loginValidation, loginUseCase)
@@ -29,19 +30,22 @@ const makeSUT = (loginResult = mockLoginResult()) => {
 
 describe('LoginController', () => {
   it('should return 200 if valid credentials are provided', async () => {
-    const loginParams = mockLoginParams()
-    const loginResult = mockLoginResult()
+    const loginParams = LoginMocks.mockLoginParams()
+    const loginResult = LoginMocks.mockLoginResult().right()
     const { SUT, loginUseCaseSpy } = makeSUT(loginResult)
 
     const httpResponse = await SUT.handle(loginParams)
 
     expect(loginUseCaseSpy).toHaveBeenCalledWith(loginParams)
     expect(httpResponse.statusCode).toBe(200)
-    expect(httpResponse.body).toMatchObject(loginResult)
+    expect(httpResponse.body).toMatchObject({
+      token: loginResult.token,
+      user: UserMapper.toDTO(loginResult.user),
+    })
   })
 
   it('should return 400 if validation fails', async () => {
-    const loginParams = mockLoginParams()
+    const loginParams = LoginMocks.mockLoginParams()
     const loginValidationError = new CommonError.ValidationError(
       faker.random.words(),
       {
@@ -64,7 +68,7 @@ describe('LoginController', () => {
     const { SUT, loginUseCaseSpy } = makeSUT()
     loginUseCaseSpy.mockResolvedValueOnce(left(loginError))
 
-    const httpResponse = await SUT.handle(mockLoginParams())
+    const httpResponse = await SUT.handle(LoginMocks.mockLoginParams())
 
     expect(httpResponse.statusCode).toBe(404)
     expect(httpResponse.body).toMatchObject(loginError)
@@ -75,7 +79,7 @@ describe('LoginController', () => {
     const { SUT, loginUseCaseSpy } = makeSUT()
     loginUseCaseSpy.mockResolvedValueOnce(left(loginError))
 
-    const httpResponse = await SUT.handle(mockLoginParams())
+    const httpResponse = await SUT.handle(LoginMocks.mockLoginParams())
 
     expect(httpResponse.statusCode).toBe(401)
     expect(httpResponse.body).toMatchObject(loginError)

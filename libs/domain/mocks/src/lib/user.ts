@@ -1,9 +1,9 @@
-import { User } from '@notifica-ufba/domain/entities'
+import { UserEntity } from '@notifica-ufba/domain/entities'
 
 import faker from 'faker'
 
-export const mockUser = (): User => {
-  return new User(
+export const mockUser = (): UserEntity => {
+  return new UserEntity(
     faker.datatype.number(),
     faker.internet.userName(),
     faker.internet.email(),

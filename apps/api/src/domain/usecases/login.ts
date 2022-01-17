@@ -1,5 +1,5 @@
-import { CommonErrors, LoginErrors } from '@notifica-ufba/domain/errors'
 import { UserEntity } from '@notifica-ufba/domain/entities'
+import { CommonErrors, LoginErrors } from '@notifica-ufba/domain/errors'
 import { UseCase, Either } from '@notifica-ufba/utils'
 
 export namespace LoginUseCase {

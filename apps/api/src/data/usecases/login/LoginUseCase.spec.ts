@@ -1,12 +1,10 @@
 import { LoginError } from '@notifica-ufba/domain/errors'
-import { UserMocks } from '@notifica-ufba/domain/mocks'
+import { UserMocks, LoginMocks } from '@notifica-ufba/domain/mocks'
 
 import {
   MockedHashCryptography,
   MockedTokenCryptography,
   MockedUserRepository,
-  mockLoginParams,
-  mockLoginResult,
 } from '@/data/mocks'
 
 import faker from 'faker'
@@ -44,10 +42,10 @@ const makeSUT = (
 
 describe('LoginUseCase', () => {
   it('should be able to login with email and password and get an access token and user info', async () => {
-    const { user, token } = mockLoginResult()
+    const { user, token } = LoginMocks.mockLoginResult().right()
     const { SUT, generateTokenSpy } = makeSUT(user, token)
 
-    const resultOrError = await SUT.run(mockLoginParams())
+    const resultOrError = await SUT.run(LoginMocks.mockLoginParams())
     const result = resultOrError.right()
 
     expect(generateTokenSpy).toHaveBeenCalledWith({
@@ -61,7 +59,7 @@ describe('LoginUseCase', () => {
   })
 
   it('should not be able to login if user does not exist', async () => {
-    const loginParams = mockLoginParams()
+    const loginParams = LoginMocks.mockLoginParams()
     const { SUT, findByEmailSpy } = makeSUT()
     findByEmailSpy.mockResolvedValueOnce(undefined)
 
@@ -73,7 +71,7 @@ describe('LoginUseCase', () => {
   })
 
   it('should not be able to login if password is wrong', async () => {
-    const loginParams = mockLoginParams()
+    const loginParams = LoginMocks.mockLoginParams()
     const { SUT, compareHashSpy } = makeSUT()
     compareHashSpy.mockResolvedValueOnce(false)
 

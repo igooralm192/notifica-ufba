@@ -1,5 +1,5 @@
 import { CommonError } from '@notifica-ufba/domain/errors'
 
-export interface IValidation {
-  validate<T = any>(input: T): Promise<CommonError.ValidationError | null>
+export interface IValidation<T = any> {
+  validate(input: T): Promise<CommonError.ValidationError | null>
 }

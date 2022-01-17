@@ -1,13 +1,13 @@
 import { CommonError, LoginError } from '@notifica-ufba/domain/errors'
-import { UserMocks } from '@notifica-ufba/domain/mocks'
+import { UserMocks, LoginMocks } from '@notifica-ufba/domain/mocks'
 
-import { mockLoginParams } from '@/data/mocks'
 import { LoginUseCase } from '@/data/usecases/login'
 import { LoginController } from '@/presentation/controllers/login'
 
-import { UserTypeORM } from '@/infra/database/typeorm/entities'
+import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
 import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
 import { setupApp } from '@/main/config/app'
+import { UserMapper } from '@/presentation/mappers'
 
 import bcrypt from 'bcryptjs'
 import { Express } from 'express'
@@ -24,7 +24,7 @@ describe('POST /login', () => {
   it('should return 200 on success', async () => {
     const user = UserMocks.mockUser()
 
-    await getConnection().manager.insert(UserTypeORM, {
+    await getConnection().manager.insert(TypeORMUserEntity, {
       ...user,
       // TODO: Put bcrypt salt in environment variable
       password: await bcrypt.hash(user.password, 10),
@@ -35,16 +35,10 @@ describe('POST /login', () => {
       password: user.password,
     })
 
-    delete user.password
-
     expect(response.status).toBe(200)
     expect(response.body).toMatchObject({
       token: expect.any(String),
-      user: {
-        ...user,
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt.toISOString(),
-      },
+      user: UserMapper.toDTO({ ...user }),
     })
   })
 
@@ -64,7 +58,7 @@ describe('POST /login', () => {
   it('should return 404 on user not found', async () => {
     const response = await request(app)
       .post('/api/login')
-      .send(mockLoginParams())
+      .send(LoginMocks.mockLoginParams())
 
     expect(response.status).toBe(404)
     expect(response.body).toMatchObject({
@@ -75,7 +69,7 @@ describe('POST /login', () => {
   it('should return 401 on wrong password', async () => {
     const user = UserMocks.mockUser()
 
-    await getConnection().manager.insert(UserTypeORM, {
+    await getConnection().manager.insert(TypeORMUserEntity, {
       ...user,
       password: faker.datatype.string(6),
     })
@@ -99,7 +93,7 @@ describe('POST /login', () => {
 
     const response = await request(app)
       .post('/api/login')
-      .send(mockLoginParams())
+      .send(LoginMocks.mockLoginParams())
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
@@ -116,7 +110,7 @@ describe('POST /login', () => {
 
     const response = await request(app)
       .post('/api/login')
-      .send(mockLoginParams())
+      .send(LoginMocks.mockLoginParams())
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({

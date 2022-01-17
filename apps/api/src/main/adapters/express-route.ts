@@ -1,6 +1,5 @@
 import { BaseController } from '@/presentation/helpers'
 
-import { instanceToPlain } from 'class-transformer'
 import { Request, Response } from 'express'
 
 export class ExpressRouteAdapter {
@@ -8,9 +7,7 @@ export class ExpressRouteAdapter {
     return async (request: Request, response: Response) => {
       const httpResponse = await controller.perform(request.body)
 
-      return response
-        .status(httpResponse.statusCode)
-        .json(instanceToPlain(httpResponse.body))
+      return response.status(httpResponse.statusCode).json(httpResponse.body)
     }
   }
 }
