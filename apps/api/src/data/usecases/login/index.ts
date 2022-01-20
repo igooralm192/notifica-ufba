@@ -1,5 +1,5 @@
 import { LoginError } from '@notifica-ufba/domain/errors'
-import { left, right } from '@notifica-ufba/utils'
+import { Either, left, right } from '@notifica-ufba/utils'
 
 import {
   ICompareHashCryptography,
@@ -15,7 +15,10 @@ export class LoginUseCase implements ILoginUseCase {
     private readonly tokenCryptography: IGenerateTokenCryptography,
   ) {}
 
-  async run({ email, password }: UseCase.Params): Promise<UseCase.Result> {
+  async run({
+    email,
+    password,
+  }: UseCase.Params): Promise<Either<UseCase.Errors, UseCase.Result>> {
     const user = await this.userRepository.findByEmail(email)
 
     if (!user) {

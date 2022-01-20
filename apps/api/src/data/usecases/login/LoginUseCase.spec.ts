@@ -42,7 +42,7 @@ const makeSUT = (
 
 describe('LoginUseCase', () => {
   it('should be able to login with email and password and get an access token and user info', async () => {
-    const { user, token } = LoginMocks.mockLoginResult().right()
+    const { user, token } = LoginMocks.mockLoginResult()
     const { SUT, generateTokenSpy } = makeSUT(user, token)
 
     const resultOrError = await SUT.run(LoginMocks.mockLoginParams())

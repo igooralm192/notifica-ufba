@@ -9,7 +9,7 @@ import faker from 'faker'
 
 import { LoginController } from '.'
 
-const makeSUT = (loginResult = LoginMocks.mockLoginResult().right()) => {
+const makeSUT = (loginResult = LoginMocks.mockLoginResult()) => {
   const loginValidation = new MockedValidation()
   const loginUseCase = new MockedLoginUseCase()
   const loginController = new LoginController(loginValidation, loginUseCase)
@@ -31,7 +31,7 @@ const makeSUT = (loginResult = LoginMocks.mockLoginResult().right()) => {
 describe('LoginController', () => {
   it('should return 200 if valid credentials are provided', async () => {
     const loginParams = LoginMocks.mockLoginParams()
-    const loginResult = LoginMocks.mockLoginResult().right()
+    const loginResult = LoginMocks.mockLoginResult()
     const { SUT, loginUseCaseSpy } = makeSUT(loginResult)
 
     const httpResponse = await SUT.handle(loginParams)
