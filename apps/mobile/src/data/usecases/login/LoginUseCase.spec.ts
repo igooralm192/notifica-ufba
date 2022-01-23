@@ -2,8 +2,8 @@ import { LoginError } from '@notifica-ufba/domain/errors'
 import { left, right } from '@notifica-ufba/utils'
 
 import {
-  mockLoginParams,
-  mockLoginResult,
+  mockLoginHttpRequest,
+  mockLoginHttpResponse,
   MockedHttpClient,
 } from '@/data/mocks'
 
@@ -12,8 +12,8 @@ import { LoginUseCase } from '.'
 import faker from 'faker'
 
 const makeSUT = () => {
-  const loginParams = mockLoginParams()
-  const loginResult = mockLoginResult()
+  const loginHttpRequest = mockLoginHttpRequest()
+  const loginHttpResponse = mockLoginHttpResponse()
 
   const httpClient = new MockedHttpClient()
   const loginUseCase = new LoginUseCase(httpClient)
@@ -21,46 +21,57 @@ const makeSUT = () => {
   const httpRequestSpy = jest.spyOn(httpClient, 'request')
   return {
     SUT: loginUseCase,
-    loginParams,
-    loginResult,
+    loginHttpRequest,
+    loginHttpResponse,
     httpRequestSpy,
   }
 }
 
 describe('LoginUseCase', () => {
   it('should call http request with correct params', async () => {
-    const { SUT, loginParams, httpRequestSpy } = makeSUT()
+    const { SUT, loginHttpRequest, loginHttpResponse, httpRequestSpy } =
+      makeSUT()
 
     httpRequestSpy.mockResolvedValueOnce({
-      statusCode: faker.datatype.number(),
-      body: right({}),
+      statusCode: 200,
+      body: right(loginHttpResponse),
     })
 
-    await SUT.run(loginParams)
+    await SUT.run(loginHttpRequest)
 
     expect(httpRequestSpy).toHaveBeenCalledWith({
       url: '/login',
       method: 'post',
-      body: loginParams,
+      body: loginHttpRequest,
     })
   })
 
   it('should return http response body on statusCode 200', async () => {
-    const { SUT, loginParams, loginResult, httpRequestSpy } = makeSUT()
+    const { SUT, loginHttpRequest, loginHttpResponse, httpRequestSpy } =
+      makeSUT()
 
     httpRequestSpy.mockResolvedValueOnce({
       statusCode: 200,
-      body: right(loginResult),
+      body: right(loginHttpResponse),
     })
 
-    const resultOrError = await SUT.run(loginParams)
+    const resultOrError = await SUT.run(loginHttpRequest)
     const result = resultOrError.right()
 
-    expect(result).toMatchObject(loginResult)
+    expect(result).toMatchObject({
+      token: loginHttpResponse.token,
+      user: {
+        id: loginHttpResponse.user.id,
+        name: loginHttpResponse.user.name,
+        email: loginHttpResponse.user.email,
+        createdAt: new Date(loginHttpResponse.user.created_at),
+        updatedAt: new Date(loginHttpResponse.user.updated_at),
+      },
+    })
   })
 
   it('should return UserDoesNotExist error on statusCode 404', async () => {
-    const { SUT, loginParams, httpRequestSpy } = makeSUT()
+    const { SUT, loginHttpRequest, httpRequestSpy } = makeSUT()
 
     httpRequestSpy.mockResolvedValueOnce({
       statusCode: 404,
@@ -70,14 +81,14 @@ describe('LoginUseCase', () => {
       }),
     })
 
-    const resultOrError = await SUT.run(loginParams)
+    const resultOrError = await SUT.run(loginHttpRequest)
     const result = resultOrError.left()
 
     expect(result).toBeInstanceOf(LoginError.UserDoesNotExistError)
   })
 
   it('should return WrongPasswordError error on statusCode 401', async () => {
-    const { SUT, loginParams, httpRequestSpy } = makeSUT()
+    const { SUT, loginHttpRequest, httpRequestSpy } = makeSUT()
 
     httpRequestSpy.mockResolvedValueOnce({
       statusCode: 401,
@@ -87,7 +98,7 @@ describe('LoginUseCase', () => {
       }),
     })
 
-    const resultOrError = await SUT.run(loginParams)
+    const resultOrError = await SUT.run(loginHttpRequest)
     const result = resultOrError.left()
 
     expect(result).toBeInstanceOf(LoginError.WrongPasswordError)
@@ -98,7 +109,7 @@ describe('LoginUseCase', () => {
       type: faker.random.word(),
       message: faker.random.words(),
     }
-    const { SUT, loginParams, httpRequestSpy } = makeSUT()
+    const { SUT, loginHttpRequest, httpRequestSpy } = makeSUT()
 
     httpRequestSpy.mockResolvedValueOnce({
       statusCode: faker.datatype.number({
@@ -108,7 +119,7 @@ describe('LoginUseCase', () => {
       body: left(httpErrorResponseBody),
     })
 
-    const resultOrError = await SUT.run(loginParams)
+    const resultOrError = await SUT.run(loginHttpRequest)
     const result = resultOrError.left()
 
     expect(result).toMatchObject(httpErrorResponseBody)

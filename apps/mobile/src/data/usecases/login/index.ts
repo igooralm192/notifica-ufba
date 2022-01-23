@@ -3,13 +3,28 @@ import {
   LoginUseCase as UseCase,
   ILoginUseCase,
 } from '@notifica-ufba/domain/usecases'
-import { Either, left } from '@notifica-ufba/utils'
+import { Either, left, right } from '@notifica-ufba/utils'
 
+import { IUserDTO } from '@/data/dtos'
 import { IHttpClient } from '@/data/protocols'
+import { UserMapper } from '@/data/mappers'
+
+export type LoginHttpRequest = {
+  email: string
+  password: string
+}
+
+export type LoginHttpResponse = {
+  token: string
+  user: IUserDTO
+}
 
 export class LoginUseCase implements ILoginUseCase {
   constructor(
-    private readonly httpClient: IHttpClient<UseCase.Params, UseCase.Result>,
+    private readonly httpClient: IHttpClient<
+      LoginHttpRequest,
+      LoginHttpResponse
+    >,
   ) {}
 
   async run(
@@ -21,15 +36,18 @@ export class LoginUseCase implements ILoginUseCase {
       body: params,
     })
 
-    if (response.body.isLeft()) {
-      switch (response.statusCode) {
-        case 404:
-          return left(new LoginError.UserDoesNotExistError())
-        case 401:
-          return left(new LoginError.WrongPasswordError())
-      }
+    if (response.body.isRight()) {
+      const { token, user } = response.body.value
+      return right({ token, user: UserMapper.toEntity(user) })
     }
 
-    return response.body
+    switch (response.statusCode) {
+      case 404:
+        return left(new LoginError.UserDoesNotExistError())
+      case 401:
+        return left(new LoginError.WrongPasswordError())
+      default:
+        return left(response.body.value)
+    }
   }
 }
