@@ -16,5 +16,5 @@
     "**/*.d.ts",
     "**/*.ts",
     "jest.setup.ts"
-  ]
+, "src/ui/contexts/login/index.tsx"  ]
 }
