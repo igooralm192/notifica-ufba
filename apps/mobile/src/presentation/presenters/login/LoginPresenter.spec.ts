@@ -42,8 +42,38 @@ describe('LoginPresenter', () => {
 
     await presenter.validateField('email', email)
 
-    expect(presenter.errors).toMatchObject({
-      email: expect.any(String),
+    expect(presenter.state).toMatchObject({
+      values: {
+        email,
+      },
+      errors: {
+        email: expect.any(String),
+      },
+    })
+  })
+
+  it('should update errors object if password validation return error', async () => {
+    const password = 'invalid_password'
+    const validation = new MockedValidation()
+    const presenter = new LoginPresenter(validation)
+
+    const validate = jest.spyOn(validation, 'validate')
+    validate.mockImplementationOnce(async () => {
+      return {
+        type: faker.random.word(),
+        message: faker.random.words(),
+      }
+    })
+
+    await presenter.validateField('password', password)
+
+    expect(presenter.state).toMatchObject({
+      values: {
+        password,
+      },
+      errors: {
+        password: expect.any(String),
+      },
     })
   })
 })

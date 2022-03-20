@@ -1,15 +1,18 @@
+import { IPresenter } from '@/presentation/protocols'
+
 export namespace LoginPresenter {
   export type State = {
-    email: string
-    password: string
-  }
-
-  export type Errors = {
-    email?: string
-    password?: string
+    values: {
+      email: string
+      password: string
+    }
+    errors: {
+      email?: string
+      password?: string
+    }
   }
 }
 
-export interface ILoginPresenter {
+export interface ILoginPresenter extends IPresenter<LoginPresenter.State> {
   validateField(field: string, value: any): Promise<void>
 }

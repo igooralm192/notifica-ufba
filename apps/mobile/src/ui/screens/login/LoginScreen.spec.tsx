@@ -1,6 +1,8 @@
-import { IUseForm } from '@/presentation/protocols'
-import { LoginProvider, useLogin } from '@/ui/contexts'
-import { ILoginPresenter } from '@/ui/presenters'
+import { LoginJoiValidation } from '@/infra/validation/joi'
+import { LoginPresenter } from '@/presentation/presenters/login'
+import { IValidation } from '@/presentation/protocols'
+import { LoginProvider } from '@/ui/contexts'
+import { CommonError } from '@notifica-ufba/domain/errors'
 
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native'
 import React from 'react'
@@ -8,72 +10,73 @@ import { Text, TextInput, View } from 'react-native'
 
 import LoginScreen from '.'
 
-class MockedLoginPresenter implements ILoginPresenter {
-  validateField(field: string, value: any): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-}
-
-const useMockedForm: IUseForm = () => {
-  return {
-    onSubmit: jest.fn(),
-    register: () => ({
-      onChange: jest.fn(),
-    }),
+class FakeValidation implements IValidation {
+  validate(input: any): Promise<CommonError.ValidationError> {
+    return Promise.resolve(null)
   }
 }
 
 describe('LoginScreen', () => {
   it('should call validate with correct values', async () => {
-    const presenter = new MockedLoginPresenter()
+    const presenter = new LoginPresenter(new FakeValidation())
     const validate = jest.spyOn(presenter, 'validateField')
-
-    validate.mockImplementation()
 
     const screen = render(<LoginScreen />, {
       wrapper: props => (
-        <LoginProvider
-          presenter={presenter}
-          hooks={{
-            useForm: useMockedForm,
-          }}
-          {...props}
-        ></LoginProvider>
+        <LoginProvider presenter={presenter} {...props}></LoginProvider>
+      ),
+    })
+
+    const emailInput = await screen.findByTestId('login-email-input')
+    fireEvent.changeText(emailInput, 'any_email@email.com')
+    await waitFor(() =>
+      expect(validate).toHaveBeenCalledWith('email', 'any_email@email.com'),
+    )
+
+    const passwordInput = await screen.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, 'any_password')
+    await waitFor(() =>
+      expect(validate).toHaveBeenCalledWith('password', 'any_password'),
+    )
+  })
+
+  it('should present error if email is invalid', async () => {
+    const validation = new FakeValidation()
+    const presenter = new LoginPresenter(validation)
+
+    jest
+      .spyOn(validation, 'validate')
+      .mockResolvedValueOnce(new CommonError.ValidationError('any_message'))
+
+    const screen = render(<LoginScreen />, {
+      wrapper: props => (
+        <LoginProvider presenter={presenter} {...props}></LoginProvider>
       ),
     })
 
     const emailInput = await screen.findByTestId('login-email-input')
     fireEvent.changeText(emailInput, 'any_email')
-    // expect(validate).toHaveBeenCalledWith('email', 'any_email')
 
-    // const passwordInput = await screen.findByTestId('login-password-input')
-    // fireEvent.changeText(passwordInput, 'any_password')
-    // expect(validate).toHaveBeenCalledWith('password', 'any_password')
+    await waitFor(() => expect(screen.queryByText('any_message')).toBeTruthy())
   })
 
-  // it('should present error if email is invalid', async () => {
-  //   const presenter = new MockedLoginPresenter()
-  //   presenter.errors = { email: 'any_error' }
+  it('should present error if password is invalid', async () => {
+    const validation = new FakeValidation()
+    const presenter = new LoginPresenter(validation)
 
-  //   const screen = render(<LoginScreen />, {
-  //     wrapper: props => (
-  //       <LoginProvider presenter={presenter} {...props}></LoginProvider>
-  //     ),
-  //   })
+    jest
+      .spyOn(validation, 'validate')
+      .mockResolvedValueOnce(new CommonError.ValidationError('any_message'))
 
-  //   expect(screen.queryByText('any_error')).toBeTruthy()
-  // })
+    const screen = render(<LoginScreen />, {
+      wrapper: props => (
+        <LoginProvider presenter={presenter} {...props}></LoginProvider>
+      ),
+    })
 
-  // it('should present error if password is invalid', async () => {
-  //   const presenter = new MockedLoginPresenter()
-  //   presenter.errors = { password: 'any_error' }
+    const passwordInput = await screen.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, 'any_password')
 
-  //   const screen = render(<LoginScreen />, {
-  //     wrapper: props => (
-  //       <LoginProvider presenter={presenter} {...props}></LoginProvider>
-  //     ),
-  //   })
-
-  //   expect(screen.queryByText('any_error')).toBeTruthy()
-  // })
+    await waitFor(() => expect(screen.queryByText('any_message')).toBeTruthy())
+  })
 })

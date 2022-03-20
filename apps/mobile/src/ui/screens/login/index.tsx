@@ -10,7 +10,10 @@ interface ILoginFormValues {
 }
 
 const LoginScreen: React.FC = () => {
-  const presenter = useLogin()
+  const {
+    presenter,
+    state: { errors },
+  } = useLogin()
 
   return (
     <View>
@@ -18,11 +21,13 @@ const LoginScreen: React.FC = () => {
         onChangeText={value => presenter.validateField('email', value)}
         testID="login-email-input"
       />
+      {errors.email && <Text>{errors.email}</Text>}
 
       <TextInput
         onChangeText={value => presenter.validateField('password', value)}
         testID="login-password-input"
       />
+      {errors.password && <Text>{errors.password}</Text>}
     </View>
   )
 }

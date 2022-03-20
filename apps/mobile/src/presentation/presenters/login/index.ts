@@ -7,16 +7,18 @@ export class LoginPresenter
   implements ILoginPresenter
 {
   constructor(private readonly validation: IValidation) {
-    super({ email: '', password: '' })
+    super({ values: { email: '', password: '' }, errors: {} })
   }
 
   async validateField(field: string, value: any): Promise<void> {
-    this.changeState({ ...this.state, [field]: value })
+    this.state.values[field] = value
 
-    const error = await this.validation.validate(this.state)
+    const error = await this.validation.validate(this.state.values)
 
-    // if (error) {
-    //   this._errors.merge({ [field]: error.message })
-    // }
+    if (error) {
+      this.state.errors[field] = error.message
+    }
+
+    this.notify()
   }
 }

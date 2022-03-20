@@ -1,17 +1,15 @@
-import { BasePresenter } from '@/presentation/helpers'
+import { IPresenter } from '@/presentation/protocols'
 import { useEffect, useState } from 'react'
 
-export function usePresenterState<S>(presenter: BasePresenter<S>) {
+export function usePresenterState<S>(presenter: IPresenter<S>) {
   const [state, setState] = useState(presenter.state)
 
   useEffect(() => {
-    const stateSubscription = (state: S) => {
-      setState(state)
-    }
+    const unsubscribe = presenter.subscribe(newState => {
+      setState({ ...newState })
+    })
 
-    presenter.subscribe(stateSubscription)
-
-    return () => presenter.unsubscribe(stateSubscription)
+    return () => unsubscribe()
   }, [presenter])
 
   return state
