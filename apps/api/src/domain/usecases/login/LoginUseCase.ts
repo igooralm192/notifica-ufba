@@ -1,16 +1,29 @@
-import { Either, left, right } from '@notifica-ufba/utils'
+import { Either, left, right, UseCase } from '@notifica-ufba/utils'
 
-import { LoginError } from '@/domain/errors'
+import { CommonError, LoginError } from '@/domain/errors'
+import { ILoginInput } from '@/domain/ports/inputs'
 import {
   ICompareHashCryptography,
   IGenerateTokenCryptography,
-} from '@/data/protocols/cryptography'
-import { IFindUserByEmailRepository } from '@/data/protocols/database'
+} from '@/domain/ports/gateways'
+import { IFindUserByEmailRepository } from '@/domain/ports/repositories'
+import { ILoginOutput } from '@/domain/ports/outputs'
+import { IValidation } from '@/domain/ports/validation'
 
-import { ILoginUseCase, LoginUseCase as UseCase } from './types'
+export type ILoginErrors =
+  | LoginError.UserDoesNotExistError
+  | LoginError.WrongPasswordError
+  | CommonError.ValidationError
+  | CommonError.DomainError
+
+export type ILoginUseCase = UseCase<
+  ILoginInput,
+  Either<ILoginErrors, ILoginOutput>
+>
 
 export class LoginUseCase implements ILoginUseCase {
   constructor(
+    private readonly validation: IValidation,
     private readonly userRepository: IFindUserByEmailRepository,
     private readonly hashCryptography: ICompareHashCryptography,
     private readonly tokenCryptography: IGenerateTokenCryptography,
@@ -19,7 +32,13 @@ export class LoginUseCase implements ILoginUseCase {
   async run({
     email,
     password,
-  }: UseCase.Request): Promise<Either<UseCase.Errors, UseCase.Response>> {
+  }: ILoginInput): Promise<Either<ILoginErrors, ILoginOutput>> {
+    const validationError = await this.validation.validate({ email, password })
+
+    if (validationError) {
+      return left(validationError)
+    }
+
     const user = await this.userRepository.findByEmail(email)
 
     if (!user) {
@@ -41,7 +60,10 @@ export class LoginUseCase implements ILoginUseCase {
 
     return right({
       token,
-      user,
+      user: {
+        ...user,
+        password: undefined,
+      },
     })
   }
 }
