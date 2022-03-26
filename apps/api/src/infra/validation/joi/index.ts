@@ -1,14 +1,12 @@
-import { CommonError } from '@notifica-ufba/domain/errors'
-import { IValidation } from '@/presentation/protocols'
+import { CommonError } from '@/domain/errors'
+import { IValidation } from '@/domain/ports/validation'
 
 import Joi from 'joi'
 
 export class JoiValidation implements IValidation {
   constructor(readonly schema: Joi.Schema) {}
 
-  async validate<T = any>(
-    input: T,
-  ): Promise<CommonError.ValidationError | null> {
+  async validate(input: any): Promise<CommonError.ValidationError | null> {
     try {
       await this.schema.validateAsync(input)
 

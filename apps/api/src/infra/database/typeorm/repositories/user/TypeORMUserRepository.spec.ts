@@ -4,6 +4,8 @@ import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
 
 import { TypeORMUserRepository } from '.'
 
+jest.setTimeout(30000)
+
 const makeSUT = () => {
   const userData = UserMocks.mockUser()
   const userRepository = new TypeORMUserRepository()

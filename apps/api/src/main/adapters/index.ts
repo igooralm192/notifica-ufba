@@ -1,1 +1,1 @@
-export * from './express-route'
+export * from './ExpressRouteAdapter'

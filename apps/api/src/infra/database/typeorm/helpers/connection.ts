@@ -1,4 +1,4 @@
-import { DatabaseError } from '@/data/errors'
+import { DatabaseError } from '@/domain/errors'
 import 'reflect-metadata'
 import {
   Connection,

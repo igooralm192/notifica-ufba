@@ -1,7 +1,7 @@
 import faker from 'faker'
 import jwt from 'jsonwebtoken'
 
-import { CryptographyError } from '@/data/errors'
+import { CryptographyError } from '@/domain/errors'
 import { JwtTokenCryptography } from '.'
 
 jest.mock('jsonwebtoken', () => {
