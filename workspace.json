@@ -2,12 +2,12 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "app": "apps/app",
+    "app-e2e": "apps/app-e2e",
     "domain-entities": "libs/domain/entities",
     "domain-errors": "libs/domain/errors",
     "domain-mocks": "libs/domain/mocks",
     "domain-usecases": "libs/domain/usecases",
-    "mobile": "apps/mobile",
-    "mobile-e2e": "apps/mobile-e2e",
     "utils": "libs/utils"
   }
 }
