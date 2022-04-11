@@ -1,4 +1,4 @@
-import { UserEntity } from '@/domain/models'
+import { UserEntity } from '@/domain/entities'
 
 import faker from 'faker'
 
