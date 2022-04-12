@@ -14,9 +14,13 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@emotion/native": "^11.0.0",
+    "@emotion/react": "^11.9.0",
     "@expo/metro-config": "0.3.10",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.1",
+    "@rneui/base": "^4.0.0-rc.1",
+    "@rneui/themed": "^4.0.0-rc.1",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "expo": "44.0.6",
@@ -41,6 +45,7 @@
     "react-native-screens": "~3.10.1",
     "react-native-svg": "12.1.1",
     "react-native-svg-transformer": "1.0.0",
+    "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.5",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
