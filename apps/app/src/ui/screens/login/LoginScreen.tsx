@@ -2,8 +2,9 @@ import { usePresenter } from '@/ui/contexts'
 import { ILoginPresenter } from '@/ui/presenters'
 
 import React from 'react'
-import { Text, TextInput } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { Text, TextInput, View } from 'react-native'
+
+import { Container, Logo, WelcomeText } from './LoginStyles'
 
 const LoginScreen: React.FC = () => {
   const { presenter } = useLogin()
@@ -13,7 +14,13 @@ const LoginScreen: React.FC = () => {
   } = presenter.state
 
   return (
-    <SafeAreaView>
+    <Container>
+      <Logo />
+
+      <WelcomeText>
+        Bem vindo de volta.{'\n'}Faça login na sua conta!
+      </WelcomeText>
+
       <TextInput
         style={{ backgroundColor: 'blue' }}
         value={values.email}
@@ -29,7 +36,7 @@ const LoginScreen: React.FC = () => {
         testID="login-password-input"
       />
       {errors.password && <Text>{errors.password}</Text>}
-    </SafeAreaView>
+    </Container>
   )
 }
 

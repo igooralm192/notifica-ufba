@@ -1,20 +1,32 @@
-import { LoginScreenFactory } from '@/main/factories/screens'
+import {
+  LoginScreenFactory,
+  WelcomeScreenFactory,
+} from '@/main/factories/screens'
+import { Header } from '@/ui/components/Header'
 
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 const Stack = createNativeStackNavigator()
 
 const Routes: React.FC = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <NavigationContainer theme={theme}>
+      <Stack.Navigator screenOptions={{ header: Header }}>
+        <Stack.Screen name="WelcomeScreen" component={WelcomeScreenFactory} />
         <Stack.Screen name="LoginScreen" component={LoginScreenFactory} />
       </Stack.Navigator>
     </NavigationContainer>
   )
+}
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#FFF',
+  },
 }
 
 export default Routes
