@@ -1,40 +1,15 @@
-import { DatabaseError } from '@/domain/errors'
 import 'reflect-metadata'
-import {
-  Connection,
-  QueryRunner,
-  Repository,
-  ObjectType,
-  createConnection,
-  getConnection,
-  getConnectionManager,
-  getRepository,
-  ConnectionOptions,
-} from 'typeorm'
 
-import ormConfig from 'ormconfig.json'
+import { DatabaseError } from '@/domain/errors'
 
-const [defaultOptions, testOptions] = ormConfig
-
-const isTest = process.env.NODE_ENV === 'test'
+import { QueryRunner, Repository, ObjectType, DataSource } from 'typeorm'
 
 export class TypeORMConnection {
   private static instance?: TypeORMConnection
-  private connection?: Connection
-  private connectionOptions?: ConnectionOptions
+  private datasource?: DataSource
   private query?: QueryRunner
 
-  private constructor() {
-    this.connectionOptions = (
-      isTest ? this.getTestConnectionOptions() : defaultOptions
-    ) as ConnectionOptions
-  }
-
-  private getTestConnectionOptions(): ConnectionOptions {
-    return Object.assign(testOptions, {
-      name: 'default',
-    }) as ConnectionOptions
-  }
+  private constructor() {}
 
   static getInstance(): TypeORMConnection {
     if (!TypeORMConnection.instance)
@@ -43,60 +18,61 @@ export class TypeORMConnection {
     return TypeORMConnection.instance
   }
 
-  async connect(): Promise<Connection> {
-    if (getConnectionManager().has('default')) {
-      return (this.connection = getConnection())
-    }
+  setDataSource(datasource?: DataSource) {
+    this.datasource = datasource
 
-    return (this.connection = await createConnection(this.connectionOptions))
+    return this
+  }
+
+  async connect(): Promise<DataSource> {
+    return await this.datasource.initialize()
   }
 
   async disconnect(): Promise<void> {
-    if (this.connection === undefined)
+    if (!this.datasource || !this.datasource.isInitialized)
       throw new DatabaseError.ConnectionNotFoundError()
 
-    await this.connection.close()
+    await this.datasource?.destroy()
 
     this.query = undefined
-    this.connection = undefined
   }
 
-  async openTransaction(): Promise<void> {
-    if (this.connection === undefined)
-      throw new DatabaseError.ConnectionNotFoundError()
+  // async openTransaction(): Promise<void> {
+  //   if (this.connection === undefined)
+  //     throw new DatabaseError.ConnectionNotFoundError()
 
-    this.query = this.connection.createQueryRunner()
-    await this.query.startTransaction()
-  }
+  //   this.query = this.connection.createQueryRunner()
+  //   await this.query.startTransaction()
+  // }
 
-  async closeTransaction(): Promise<void> {
-    if (this.query === undefined)
-      throw new DatabaseError.TransactionNotFoundError()
+  // async closeTransaction(): Promise<void> {
+  //   if (this.query === undefined)
+  //     throw new DatabaseError.TransactionNotFoundError()
 
-    await this.query.release()
-  }
+  //   await this.query.release()
+  // }
 
-  async commitTransaction(): Promise<void> {
-    if (this.query === undefined)
-      throw new DatabaseError.TransactionNotFoundError()
+  // async commitTransaction(): Promise<void> {
+  //   if (this.query === undefined)
+  //     throw new DatabaseError.TransactionNotFoundError()
 
-    await this.query.commitTransaction()
-  }
+  //   await this.query.commitTransaction()
+  // }
 
-  async rollbackTransaction(): Promise<void> {
-    if (this.query === undefined)
-      throw new DatabaseError.TransactionNotFoundError()
+  // async rollbackTransaction(): Promise<void> {
+  //   if (this.query === undefined)
+  //     throw new DatabaseError.TransactionNotFoundError()
 
-    await this.query.rollbackTransaction()
-  }
+  //   await this.query.rollbackTransaction()
+  // }
 
   getRepository<Entity>(entity: ObjectType<Entity>): Repository<Entity> {
-    if (this.connection === undefined)
+    if (!this.datasource || !this.datasource.isInitialized)
       throw new DatabaseError.ConnectionNotFoundError()
 
     if (this.query !== undefined)
       return this.query.manager.getRepository(entity)
 
-    return getRepository(entity)
+    return this.datasource.getRepository(entity)
   }
 }

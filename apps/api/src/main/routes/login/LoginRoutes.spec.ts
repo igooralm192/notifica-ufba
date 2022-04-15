@@ -4,7 +4,7 @@ import { LoginController } from '@/application/controllers/login'
 
 import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
 import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
-import { setupApp } from '@/main/config/app'
+import { makeApp } from '@/main/config/app'
 
 import bcrypt from 'bcryptjs'
 import { Express } from 'express'
@@ -19,7 +19,7 @@ let app: Express
 
 describe('POST /login', () => {
   const getConnection = useTypeORMTestConnection(async () => {
-    app = setupApp()
+    app = makeApp()
   })
 
   it('should return 200 on success', async () => {

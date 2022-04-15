@@ -1,22 +1,25 @@
+import config from '@/infra/database/typeorm/config'
 import { TypeORMConnection } from '@/infra/database/typeorm/helpers'
-import { Connection } from 'typeorm'
+import { DataSource } from 'typeorm'
 
 export const useTypeORMTestConnection = (beforeAllCb?: () => Promise<void>) => {
-  let connection: Connection
+  let datasource: DataSource
 
   beforeAll(async () => {
-    connection = await TypeORMConnection.getInstance().connect()
+    datasource = await TypeORMConnection.getInstance()
+      .setDataSource(new DataSource(config.test))
+      .connect()
 
     beforeAllCb?.()
   })
 
   afterEach(async () => {
-    await connection.synchronize(true)
+    await datasource.synchronize(true)
   })
 
   afterAll(async () => {
-    await connection.close()
+    await datasource.destroy()
   })
 
-  return () => connection
+  return () => datasource
 }

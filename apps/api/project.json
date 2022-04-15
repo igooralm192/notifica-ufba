@@ -45,6 +45,16 @@
         ]
       }
     },
+    "migration:run": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "yarn typeorm migration:run -d ./apps/api/src/main/datasource.ts"
+          }
+        ]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],

@@ -1,12 +1,12 @@
 import express, { Express } from 'express'
 
-import { setupRoutes } from './routes'
+import { makeRoutes } from './routes'
 
-export const setupApp = (): Express => {
+export const makeApp = (): Express => {
   const app = express()
 
   app.use(express.json())
-  setupRoutes(app)
+  makeRoutes(app)
 
   return app
 }

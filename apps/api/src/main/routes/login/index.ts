@@ -5,6 +5,6 @@ import { Router } from 'express'
 
 const { adapt } = ExpressRouteAdapter
 
-export default (router: Router) => {
+export const makeLoginRoutes = (router: Router) => {
   router.post('/login', adapt(makeLoginController()))
 }
