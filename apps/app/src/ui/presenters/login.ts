@@ -16,6 +16,7 @@ interface IFormData<T> {
 
 export namespace ILoginPresenter {
   export type State = {
+    isLoading: boolean
     form: IFormData<ILoginFormValues>
     error?: string
   }
@@ -24,4 +25,5 @@ export namespace ILoginPresenter {
 export interface ILoginPresenter extends IPresenter<ILoginPresenter.State> {
   validate(field: keyof ILoginFormValues, value: any): void
   login(): Promise<void>
+  setError(error?: string): void
 }

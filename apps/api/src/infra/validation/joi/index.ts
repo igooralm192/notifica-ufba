@@ -14,6 +14,8 @@ export class JoiValidation implements IValidation {
     } catch (err) {
       const errorDetail = err.details?.[0]
 
+      console.log(errorDetail)
+
       return new CommonError.ValidationError(errorDetail?.message, {
         key: errorDetail?.context.key,
         value: errorDetail?.context.value,

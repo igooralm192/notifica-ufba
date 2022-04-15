@@ -1,22 +1,28 @@
 import { TypeORMConnection } from '@/infra/database/typeorm/helpers'
-import { Connection } from 'typeorm'
+import env from '@/main/config/env'
+import { DataSource, DataSourceOptions } from 'typeorm'
+
+const defaultOptions: DataSourceOptions = {
+  type: 'sqlite',
+  database: env.DB_NAME,
+}
 
 export const useTypeORMTestConnection = (beforeAllCb?: () => Promise<void>) => {
-  let connection: Connection
+  let datasource: DataSource
 
   beforeAll(async () => {
-    connection = await TypeORMConnection.getInstance().connect()
+    datasource = await new TypeORMConnection(defaultOptions).connect()
 
     beforeAllCb?.()
   })
 
   afterEach(async () => {
-    await connection.synchronize(true)
+    await datasource.synchronize(true)
   })
 
   afterAll(async () => {
-    await connection.close()
+    await datasource.destroy()
   })
 
-  return () => connection
+  return () => datasource
 }

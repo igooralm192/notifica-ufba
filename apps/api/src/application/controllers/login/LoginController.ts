@@ -13,6 +13,7 @@ export class LoginController extends Controller {
   }
 
   async handle(request: any): Promise<IControllerResponse> {
+    console.log('OPA')
     const result = await this.loginUseCase.run(request)
 
     if (result.isRight()) {

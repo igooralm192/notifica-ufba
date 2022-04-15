@@ -11,7 +11,7 @@ export class TypeORMUserRepository
   async findByEmail(
     email: IFindUserByEmailRepository.Input,
   ): Promise<IFindUserByEmailRepository.Output> {
-    const user = await this.repository.findOne({ email })
+    const user = await this.repository.findOneBy({ email })
 
     return user ?? null
   }

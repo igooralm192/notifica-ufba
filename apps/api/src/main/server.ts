@@ -5,10 +5,11 @@ import env from '@/main/config/env'
 TypeORMConnection.getInstance()
   .connect()
   .then(() => {
+    console.log('OI')
     const app = setupApp()
 
     app.listen(env.PORT, () =>
-      console.log(`Running at http://localhost:${env.PORT}!`),
+      console.log(`Running at http://localhost:${env.PORT}!!`),
     )
   })
   .catch(console.error)

@@ -1,15 +1,17 @@
 import LogoSVG from '@/ui/assets/logo.svg'
 
-import styled from '@emotion/native'
 import { Text } from '@rneui/themed'
+import styled from 'styled-components/native'
 
-export const Container = styled.View`
-  padding: 16px;
-  flex: 1;
-  align-items: center;
-`
+export const Container = styled.ScrollView.attrs({
+  contentContainerStyle: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
+  },
+})``
 
 export const Logo = styled(LogoSVG)`
+  align-self: center;
   margin: 16px 0 32px;
 `
 
@@ -18,4 +20,12 @@ export const WelcomeText = styled(Text)`
   font-family: 'Quicksand_400Regular';
   font-size: 16px;
   text-align: center;
+`
+
+export const InputContainer = styled.View`
+  margin-bottom: 16px;
+`
+
+export const ButtonContainer = styled.View`
+  margin-top: 16px;
 `

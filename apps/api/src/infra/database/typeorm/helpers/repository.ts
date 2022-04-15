@@ -4,7 +4,7 @@ import { ObjectType, Repository } from 'typeorm'
 
 export abstract class TypeORMRepository {
   constructor(
-    private readonly connection: TypeORMConnection = TypeORMConnection.getInstance(),
+    private readonly connection: TypeORMConnection = new TypeORMConnection(),
   ) {}
 
   getRepository<Entity>(entity: ObjectType<Entity>): Repository<Entity> {

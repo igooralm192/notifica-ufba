@@ -1,5 +1,5 @@
-import styled from '@emotion/native'
 import { Text } from '@rneui/themed'
+import styled from 'styled-components/native'
 
 export const Container = styled.View`
   padding-left: 8px;

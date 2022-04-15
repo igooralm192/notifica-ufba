@@ -11,7 +11,10 @@ export class LoginPresenter
     private readonly validation: IValidation,
     private readonly loginUseCase: ILoginUseCase,
   ) {
-    super({ form: { values: { email: '', password: '' }, errors: {} } })
+    super({
+      isLoading: false,
+      form: { values: { email: '', password: '' }, errors: {} },
+    })
   }
 
   validate(field: keyof ILoginFormValues, value: any): void {
@@ -25,13 +28,23 @@ export class LoginPresenter
   }
 
   async login(): Promise<void> {
-    const result = await this.loginUseCase.run(this.state.form.values)
+    this.state.isLoading = true
+    this.notify()
 
+    const result = await this.loginUseCase.run(this.state.form.values)
     if (result.isLeft()) {
+      console.log(result.left())
       this.state.error = result.left().message
+      this.state.isLoading = false
+      this.notify()
       return
     }
 
     // TODO: Navigate to another screen
+  }
+
+  setError(error?: string): void {
+    this.state.error = error
+    this.notify()
   }
 }
