@@ -43,8 +43,13 @@ export class LoginUseCase implements ILoginUseCase {
         return left(new LoginError.UserDoesNotExistError())
       case 401:
         return left(new LoginError.WrongPasswordError())
+      case 500: {
+        const error = new Error()
+        error.stack = response.stack
+        return left(new CommonError.UnexpectedError(error))
+      }
       default:
-        return left(new CommonError.UnexpectedError())
+        return response.body
     }
   }
 }

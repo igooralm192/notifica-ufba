@@ -1,37 +1,67 @@
-import { Presenter } from '@/application/presenters/Presenter'
 import { IValidation } from '@/domain/ports/validation'
 import { ILoginUseCase } from '@/domain/usecases'
 import { ILoginFormValues, ILoginPresenter } from '@/ui/presenters'
 
-export class LoginPresenter
-  extends Presenter<ILoginPresenter.State>
-  implements ILoginPresenter
-{
+import { makeAutoObservable } from 'mobx'
+
+export class LoginPresenter implements ILoginPresenter {
+  isLoading = false
+  error: ILoginPresenter['error'] = undefined
+  values: ILoginPresenter['values'] = { email: '', password: '' }
+  errors: ILoginPresenter['errors'] = {}
+
   constructor(
     private readonly validation: IValidation,
     private readonly loginUseCase: ILoginUseCase,
   ) {
-    super({ form: { values: { email: '', password: '' }, errors: {} } })
+    makeAutoObservable(this)
   }
 
   validate(field: keyof ILoginFormValues, value: any): void {
-    this.state.form.values[field] = value
+    this.values[field] = value
 
     const error = this.validation.validate(field, value)
 
-    this.state.form.errors[field] = error?.message
-
-    this.notify()
+    this.errors[field] = error?.message
   }
 
   async login(): Promise<void> {
-    const result = await this.loginUseCase.run(this.state.form.values)
+    this.validate('email', this.values.email)
+    this.validate('password', this.values.password)
 
-    if (result.isLeft()) {
-      this.state.error = result.left().message
+    if (this.hasErrors) {
       return
     }
 
+    this.showLoading()
+
+    const result = await this.loginUseCase.run(this.values)
+
+    if (result.isLeft()) {
+      this.error = result.left().message
+    }
+
+    this.hideLoading()
+
     // TODO: Navigate to another screen
+  }
+
+  setError(error?: string): void {
+    this.error = error
+    // this.notify()
+  }
+
+  private showLoading() {
+    this.isLoading = true
+    // this.notify()
+  }
+
+  private hideLoading() {
+    this.isLoading = false
+    // this.notify()
+  }
+
+  get hasErrors() {
+    return Object.values(this.errors).some(value => value !== undefined)
   }
 }

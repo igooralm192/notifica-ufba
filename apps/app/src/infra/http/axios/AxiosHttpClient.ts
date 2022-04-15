@@ -4,9 +4,17 @@ import {
   IHttpResponse,
 } from '@/domain/ports/gateways'
 
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, AxiosInstance } from 'axios'
 
 export class AxiosHttpClient implements IHttpClient {
+  private api: AxiosInstance
+
+  constructor() {
+    this.api = axios.create({
+      baseURL: 'http://192.168.15.5:3333/api',
+    })
+  }
+
   async request({
     url,
     method,
@@ -14,7 +22,7 @@ export class AxiosHttpClient implements IHttpClient {
     headers,
   }: IHttpRequest): Promise<IHttpResponse> {
     try {
-      const response = await axios({ url, method, data: body, headers })
+      const response = await this.api({ url, method, data: body, headers })
 
       return {
         statusCode: response.status,
@@ -25,8 +33,9 @@ export class AxiosHttpClient implements IHttpClient {
 
       const statusCode = axiosError?.response?.status || 500
       const body = axiosError?.response?.data
+      const stack = axiosError?.stack
 
-      return { statusCode, body }
+      return { statusCode, body, stack }
     }
   }
 }

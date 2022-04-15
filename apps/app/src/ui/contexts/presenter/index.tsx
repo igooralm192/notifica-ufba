@@ -1,5 +1,8 @@
 import { IPresenter } from '@/ui/protocols'
 
+import { autorun, comparer, reaction } from 'mobx'
+import { observer, Observer } from 'mobx-react'
+import { deepObserve } from 'mobx-utils'
 import React, { useContext, useEffect, useState } from 'react'
 
 const PresenterContext = React.createContext({} as { presenter: IPresenter })
@@ -8,15 +11,17 @@ const PresenterProvider: React.FC<{ presenter: IPresenter }> = ({
   children,
   presenter,
 }) => {
-  const [, setState] = useState(presenter.state)
-
   useEffect(() => {
-    const unsubscribe = presenter.subscribe(newState => {
-      setState({ ...newState })
-    })
+    const disposer = deepObserve(
+      () => presenter,
+      () => {
+        // @ts-ignore
+        console.log('UÉ', presenter.values)
+      },
+    )
 
-    return () => unsubscribe()
-  }, [presenter])
+    return () => disposer()
+  }, [])
 
   return (
     <PresenterContext.Provider value={{ presenter }}>
@@ -24,8 +29,7 @@ const PresenterProvider: React.FC<{ presenter: IPresenter }> = ({
     </PresenterContext.Provider>
   )
 }
-
 export const usePresenter = <T extends IPresenter>() =>
   useContext(PresenterContext) as { presenter: T }
 
-export default PresenterProvider
+export default observer(PresenterProvider)
