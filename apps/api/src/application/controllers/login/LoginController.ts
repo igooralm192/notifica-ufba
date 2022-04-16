@@ -5,7 +5,7 @@ import {
   Controller,
   IControllerResponse,
 } from '@/application/controllers/Controller'
-import { LoginViewModel } from '@/application/models/login'
+import { UserViewModel } from '@/application/models'
 import { IValidation } from '@/validation/protocols'
 
 export class LoginController extends Controller {
@@ -26,7 +26,8 @@ export class LoginController extends Controller {
     const result = await this.loginUseCase.run(request)
 
     if (result.isRight()) {
-      return this.ok(LoginViewModel.toJSON(result.value))
+      const { token, user } = result.value
+      return this.ok({ token, user: UserViewModel.fromDTO(user).toJSON() })
     }
 
     switch (result.value.constructor) {
