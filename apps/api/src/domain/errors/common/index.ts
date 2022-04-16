@@ -1,2 +1,2 @@
+export * from './InternalServerError'
 export * from './ValidationError'
-export * from './UnexpectedError'

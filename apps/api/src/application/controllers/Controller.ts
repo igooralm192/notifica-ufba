@@ -1,4 +1,5 @@
-import { CommonError, DomainError } from '@/domain/errors'
+import { BaseError } from '@notifica-ufba/errors'
+import { CommonError } from '@/domain/errors'
 
 export interface IControllerResponse {
   statusCode: number
@@ -24,11 +25,13 @@ export abstract class Controller {
 
   private errorResponse(
     statusCode: number,
-    error: DomainError,
+    error: BaseError,
   ): IControllerResponse {
     return this.response(statusCode, {
+      code: error.code,
       message: error.message,
-      ...error,
+      context: error.context,
+      stack: error.stack,
     })
   }
 
@@ -36,19 +39,19 @@ export abstract class Controller {
     return this.response(200, data)
   }
 
-  public badRequest(error: DomainError) {
+  public badRequest(error: BaseError) {
     return this.errorResponse(400, error)
   }
 
-  public unauthorized(error: DomainError) {
+  public unauthorized(error: BaseError) {
     return this.errorResponse(401, error)
   }
 
-  public notFound(error: DomainError) {
+  public notFound(error: BaseError) {
     return this.errorResponse(404, error)
   }
 
   public fail(error: Error) {
-    return this.errorResponse(500, new CommonError.UnexpectedError(error))
+    return this.errorResponse(500, new CommonError.InternalServerError(error))
   }
 }

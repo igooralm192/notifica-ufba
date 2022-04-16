@@ -1,6 +1,6 @@
-import { DomainError } from '../DomainError'
+import { BaseError } from '@notifica-ufba/errors'
 
-export class ConnectionNotFoundError extends DomainError {
+export class ConnectionNotFoundError extends BaseError {
   constructor() {
     super(
       'ConnectionNotFoundError',
