@@ -1,3 +1,3 @@
-import { makeDataSource } from '@/main/factories/helpers'
+import { makeTypeORMDataSource } from '@/main/factories/helpers'
 
-export default makeDataSource()
+export default makeTypeORMDataSource()

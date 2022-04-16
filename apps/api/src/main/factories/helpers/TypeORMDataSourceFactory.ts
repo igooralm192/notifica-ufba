@@ -3,6 +3,6 @@ import env from '@/main/config/env'
 
 import { DataSource } from 'typeorm'
 
-export const makeDataSource = () => {
+export const makeTypeORMDataSource = () => {
   return new DataSource(config[env.NODE_ENV])
 }

@@ -1,2 +1,2 @@
-export * from './connection'
-export * from './datasource'
+export * from './TypeORMConnectionFactory'
+export * from './TypeORMDataSourceFactory'

@@ -1,5 +1,5 @@
-import { LoginController } from '@/application/controllers/login'
-import { makeLoginUseCase } from '@/main/factories/usecases/login'
+import { LoginController } from '@/application/controllers'
+import { makeLoginUseCase } from '@/main/factories/usecases'
 import { makeLoginValidation } from '@/main/factories/validation'
 
 export const makeLoginController = () => {
