@@ -1,4 +1,5 @@
 import { Either } from '@notifica-ufba/utils'
+
 import { CryptographyError } from '@/domain/errors'
 
 export namespace IGenerateTokenCryptography {

@@ -1,4 +1,5 @@
 import { BaseError } from '@notifica-ufba/errors'
+
 import { CommonError } from '@/domain/errors'
 import { IControllerResponseDTO } from '@/application/dtos'
 

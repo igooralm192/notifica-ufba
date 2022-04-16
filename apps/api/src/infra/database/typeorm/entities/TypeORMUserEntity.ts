@@ -1,3 +1,5 @@
+import { UserEntity } from '@/domain/entities'
+
 import {
   Entity,
   BaseEntity,
@@ -8,7 +10,7 @@ import {
 } from 'typeorm'
 
 @Entity('users')
-export class TypeORMUserEntity extends BaseEntity {
+export class TypeORMUserEntity extends BaseEntity implements UserEntity {
   @PrimaryGeneratedColumn('increment')
   id: number
 

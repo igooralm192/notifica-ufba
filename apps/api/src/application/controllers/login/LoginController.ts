@@ -4,6 +4,7 @@ import { ILoginUseCase } from '@/domain/usecases'
 import { IControllerResponseDTO } from '@/application/dtos'
 import { BaseController } from '@/application/helpers'
 import { UserViewModel } from '@/application/models'
+
 import { IValidation } from '@/validation/protocols'
 
 export class LoginController extends BaseController {

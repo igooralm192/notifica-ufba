@@ -4,7 +4,7 @@ import { CryptographyError } from '@/domain/errors'
 import {
   IGenerateTokenCryptography,
   IDecodeTokenCryptography,
-} from '@/domain/ports/gateways/cryptography'
+} from '@/domain/ports/gateways'
 
 import jwt from 'jsonwebtoken'
 

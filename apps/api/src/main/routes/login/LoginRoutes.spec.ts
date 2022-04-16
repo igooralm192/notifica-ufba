@@ -1,21 +1,23 @@
+import { CommonError, LoginError } from '@/domain/errors'
 import { mockUser } from '@/domain/mocks/entities'
+import { mockLoginInput } from '@/domain/mocks/inputs'
 import { LoginUseCase } from '@/domain/usecases/login'
+
 import { LoginController } from '@/application/controllers/login'
 
 import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
 import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
+
 import { makeApp } from '@/main/config/app'
 
 import bcrypt from 'bcryptjs'
-import { Express } from 'express'
+import express from 'express'
 import faker from 'faker'
 import request from 'supertest'
-import { CommonError, LoginError } from '@/domain/errors'
-import { mockLoginInput } from '@/domain/mocks/inputs'
 
 jest.setTimeout(30000)
 
-let app: Express
+let app: express.Express
 
 describe('POST /login', () => {
   const getConnection = useTypeORMTestConnection(async () => {
