@@ -21,6 +21,7 @@
       "@notifica-ufba/domain/errors": ["libs/domain/errors/src/index.ts"],
       "@notifica-ufba/domain/mocks": ["libs/domain/mocks/src/index.ts"],
       "@notifica-ufba/domain/usecases": ["libs/domain/usecases/src/index.ts"],
+      "@notifica-ufba/errors": ["libs/errors/src/index.ts"],
       "@notifica-ufba/utils": ["libs/utils/src/index.ts"]
     }
   },

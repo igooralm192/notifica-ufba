@@ -8,6 +8,7 @@
     "domain-errors": "libs/domain/errors",
     "domain-mocks": "libs/domain/mocks",
     "domain-usecases": "libs/domain/usecases",
+    "errors": "libs/errors",
     "utils": "libs/utils"
   }
 }
