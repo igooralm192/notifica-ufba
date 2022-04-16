@@ -2,9 +2,7 @@ import { CommonError } from '@/domain/errors'
 import faker from 'faker'
 import Joi from 'joi'
 
-import { JoiValidation } from '.'
-
-const joiValidateSpy = jest.fn()
+import { JoiValidation } from './JoiValidation'
 
 const makeSUT = (schema: Joi.Schema) => {
   const validation = new JoiValidation(schema)

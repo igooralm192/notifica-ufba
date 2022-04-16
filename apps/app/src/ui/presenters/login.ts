@@ -1,5 +1,3 @@
-import { IPresenter } from '@/ui/protocols'
-
 export interface ILoginFormValues {
   email: string
   password: string
@@ -14,14 +12,10 @@ interface IFormData<T> {
   }
 }
 
-export namespace ILoginPresenter {
-  export type State = {
-    form: IFormData<ILoginFormValues>
-    error?: string
-  }
-}
-
-export interface ILoginPresenter extends IPresenter<ILoginPresenter.State> {
+export interface ILoginPresenter extends IFormData<ILoginFormValues> {
+  isLoading: boolean
+  error?: string
   validate(field: keyof ILoginFormValues, value: any): void
-  login(): Promise<void>
+  login(email: string, password: string): Promise<void>
+  setError(error?: string): void
 }

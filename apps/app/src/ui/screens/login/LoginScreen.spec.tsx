@@ -1,37 +1,77 @@
 import { LoginPresenter } from '@/application/presenters/login'
+import { AuthStore } from '@/application/stores'
+import { mockUser } from '@/domain/mocks/entities'
 import { LoginUseCase } from '@/domain/usecases'
 import { AxiosHttpClient } from '@/infra/http/axios'
 import { LoginJoiValidation } from '@/infra/validation/joi'
-import { PresenterProvider } from '@/ui/contexts'
+import { LoginScreen } from '@/ui/screens'
+import { AllProviders } from '@/ui/components'
 
-import { fireEvent, render, waitFor } from '@testing-library/react-native'
+import {
+  act,
+  fireEvent,
+  render,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react-native'
+import axios, { AxiosResponse } from 'axios'
 import faker from 'faker'
 import React from 'react'
 
-import LoginScreen from '.'
-
 jest.mock('axios')
+jest.mock('react-native-ratings')
+jest.mock('@react-navigation/native', () => ({
+  useNavigate: jest.fn(),
+}))
+
+const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedAxiosInstance = jest.fn()
+
+mockedAxios.create.mockImplementation(() => mockedAxiosInstance as any)
+
+const makeSUT = () => {
+  const email = faker.internet.email()
+  const password = faker.internet.password(6)
+  const user = mockUser()
+
+  const authStore = new AuthStore()
+  const loginValidation = new LoginJoiValidation()
+  const loginUseCase = new LoginUseCase(new AxiosHttpClient())
+
+  const loginPresenter = new LoginPresenter(
+    authStore,
+    loginValidation,
+    loginUseCase,
+  )
+
+  const screen = render(<LoginScreen presenter={loginPresenter} />, {
+    wrapper: AllProviders,
+  })
+
+  return {
+    SUT: screen,
+    authStore,
+    loginValidation,
+    loginUseCase,
+    loginPresenter,
+    email,
+    password,
+    user,
+  }
+}
 
 describe('LoginScreen', () => {
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
   it('should validate inputs and update values', async () => {
-    const presenter = new LoginPresenter(
-      new LoginJoiValidation(),
-      new LoginUseCase(new AxiosHttpClient()),
-    )
+    const { SUT, email, password } = makeSUT()
 
-    const screen = render(<LoginScreen />, {
-      wrapper: props => (
-        <PresenterProvider presenter={presenter} {...props}></PresenterProvider>
-      ),
-    })
-
-    const email = faker.internet.email()
-    const password = faker.internet.password(6)
-
-    const emailInput = await screen.findByTestId('login-email-input')
+    const emailInput = await SUT.findByTestId('login-email-input')
     fireEvent.changeText(emailInput, email)
 
-    const passwordInput = await screen.findByTestId('login-password-input')
+    const passwordInput = await SUT.findByTestId('login-password-input')
     fireEvent.changeText(passwordInput, password)
 
     await waitFor(() => {
@@ -40,77 +80,80 @@ describe('LoginScreen', () => {
     })
   })
 
-  it('should present error if email is invalid', async () => {
-    const presenter = new LoginPresenter(
-      new LoginJoiValidation(),
-      new LoginUseCase(new AxiosHttpClient()),
-    )
+  it('should present error if form values are invalid', async () => {
+    const { SUT } = makeSUT()
 
-    const screen = render(<LoginScreen />, {
-      wrapper: props => (
-        <PresenterProvider presenter={presenter} {...props}></PresenterProvider>
-      ),
-    })
-
-    const emailInput = await screen.findByTestId('login-email-input')
-    fireEvent.changeText(emailInput, 'any_email')
+    const emailInput = await SUT.findByTestId('login-email-input')
+    fireEvent.changeText(emailInput, faker.random.words())
 
     await waitFor(() =>
-      expect(screen.queryByText('E-mail inválido.')).toBeTruthy(),
+      expect(SUT.queryByText('E-mail inválido.')).toBeTruthy(),
     )
 
-    const passwordInput = await screen.findByTestId('login-password-input')
-    fireEvent.changeText(passwordInput, 'pass')
+    const passwordInput = await SUT.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, faker.internet.password(5))
 
     await waitFor(() =>
       expect(
-        screen.queryByText('Senha precisa ter no mínimo 6 caracteres.'),
+        SUT.queryByText('Senha precisa ter no mínimo 6 caracteres.'),
       ).toBeTruthy(),
     )
   })
 
-  // it('should present error if password is invalid', async () => {
-  //   const presenter = new LoginPresenter(
-  //     new LoginJoiValidation(),
-  //     new LoginUseCase(new AxiosHttpClient()),
-  //   )
+  it('should press button, authenticate and save user', async () => {
+    const { SUT, authStore, email, password, user } = makeSUT()
 
-  //   const screen = render(<LoginScreen />, {
-  //     wrapper: props => (
-  //       <PresenterProvider presenter={presenter} {...props}></PresenterProvider>
-  //     ),
-  //   })
+    const emailInput = await SUT.findByTestId('login-email-input')
+    fireEvent.changeText(emailInput, email)
 
-  //   const emailInput = await screen.findByTestId('login-email-input')
-  //   fireEvent.changeText(emailInput, 'any_email@email.com')
+    const passwordInput = await SUT.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, password)
 
-  //   const passwordInput = await screen.findByTestId('login-password-input')
-  //   fireEvent.changeText(passwordInput, 'pass')
+    mockedAxiosInstance.mockResolvedValueOnce({
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          created_at: user.createdAt.toISOString(),
+          updated_at: user.updatedAt.toISOString(),
+        },
+      },
+      status: 200,
+    } as AxiosResponse)
 
-  //   await waitFor(() =>
-  //     expect(
-  //       screen.queryByText('Senha precisa ter no mínimo 6 caracteres.'),
-  //     ).toBeTruthy(),
-  //   )
-  // })
+    fireEvent.press(SUT.getByText('Entrar'))
 
-  // it('should present error if password is invalid', async () => {
-  //   const validation = new FakeValidation()
-  //   const presenter = new LoginPresenter(validation)
+    await waitForElementToBeRemoved(() => SUT.getByTestId('login-loading'))
 
-  //   jest
-  //     .spyOn(validation, 'validate')
-  //     .mockResolvedValueOnce(new CommonError.ValidationError('any_message'))
+    expect(authStore.user).toMatchObject(user)
+  })
 
-  //   const screen = render(<LoginScreen />, {
-  //     wrapper: props => (
-  //       <LoginProvider presenter={presenter} {...props}></LoginProvider>
-  //     ),
-  //   })
+  it.only('should show error message when authentication fails', async () => {
+    jest.useFakeTimers()
 
-  //   const passwordInput = await screen.findByTestId('login-password-input')
-  //   fireEvent.changeText(passwordInput, 'any_password')
+    const { SUT, loginPresenter, email, password } = makeSUT()
 
-  //   await waitFor(() => expect(screen.queryByText('any_message')).toBeTruthy())
-  // })
+    const emailInput = await SUT.findByTestId('login-email-input')
+    fireEvent.changeText(emailInput, email)
+
+    const passwordInput = await SUT.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, password)
+
+    mockedAxiosInstance.mockRejectedValueOnce({
+      data: {},
+      status: 500,
+    } as AxiosResponse)
+
+    fireEvent.press(SUT.getByText('Entrar'))
+
+    await waitForElementToBeRemoved(() => SUT.getByTestId('login-loading'))
+    await waitFor(() => expect(SUT.getByText('Erro ao fazer login.')))
+
+    act(() => {
+      jest.runAllTimers()
+    })
+
+    expect(loginPresenter.error).toBeUndefined()
+  })
 })
