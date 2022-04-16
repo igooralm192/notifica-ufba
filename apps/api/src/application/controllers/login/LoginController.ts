@@ -1,14 +1,12 @@
 import { LoginError } from '@/domain/errors'
 import { ILoginUseCase } from '@/domain/usecases'
 
-import {
-  Controller,
-  IControllerResponse,
-} from '@/application/controllers/Controller'
+import { IControllerResponseDTO } from '@/application/dtos'
+import { BaseController } from '@/application/helpers'
 import { UserViewModel } from '@/application/models'
 import { IValidation } from '@/validation/protocols'
 
-export class LoginController extends Controller {
+export class LoginController extends BaseController {
   constructor(
     private readonly validation: IValidation,
     private readonly loginUseCase: ILoginUseCase,
@@ -16,7 +14,7 @@ export class LoginController extends Controller {
     super()
   }
 
-  async handle(request: any): Promise<IControllerResponse> {
+  async handle(request: any): Promise<IControllerResponseDTO> {
     const validationError = this.validation.validate(request)
 
     if (validationError) {

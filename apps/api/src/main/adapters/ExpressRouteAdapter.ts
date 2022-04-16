@@ -1,9 +1,9 @@
-import { Controller } from '@/application/controllers/Controller'
+import { BaseController } from '@/application/helpers'
 
 import { Request, Response } from 'express'
 
 export class ExpressRouteAdapter {
-  static adapt(controller: Controller) {
+  static adapt(controller: BaseController) {
     return async (request: Request, response: Response) => {
       const controllerResponse = await controller.perform(request.body)
 
