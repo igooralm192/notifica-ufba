@@ -1,5 +1,8 @@
-import { LoginJoiValidation } from '@/infra/validation/joi'
+import { ValidatorBuilder } from '@/main/builders'
+import { ValidationComposite } from '@/validation/composites'
 
 export const makeLoginValidation = () => {
-  return new LoginJoiValidation()
+  return ValidationComposite.build({
+    email: ValidatorBuilder.create().email().required().build(),
+  })
 }

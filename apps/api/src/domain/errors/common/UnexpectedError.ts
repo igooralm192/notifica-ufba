@@ -1,7 +1,12 @@
-import { DomainError } from '../DomainError'
+import { BaseError } from '@/shared/errors'
 
-export class UnexpectedError extends DomainError {
+export class UnexpectedError extends BaseError {
   constructor(error: Error) {
-    super('UnexpectedError', 'Erro interno no servidor.', error.stack)
+    super(
+      'UnexpectedError',
+      'Erro interno no servidor.',
+      undefined,
+      error.stack,
+    )
   }
 }

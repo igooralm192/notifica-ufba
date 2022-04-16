@@ -1,4 +1,4 @@
-import { CommonError, LoginError } from '@/domain/errors'
+import { LoginError } from '@/domain/errors'
 import { ILoginUseCase } from '@/domain/usecases'
 
 import {
@@ -6,13 +6,23 @@ import {
   IControllerResponse,
 } from '@/application/controllers/Controller'
 import { LoginViewModel } from '@/application/models/login'
+import { IValidation } from '@/validation/protocols'
 
 export class LoginController extends Controller {
-  constructor(private readonly loginUseCase: ILoginUseCase) {
+  constructor(
+    private readonly validation: IValidation,
+    private readonly loginUseCase: ILoginUseCase,
+  ) {
     super()
   }
 
   async handle(request: any): Promise<IControllerResponse> {
+    const validationError = this.validation.validate(request)
+
+    if (validationError) {
+      return this.badRequest(validationError)
+    }
+
     const result = await this.loginUseCase.run(request)
 
     if (result.isRight()) {
@@ -25,9 +35,6 @@ export class LoginController extends Controller {
 
       case LoginError.WrongPasswordError:
         return this.unauthorized(result.value)
-
-      case CommonError.ValidationError:
-        return this.badRequest(result.value)
 
       default:
         return this.fail(result.value)
