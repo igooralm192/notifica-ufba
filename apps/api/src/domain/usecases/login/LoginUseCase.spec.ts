@@ -1,4 +1,4 @@
-import { CommonError, LoginError } from '@/domain/errors'
+import { LoginError } from '@/domain/errors'
 import { mockUser } from '@/domain/mocks/entities'
 import { mockLoginInput } from '@/domain/mocks/inputs'
 import {
@@ -8,23 +8,18 @@ import {
 import { MockedUserRepository } from '@/domain/mocks/repositories'
 
 import faker from 'faker'
+
 import { LoginUseCase } from '.'
-import { MockedValidation } from '@/domain/mocks/validation'
 
 const makeSUT = (user = mockUser(), token = faker.datatype.uuid()) => {
-  const loginValidation = new MockedValidation()
   const userRepository = new MockedUserRepository()
   const hashCryptography = new MockedHashCryptography()
   const tokenCryptography = new MockedTokenCryptography()
   const loginUseCase = new LoginUseCase(
-    loginValidation,
     userRepository,
     hashCryptography,
     tokenCryptography,
   )
-
-  const validateSpy = jest.spyOn(loginValidation, 'validate')
-  validateSpy.mockResolvedValue(null)
 
   const findByEmailSpy = jest.spyOn(userRepository, 'findByEmail')
   findByEmailSpy.mockResolvedValue(user)
@@ -37,7 +32,6 @@ const makeSUT = (user = mockUser(), token = faker.datatype.uuid()) => {
 
   return {
     SUT: loginUseCase,
-    validateSpy,
     findByEmailSpy,
     compareHashSpy,
     generateTokenSpy,
@@ -64,20 +58,6 @@ describe('LoginUseCase', () => {
       token,
       user,
     })
-  })
-
-  it('should not be able to login if validation returns error', async () => {
-    const loginInput = mockLoginInput()
-    const { SUT, validateSpy } = makeSUT()
-    validateSpy.mockResolvedValueOnce(
-      new CommonError.ValidationError('any_message'),
-    )
-
-    const resultOrError = await SUT.run(loginInput)
-    const error = resultOrError.left()
-
-    expect(validateSpy).toHaveBeenCalledWith(loginInput)
-    expect(error).toBeInstanceOf(CommonError.ValidationError)
   })
 
   it('should not be able to login if user does not exist', async () => {

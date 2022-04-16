@@ -8,13 +8,11 @@ import {
 } from '@/domain/ports/gateways'
 import { IFindUserByEmailRepository } from '@/domain/ports/repositories'
 import { ILoginOutput } from '@/domain/ports/outputs'
-import { IValidation } from '@/domain/ports/validation'
 
 export type ILoginErrors =
   | LoginError.UserDoesNotExistError
   | LoginError.WrongPasswordError
-  | CommonError.ValidationError
-  | CommonError.UnexpectedError
+  | CommonError.InternalServerError
 
 export type ILoginUseCase = UseCase<
   ILoginInput,
@@ -23,7 +21,6 @@ export type ILoginUseCase = UseCase<
 
 export class LoginUseCase implements ILoginUseCase {
   constructor(
-    private readonly validation: IValidation,
     private readonly userRepository: IFindUserByEmailRepository,
     private readonly hashCryptography: ICompareHashCryptography,
     private readonly tokenCryptography: IGenerateTokenCryptography,
@@ -33,12 +30,6 @@ export class LoginUseCase implements ILoginUseCase {
     email,
     password,
   }: ILoginInput): Promise<Either<ILoginErrors, ILoginOutput>> {
-    const validationError = await this.validation.validate({ email, password })
-
-    if (validationError) {
-      return left(validationError)
-    }
-
     const user = await this.userRepository.findByEmail(email)
 
     if (!user) {

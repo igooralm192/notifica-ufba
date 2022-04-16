@@ -58,7 +58,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(400)
     expect(response.body).toMatchObject({
-      type: CommonError.ValidationError.name,
+      code: CommonError.ValidationError.name,
     })
   })
 
@@ -69,7 +69,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(404)
     expect(response.body).toMatchObject({
-      type: LoginError.UserDoesNotExistError.name,
+      code: LoginError.UserDoesNotExistError.name,
     })
   })
 
@@ -87,7 +87,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(401)
     expect(response.body).toMatchObject({
-      type: LoginError.WrongPasswordError.name,
+      code: LoginError.WrongPasswordError.name,
     })
   })
 
@@ -104,7 +104,7 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
-      type: CommonError.UnexpectedError.name,
+      code: CommonError.InternalServerError.name,
     })
   })
 
@@ -112,7 +112,9 @@ describe('POST /login', () => {
     jest
       .spyOn(LoginController.prototype, 'handle')
       .mockImplementationOnce(async () => {
-        throw new Error()
+        const error = new Error('any_error_message')
+        error.stack = 'any_stack'
+        throw error
       })
 
     const response = await request(app)
@@ -121,7 +123,8 @@ describe('POST /login', () => {
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
-      type: CommonError.UnexpectedError.name,
+      code: CommonError.InternalServerError.name,
+      stack: 'any_stack',
     })
   })
 })
