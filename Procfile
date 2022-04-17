@@ -1,1 +1,1 @@
-web: node dist/apps/api/index.js0
+web: env-cmd -f .env node dist/apps/api/index.js
