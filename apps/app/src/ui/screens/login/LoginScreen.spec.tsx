@@ -1,48 +1,36 @@
-import { LoginPresenter } from '@/application/presenters/login'
-import { AuthStore } from '@/application/stores'
-import { mockUser } from '@/domain/mocks/entities'
-import { LoginUseCase } from '@/domain/usecases'
-import { AxiosHttpClient } from '@/infra/http/axios'
+import { MockedLoginPresenter } from '@/application/mocks/presenters'
 import { LoginScreen } from '@/ui/screens'
 import { AllProviders } from '@/ui/components'
-import { makeLoginValidation } from '@/main/factories/validation'
 
-import {
-  act,
-  fireEvent,
-  render,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react-native'
-import axios, { AxiosResponse } from 'axios'
+import { fireEvent, render, waitFor } from '@testing-library/react-native'
 import faker from 'faker'
 import React from 'react'
 
-jest.mock('axios')
-jest.mock('react-native-ratings')
 jest.mock('@react-navigation/native', () => ({
   useNavigate: jest.fn(),
 }))
 
-const mockedAxios = axios as jest.Mocked<typeof axios>
-const mockedAxiosInstance = jest.fn()
-
-mockedAxios.create.mockImplementation(() => mockedAxiosInstance as any)
-
-const makeSUT = () => {
+const makeSUT = (
+  values = { email: '', password: '' },
+  errors = {},
+  error?: string,
+) => {
   const email = faker.internet.email()
   const password = faker.internet.password(6)
-  const user = mockUser()
 
-  const authStore = new AuthStore()
-  const loginValidation = makeLoginValidation()
-  const loginUseCase = new LoginUseCase(new AxiosHttpClient())
+  const loginPresenter = new MockedLoginPresenter()
+  loginPresenter.values = values
+  loginPresenter.errors = errors
+  loginPresenter.error = error
 
-  const loginPresenter = new LoginPresenter(
-    authStore,
-    loginValidation,
-    loginUseCase,
-  )
+  const validateSpy = jest.spyOn(loginPresenter, 'validate')
+  validateSpy.mockImplementation()
+
+  const loginSpy = jest.spyOn(loginPresenter, 'login')
+  loginSpy.mockImplementation()
+
+  const setErrorSpy = jest.spyOn(loginPresenter, 'setError')
+  setErrorSpy.mockImplementation()
 
   const screen = render(<LoginScreen presenter={loginPresenter} />, {
     wrapper: AllProviders,
@@ -50,23 +38,22 @@ const makeSUT = () => {
 
   return {
     SUT: screen,
-    authStore,
-    loginValidation,
-    loginUseCase,
+    validateSpy,
+    loginSpy,
+    setErrorSpy,
     loginPresenter,
     email,
     password,
-    user,
   }
 }
 
 describe('LoginScreen', () => {
   afterEach(() => {
-    jest.useRealTimers()
+    jest.useFakeTimers()
   })
 
-  it('should validate inputs and update values', async () => {
-    const { SUT, email, password } = makeSUT()
+  it('should call validate when input change text', async () => {
+    const { SUT, validateSpy, email, password } = makeSUT()
 
     const emailInput = await SUT.findByTestId('login-email-input')
     fireEvent.changeText(emailInput, email)
@@ -74,86 +61,58 @@ describe('LoginScreen', () => {
     const passwordInput = await SUT.findByTestId('login-password-input')
     fireEvent.changeText(passwordInput, password)
 
-    await waitFor(() => {
-      expect(emailInput.props.value).toBe(email)
-      expect(passwordInput.props.value).toBe(password)
-    })
+    expect(validateSpy).toHaveBeenCalledWith('email', email)
+    expect(validateSpy).toHaveBeenCalledWith('password', password)
   })
 
-  it('should present error if form values are invalid', async () => {
-    const { SUT } = makeSUT()
+  it('should update values based on presenter values', async () => {
+    const values = {
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+    const { SUT } = makeSUT(values)
 
-    const emailInput = await SUT.findByTestId('login-email-input')
-    fireEvent.changeText(emailInput, faker.random.words())
-
-    await waitFor(() =>
-      expect(SUT.queryByText('E-mail inválido.')).toBeTruthy(),
-    )
-
-    const passwordInput = await SUT.findByTestId('login-password-input')
-    fireEvent.changeText(passwordInput, faker.internet.password(5))
-
-    await waitFor(() =>
-      expect(
-        SUT.queryByText('Senha precisa ter no mínimo 6 caracteres.'),
-      ).toBeTruthy(),
+    expect(SUT.getByTestId('login-email-input').props.value).toBe(values.email)
+    expect(SUT.getByTestId('login-password-input').props.value).toBe(
+      values.password,
     )
   })
 
-  it('should press button, authenticate and save user', async () => {
-    const { SUT, authStore, email, password, user } = makeSUT()
+  it('should show error messages if presenter has errors', async () => {
+    const errors = {
+      email: faker.random.words(),
+      password: faker.random.words(),
+    }
+    const { SUT } = makeSUT(undefined, errors)
 
-    const emailInput = await SUT.findByTestId('login-email-input')
-    fireEvent.changeText(emailInput, email)
+    expect(SUT.queryByText(errors.email)).toBeTruthy()
+    expect(SUT.queryByText(errors.password)).toBeTruthy()
+  })
 
-    const passwordInput = await SUT.findByTestId('login-password-input')
-    fireEvent.changeText(passwordInput, password)
-
-    mockedAxiosInstance.mockResolvedValueOnce({
-      data: {
-        user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          created_at: user.createdAt.toISOString(),
-          updated_at: user.updatedAt.toISOString(),
-        },
-      },
-      status: 200,
-    } as AxiosResponse)
+  it('should call login with email and password from presenter values on press button', async () => {
+    const values = {
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+    const { SUT, loginSpy } = makeSUT(values)
 
     fireEvent.press(SUT.getByText('Entrar'))
 
-    await waitForElementToBeRemoved(() => SUT.getByTestId('login-loading'))
-
-    expect(authStore.user).toMatchObject(user)
+    expect(loginSpy).toHaveBeenCalledWith(values.email, values.password)
   })
 
-  it.only('should show error message when authentication fails', async () => {
+  it('should show toast message if presenter has main error', async () => {
     jest.useFakeTimers()
 
-    const { SUT, loginPresenter, email, password } = makeSUT()
+    const error = faker.random.words()
+    const { SUT, setErrorSpy } = makeSUT(undefined, undefined, error)
 
-    const emailInput = await SUT.findByTestId('login-email-input')
-    fireEvent.changeText(emailInput, email)
-
-    const passwordInput = await SUT.findByTestId('login-password-input')
-    fireEvent.changeText(passwordInput, password)
-
-    mockedAxiosInstance.mockRejectedValueOnce({
-      data: {},
-      status: 500,
-    } as AxiosResponse)
-
-    fireEvent.press(SUT.getByText('Entrar'))
-
-    await waitForElementToBeRemoved(() => SUT.getByTestId('login-loading'))
     await waitFor(() => expect(SUT.getByText('Erro ao fazer login.')))
+    expect(SUT.getByText(error)).toBeTruthy()
 
-    act(() => {
-      jest.runAllTimers()
-    })
+    // On hide toast
+    jest.runAllTimers()
 
-    expect(loginPresenter.error).toBeUndefined()
+    expect(setErrorSpy).toHaveBeenCalledWith(undefined)
   })
 })
