@@ -46,6 +46,16 @@
         ]
       }
     },
+    "run-test": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "node dist/out-tsc/apps/api/src/main/server.js"
+          }
+        ]
+      }
+    },
     "build-test": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

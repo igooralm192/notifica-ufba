@@ -1,1 +1,1 @@
-web: node dist/out-tsc/apps/api/src/main/index.js
+web: yarn start:api:prod
