@@ -3,8 +3,6 @@ import { ILoginOutput } from '@/domain/ports/outputs'
 
 import faker from 'faker'
 
-// Login
-
 export const mockLoginOutput = (user?: UserEntity): ILoginOutput => {
   return {
     user: {

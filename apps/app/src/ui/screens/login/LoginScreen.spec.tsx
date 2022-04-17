@@ -3,9 +3,9 @@ import { AuthStore } from '@/application/stores'
 import { mockUser } from '@/domain/mocks/entities'
 import { LoginUseCase } from '@/domain/usecases'
 import { AxiosHttpClient } from '@/infra/http/axios'
-import { LoginJoiValidation } from '@/infra/validation/joi'
 import { LoginScreen } from '@/ui/screens'
 import { AllProviders } from '@/ui/components'
+import { makeLoginValidation } from '@/main/factories/validation'
 
 import {
   act,
@@ -35,7 +35,7 @@ const makeSUT = () => {
   const user = mockUser()
 
   const authStore = new AuthStore()
-  const loginValidation = new LoginJoiValidation()
+  const loginValidation = makeLoginValidation()
   const loginUseCase = new LoginUseCase(new AxiosHttpClient())
 
   const loginPresenter = new LoginPresenter(

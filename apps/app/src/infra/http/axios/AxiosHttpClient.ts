@@ -11,6 +11,7 @@ export class AxiosHttpClient implements IHttpClient {
 
   constructor() {
     this.api = axios.create({
+      // TODO: Use from .env
       baseURL: 'http://192.168.15.5:3333/api',
     })
   }

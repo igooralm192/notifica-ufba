@@ -1,21 +1,24 @@
 import { CommonError } from '@/domain/errors'
-import { IValidation } from '@/domain/ports/validation'
+import { IValidation } from '@/validation/protocols'
 
 import Joi from 'joi'
 
 export class JoiValidation implements IValidation {
   constructor(readonly schema: Joi.Schema) {}
 
-  validate(field: string, value: any): CommonError.ValidationError | null {
-    const validationError = this.schema.extract(field).validate(value).error
+  validate(input: Record<string, any>): CommonError.ValidationError | null {
+    const { error } = this.schema.validate(input)
 
-    if (!validationError) return null
+    if (!error) return null
 
-    const errorMessage = validationError.details[0].message
+    const errorMessage = error.details[0].message
+    const fieldKey = error.details[0].context?.key
+    const fieldValue = error.details[0].context?.value
 
     return new CommonError.ValidationError(errorMessage, {
-      key: field,
-      value: value,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      key: fieldKey!,
+      value: fieldValue,
     })
   }
 }

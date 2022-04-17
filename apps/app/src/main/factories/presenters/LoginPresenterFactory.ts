@@ -4,9 +4,9 @@ import { makeLoginValidation } from '@/main/factories/validation'
 import { makeLoginUseCase } from '@/main/factories/usecases'
 
 export const makeLoginPresenter = () => {
-  return new LoginPresenter(
-    makeAuthStore(),
-    makeLoginValidation(),
-    makeLoginUseCase(),
-  )
+  const authStore = makeAuthStore()
+  const loginValidation = makeLoginValidation()
+  const loginUseCase = makeLoginUseCase()
+
+  return new LoginPresenter(authStore, loginValidation, loginUseCase)
 }

@@ -1,4 +1,5 @@
 import { IHttpRequest } from '@/domain/ports/gateways'
+
 import { AxiosHttpClient } from '@/infra/http/axios'
 import { mockAxiosHttpResponse } from '@/infra/mocks'
 

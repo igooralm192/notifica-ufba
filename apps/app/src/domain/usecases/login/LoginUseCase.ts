@@ -38,7 +38,12 @@ export class LoginUseCase implements ILoginUseCase {
           user: UserModel.fromJSON(response.body.user).toEntity(),
         })
       case 400:
-        return left(new CommonError.ValidationError(response.body.message))
+        return left(
+          new CommonError.ValidationError(
+            response.body.message,
+            response.body.context,
+          ),
+        )
       case 404:
         return left(new LoginError.UserDoesNotExistError())
       case 401:

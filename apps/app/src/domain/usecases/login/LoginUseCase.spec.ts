@@ -1,8 +1,9 @@
 import { left } from '@notifica-ufba/utils'
+
 import { CommonError, LoginError } from '@/domain/errors'
-import { UserModel } from '@/domain/models'
 import { MockedHttpClient } from '@/domain/mocks/gateways'
 import { mockLoginInput } from '@/domain/mocks/inputs'
+import { UserModel } from '@/domain/models'
 
 import faker from 'faker'
 

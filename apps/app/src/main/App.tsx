@@ -1,5 +1,5 @@
-import Routes from '@/main/routes'
 import { AllProviders } from '@/ui/components'
+import Routes from '@/main/routes'
 
 const App: React.FC = () => {
   return (
