@@ -8,6 +8,7 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/api",
+        "outputFileName": "index.js",
         "main": "apps/api/src/main/server.ts",
         "tsConfig": "apps/api/tsconfig.app.json"
       },
