@@ -1,15 +1,18 @@
 {
-   "version": 2,
-   "builds": [
-     {
-       "src": "dist/apps/api/main.js",
-       "use": "@vercel/node"
-     }
-   ],
-   "routes": [
-     {
-       "src": "/(.*)",
-       "dest": "/"
-     }
-   ]
+  "version": 2,
+  "scripts": {
+    "build": "yarn build api"
+  },
+  "builds": [
+    {
+      "src": "dist/apps/api/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
 }
