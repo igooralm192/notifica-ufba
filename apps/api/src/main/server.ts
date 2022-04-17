@@ -1,8 +1,8 @@
+import 'module-alias/register'
+
 import { makeApp } from '@/main/config/app'
 import env from '@/main/config/env'
 import { makeTypeORMConnection } from '@/main/factories/helpers'
-
-console.log(process.env)
 
 makeTypeORMConnection()
   .connect()

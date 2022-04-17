@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "heroku-postbuild": "nx build api --prod",
+    "heroku-postbuild": "nx build-test api --prod",
     "lint": "nx affected:lint",
     "test": "nx test",
     "test:ci": "nx affected:test",
@@ -24,6 +24,7 @@
     "@rneui/themed": "^4.0.0-rc.1",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.0",
     "env-cmd": "^10.1.0",
     "expo": "44.0.6",
     "expo-app-loading": "~1.3.0",
@@ -41,6 +42,7 @@
     "mobx": "^6.5.0",
     "mobx-react": "^7.3.0",
     "mobx-utils": "^6.0.5",
+    "module-alias": "^2.2.2",
     "pg": "^8.7.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -134,5 +136,14 @@
     "tsconfig-paths": "^3.12.0",
     "tsconfig-paths-webpack-plugin": "3.5.2",
     "typescript": "~4.4.3"
+  },
+  "_moduleAliases": {
+    "@notifica-ufba/domain/entities": "dist/out-tsc/libs/domain/entities",
+    "@notifica-ufba/domain/errors": "dist/out-tsc/libs/domain/errors",
+    "@notifica-ufba/domain/mocks": "dist/out-tsc/libs/domain/mocks",
+    "@notifica-ufba/domain/usecases": "dist/out-tsc/libs/domain/usecases",
+    "@notifica-ufba/errors": "dist/out-tsc/libs/errors/src",
+    "@notifica-ufba/utils": "dist/out-tsc/libs/utils/src",
+    "@": "dist/out-tsc/apps/api/src"
   }
 }
