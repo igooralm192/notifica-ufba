@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "scripts": {
-    "build": "yarn build api"
-  },
   "builds": [
     {
       "src": "dist/apps/api/main.js",
