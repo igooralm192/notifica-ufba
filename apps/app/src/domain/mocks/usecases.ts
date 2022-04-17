@@ -1,4 +1,5 @@
 import { Either } from '@notifica-ufba/utils'
+
 import { ILoginOutput } from '@/domain/ports/outputs'
 import { ILoginErrors, ILoginUseCase } from '@/domain/usecases'
 

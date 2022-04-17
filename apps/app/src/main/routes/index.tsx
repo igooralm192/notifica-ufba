@@ -1,8 +1,8 @@
+import { Header } from '@/ui/components/Header'
 import {
   LoginScreenFactory,
   WelcomeScreenFactory,
 } from '@/main/factories/screens'
-import { Header } from '@/ui/components/Header'
 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'

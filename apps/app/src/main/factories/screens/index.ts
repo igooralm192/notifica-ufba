@@ -1,2 +1,2 @@
-export * from './login'
-export * from './welcome'
+export * from './LoginScreenFactory'
+export * from './WelcomeScreenFactory'

@@ -1,7 +1,7 @@
-import { IValidation } from '@/domain/ports/validation'
 import { ILoginUseCase } from '@/domain/usecases'
-import { ILoginFormValues, ILoginPresenter } from '@/ui/presenters'
 import { IAuthStore } from '@/application/stores'
+import { ILoginFormValues, ILoginPresenter } from '@/ui/presenters'
+import { IValidation } from '@/validation/protocols'
 
 import { makeAutoObservable } from 'mobx'
 
@@ -22,7 +22,7 @@ export class LoginPresenter implements ILoginPresenter {
   validate(field: keyof ILoginFormValues, value: any): void {
     this.values[field] = value
 
-    const error = this.validation.validate(field, value)
+    const error = this.validation.validate(this.values)
 
     this.errors[field] = error?.message
   }

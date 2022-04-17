@@ -2,8 +2,6 @@ import { UserEntity } from '@/domain/entities'
 
 import faker from 'faker'
 
-// User
-
 export const mockUser = (): UserEntity => {
   return new UserEntity(
     faker.datatype.number(),

@@ -2,9 +2,10 @@ import { left, right } from '@notifica-ufba/utils'
 
 import { CommonError } from '@/domain/errors'
 import { mockUser } from '@/domain/mocks/entities'
-import { MockedValidation } from '@/domain/mocks/validation'
 import { MockedLoginUseCase } from '@/domain/mocks/usecases'
+
 import { MockedAuthStore } from '@/application/mocks/stores'
+import { MockedValidation } from '@/application/mocks/validation'
 
 import faker from 'faker'
 
@@ -107,11 +108,11 @@ describe('LoginPresenter', () => {
     const { SUT, loginUseCaseSpy, email, password } = makeSUT()
 
     loginUseCaseSpy.mockResolvedValueOnce(
-      left(new CommonError.UnexpectedError()),
+      left(new CommonError.UnexpectedError(new Error())),
     )
 
     await SUT.login(email, password)
 
-    expect(SUT.error).toBe(new CommonError.UnexpectedError().message)
+    expect(SUT.error).toBe('Ocorreu um erro inesperado, tente novamente.')
   })
 })
