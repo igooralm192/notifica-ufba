@@ -10,8 +10,8 @@ const config: Record<string, DataSourceOptions> = {
     database: process.env.DB_NAME,
     synchronize: true,
     logging: false,
-    entities: ['apps/api/src/infra/database/typeorm/entities/*.{ts,js}'],
-    migrations: ['apps/api/src/infra/database/typeorm/migrations/*.{ts,js}'],
+    entities: ['**/apps/api/src/infra/database/typeorm/entities/*.{ts,js}'],
+    migrations: ['**/apps/api/src/infra/database/typeorm/migrations/*.{ts,js}'],
     // @ts-ignore
     cli: {
       migrationsDir: 'src/infra/database/typeorm/migrations',
@@ -20,11 +20,13 @@ const config: Record<string, DataSourceOptions> = {
   production: {
     type: process.env.DB_TYPE as any,
     url: process.env.DATABASE_URL,
-    ssl: true,
+    ssl: {
+      rejectUnauthorized: false,
+    },
     synchronize: true,
     logging: false,
-    entities: ['apps/api/src/infra/database/typeorm/entities/*.{ts,js}'],
-    migrations: ['apps/api/src/infra/database/typeorm/migrations/*.{ts,js}'],
+    entities: ['**/apps/api/src/infra/database/typeorm/entities/*.js'],
+    migrations: ['**/apps/api/src/infra/database/typeorm/migrations/*.js'],
     // @ts-ignore
     cli: {
       migrationsDir: 'src/infra/database/typeorm/migrations',

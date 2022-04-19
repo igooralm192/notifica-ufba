@@ -1,7 +1,7 @@
-import 'module-alias/register'
+// import 'module-alias/register'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config({ path: 'apps/api/.env' })
+require('dotenv').config()
 
 console.log(process.env.NODE_ENV)
 
