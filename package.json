@@ -5,8 +5,8 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "heroku-postbuild": "nx build-test api",
-    "start:api:prod": "nx run-test api",
+    "heroku-postbuild": "nx build api --prod",
+    "start:api:prod": "node dist/apps/api/index.js",
     "lint": "nx affected:lint",
     "test": "nx test",
     "test:ci": "nx affected:test",
