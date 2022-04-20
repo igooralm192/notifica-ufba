@@ -21,6 +21,4 @@ jobs:
       run: yarn
     - name: Run deploy
       run: git remote add heroku https://git.heroku.com/notifica-ufba.git
-    - run: git config user.email "igoor1205@gmail.com"
-    - run: git config user.name "igoor1205@gmail.com"
     - run: git push heroku master
