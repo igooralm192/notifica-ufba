@@ -6,8 +6,8 @@ import Joi from 'joi'
 export class JoiValidation implements IValidation {
   constructor(readonly schema: Joi.Schema) {}
 
-  validate(input: Record<string, any>): CommonError.ValidationError | null {
-    const { error } = this.schema.validate(input)
+  validate(field: string, value: any): CommonError.ValidationError | null {
+    const { error } = this.schema.extract(field).validate(value)
 
     if (!error) return null
 

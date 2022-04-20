@@ -48,10 +48,6 @@ const makeSUT = (
 }
 
 describe('LoginScreen', () => {
-  afterEach(() => {
-    jest.useFakeTimers()
-  })
-
   it('should call validate when input change text', async () => {
     const { SUT, validateSpy, email, password } = makeSUT()
 
@@ -102,17 +98,10 @@ describe('LoginScreen', () => {
   })
 
   it('should show toast message if presenter has main error', async () => {
-    jest.useFakeTimers()
-
     const error = faker.random.words()
-    const { SUT, setErrorSpy } = makeSUT(undefined, undefined, error)
+    const { SUT } = makeSUT(undefined, undefined, error)
 
     await waitFor(() => expect(SUT.getByText('Erro ao fazer login.')))
     expect(SUT.getByText(error)).toBeTruthy()
-
-    // On hide toast
-    jest.runAllTimers()
-
-    expect(setErrorSpy).toHaveBeenCalledWith(undefined)
   })
 })

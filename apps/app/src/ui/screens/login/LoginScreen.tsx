@@ -52,7 +52,10 @@ const LoginScreen: React.FC<{ presenter: ILoginPresenter }> = ({
   }, [error])
 
   return (
-    <Container keyboardShouldPersistTaps="handled">
+    <Container
+      keyboardShouldPersistTaps="handled"
+      onScrollBeginDrag={Keyboard.dismiss}
+    >
       <FormContainer>
         <Logo />
 

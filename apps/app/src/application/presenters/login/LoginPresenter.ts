@@ -22,7 +22,7 @@ export class LoginPresenter implements ILoginPresenter {
   validate(field: keyof ILoginFormValues, value: any): void {
     this.values[field] = value
 
-    const error = this.validation.validate(this.values)
+    const error = this.validation.validate(field, value)
 
     this.errors[field] = error?.message
   }
