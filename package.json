@@ -139,5 +139,14 @@
     "tsconfig-paths-webpack-plugin": "3.5.2",
     "tscpaths": "^0.0.9",
     "typescript": "~4.4.3"
+  },
+  "_moduleAliases": {
+    "@notifica-ufba/domain/entities": "dist/libs/domain/entities",
+    "@notifica-ufba/domain/errors": "dist/libs/domain/errors",
+    "@notifica-ufba/domain/mocks": "dist/libs/domain/mocks",
+    "@notifica-ufba/domain/usecases": "dist/libs/domain/usecases",
+    "@notifica-ufba/errors": "dist/libs/errors/src",
+    "@notifica-ufba/utils": "dist/libs/utils/src",
+    "@": "dist/apps/api/src"
   }
 }
