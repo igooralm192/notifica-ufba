@@ -11,6 +11,7 @@ const themeOptions = createTheme({
     grey0: '#FAFAFA',
     grey1: '#E2E2E2',
     grey5: '#5C5C5C',
+    black: '#484848',
   },
 })
 

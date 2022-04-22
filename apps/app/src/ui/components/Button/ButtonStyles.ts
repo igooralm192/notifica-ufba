@@ -1,16 +1,29 @@
 import { Button, ButtonProps } from '@rneui/themed'
 import styled from 'styled-components/native'
 
-export const Container = styled(Button).attrs<ButtonProps>(({ theme }) => {
+const outlineStyle = {
+  borderWidth: 2,
+}
+
+const buttonStyleMap = {
+  solid: {},
+  outline: outlineStyle,
+  clear: {},
+}
+
+export const Container = styled(Button).attrs<ButtonProps>(({ type }) => {
   return {
+    containerStyle: {
+      borderRadius: 32,
+    },
     titleStyle: {
       fontFamily: 'Quicksand_700Bold',
       fontSize: 18,
     },
     buttonStyle: {
       padding: 16,
-      backgroundColor: theme.colors.primary,
       borderRadius: 32,
+      ...(type ? buttonStyleMap[type] : {}),
     },
   }
 })``
