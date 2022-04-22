@@ -1,6 +1,6 @@
-import { IHttpClient } from '@/domain/ports/gateways'
 import { AxiosHttpClient } from '@/infra/http/axios'
+import env from '@/main/config/env'
 
-export const makeAxiosHttpClient = (): IHttpClient => {
-  return new AxiosHttpClient()
+export const makeAxiosHttpClient = () => {
+  return new AxiosHttpClient(env.API_URL)
 }
