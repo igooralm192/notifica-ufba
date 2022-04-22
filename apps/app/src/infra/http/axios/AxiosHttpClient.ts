@@ -9,11 +9,8 @@ import axios, { AxiosError, AxiosInstance } from 'axios'
 export class AxiosHttpClient implements IHttpClient {
   private api: AxiosInstance
 
-  constructor() {
-    this.api = axios.create({
-      // TODO: Use from .env
-      baseURL: 'http://192.168.15.5:3333/api',
-    })
+  constructor(url: string) {
+    this.api = axios.create({ baseURL: 'http://10.0.2.2:3333/api' })
   }
 
   async request({

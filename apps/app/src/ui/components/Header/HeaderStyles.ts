@@ -6,6 +6,7 @@ export const Container = styled.View`
   padding-right: 8px;
   flex-direction: row;
   align-items: center;
+  background-color: ${({ theme }) => theme.colors.white};
 `
 export const Title = styled(Text)`
   flex: 1;

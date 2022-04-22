@@ -1,3 +1,4 @@
+
 import 'text-encoding-polyfill';
 import { registerRootComponent } from 'expo'
 

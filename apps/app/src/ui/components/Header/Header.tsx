@@ -1,25 +1,17 @@
 import { NativeStackHeaderProps } from '@react-navigation/native-stack'
 import { Button } from '@rneui/themed'
 import React from 'react'
-import { StatusBar } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Container, Title, Action } from './HeaderStyles'
 
 export interface HeaderProps extends NativeStackHeaderProps {}
 
-const Header: React.FC<HeaderProps> = ({
-  navigation,
-  options,
-  route,
-  back,
-}) => {
+const Header: React.FC<HeaderProps> = ({ navigation, options, back }) => {
   const insets = useSafeAreaInsets()
 
   return (
     <Container style={{ paddingTop: insets.top, height: insets.top + 56 }}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
-
       <Action>
         {back && (
           <Button
