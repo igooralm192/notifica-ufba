@@ -44,6 +44,10 @@ export abstract class BaseController {
     return this.errorResponse(401, error)
   }
 
+  public forbidden(error: BaseError) {
+    return this.errorResponse(403, error)
+  }
+
   public notFound(error: BaseError) {
     return this.errorResponse(404, error)
   }
