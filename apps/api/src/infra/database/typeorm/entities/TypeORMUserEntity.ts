@@ -11,8 +11,8 @@ import {
 
 @Entity('users')
 export class TypeORMUserEntity extends BaseEntity implements UserEntity {
-  @PrimaryGeneratedColumn('increment')
-  id: number
+  @PrimaryGeneratedColumn('uuid')
+  id: string
 
   @Column()
   name: string
@@ -22,12 +22,6 @@ export class TypeORMUserEntity extends BaseEntity implements UserEntity {
 
   @Column()
   password: string
-
-  @Column()
-  matriculation: string
-
-  @Column()
-  course: string
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

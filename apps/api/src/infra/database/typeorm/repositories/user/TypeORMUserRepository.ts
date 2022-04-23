@@ -1,4 +1,3 @@
-import { UserEntity } from '@/domain/entities'
 import {
   ICreateUserRepository,
   IFindUserByEmailRepository,
