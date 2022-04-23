@@ -8,6 +8,8 @@ export const mockUser = (): UserEntity => {
     faker.internet.userName(),
     faker.internet.email(),
     faker.internet.password(),
+    faker.datatype.uuid(),
+    faker.company.companyName(),
     faker.datatype.datetime(),
     faker.datatype.datetime(),
   )

@@ -23,6 +23,12 @@ export class TypeORMUserEntity extends BaseEntity implements UserEntity {
   @Column()
   password: string
 
+  @Column()
+  matriculation: string
+
+  @Column()
+  course: string
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
 

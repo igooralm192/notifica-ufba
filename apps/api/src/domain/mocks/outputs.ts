@@ -10,6 +10,8 @@ export const mockLoginOutput = (user?: UserEntity): ILoginOutput => {
       id: user?.id || faker.datatype.number(),
       name: user?.name || faker.internet.userName(),
       email: user?.email || faker.internet.email(),
+      matriculation: user?.matriculation || faker.datatype.uuid(),
+      course: user?.course || faker.company.companyName(),
       createdAt: user?.createdAt || faker.datatype.datetime(),
       updatedAt: user?.updatedAt || faker.datatype.datetime(),
     },
