@@ -3,15 +3,14 @@
   "files": [],
   "include": ["**/*.json"],
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
-      "@notifica-ufba/domain/entities": ["../../libs/domain/entities/src"],
-      "@notifica-ufba/domain/errors": ["../../libs/domain/errors/src"],
-      "@notifica-ufba/domain/mocks": ["../../libs/domain/mocks/src"],
-      "@notifica-ufba/domain/usecases": ["../../libs/domain/usecases/src"],
-      "@notifica-ufba/errors": ["../../libs/errors/src"],
-      "@notifica-ufba/utils": ["../../libs/utils/src"],
-      "@/*": ["./src/*"]
+      "@notifica-ufba/domain/entities": ["libs/domain/entities/src/index.ts"],
+      "@notifica-ufba/domain/errors": ["libs/domain/errors/src/index.ts"],
+      "@notifica-ufba/domain/mocks": ["libs/domain/mocks/src/index.ts"],
+      "@notifica-ufba/domain/usecases": ["libs/domain/usecases/src/index.ts"],
+      "@notifica-ufba/errors": ["libs/errors/src/index.ts"],
+      "@notifica-ufba/utils": ["libs/utils/src/index.ts"],
+      "@/*": ["apps/api/src/*"]
     }
   },
   "references": [

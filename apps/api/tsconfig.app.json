@@ -15,11 +15,11 @@
   ],
   "include": [
     "**/*.ts",
-    "../../libs/domain/mocks/src/**/*.ts",
-    "../../libs/domain/entities/src/**/*.ts",
-    "../../libs/domain/errors/src/**/*.ts",
-    "../../libs/domain/usecases/src/**/*.ts",
-    "../../libs/errors/src/**/*.ts",
-    "../../libs/utils/src/**/*.ts"
+    "libs/domain/mocks/src/**/*.ts",
+    "libs/domain/entities/src/**/*.ts",
+    "libs/domain/errors/src/**/*.ts",
+    "libs/domain/usecases/src/**/*.ts",
+    "libs/errors/src/**/*.ts",
+    "libs/utils/src/**/*.ts"
   ]
 }
