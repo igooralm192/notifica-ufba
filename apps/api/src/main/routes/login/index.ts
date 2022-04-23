@@ -1,1 +1,1 @@
-export * from './LoginRoutes'
+export * from './LoginRoute'
