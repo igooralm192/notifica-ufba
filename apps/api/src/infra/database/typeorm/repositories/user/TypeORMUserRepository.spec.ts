@@ -1,38 +1,55 @@
-import { UserMocks } from '@notifica-ufba/domain/mocks'
+import { mockUser } from '@/domain/mocks/entities'
 import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
 import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
 
 import { TypeORMUserRepository } from '.'
 
-jest.setTimeout(30000)
-
 const makeSUT = () => {
-  const userData = UserMocks.mockUser()
+  const user = mockUser()
   const userRepository = new TypeORMUserRepository()
 
   return {
     SUT: userRepository,
-    userData,
+    user,
   }
 }
 
 describe('TypeORMUserRepository', () => {
   const getConnection = useTypeORMTestConnection()
 
-  it('should return user if email exist', async () => {
-    const { SUT, userData } = makeSUT()
-    await getConnection().manager.insert(TypeORMUserEntity, userData)
+  describe('create', () => {
+    it('should create and return a user', async () => {
+      const { SUT, user } = makeSUT()
 
-    const user = await SUT.findByEmail(userData.email)
+      const createdUser = await SUT.create({ ...user })
 
-    expect(user).toMatchObject(userData)
+      const findUser = await getConnection().manager.findOneBy(
+        TypeORMUserEntity,
+        {
+          email: user.email,
+        },
+      )
+
+      expect(createdUser).toMatchObject(findUser)
+    })
   })
 
-  it('should return null if email not exist', async () => {
-    const { SUT } = makeSUT()
+  describe('findByEmail', () => {
+    it('should return user if email exist', async () => {
+      const { SUT, user } = makeSUT()
+      await getConnection().manager.insert(TypeORMUserEntity, user)
 
-    const user = await SUT.findByEmail('non-existent-email')
+      const findUser = await SUT.findByEmail(user.email)
 
-    expect(user).toBeNull()
+      expect(findUser).toMatchObject(user)
+    })
+
+    it('should return null if email not exist', async () => {
+      const { SUT } = makeSUT()
+
+      const user = await SUT.findByEmail('non-existent-email')
+
+      expect(user).toBeNull()
+    })
   })
 })
