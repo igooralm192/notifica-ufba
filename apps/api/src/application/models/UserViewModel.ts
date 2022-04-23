@@ -1,22 +1,25 @@
 import { IUserDTO } from '@/domain/dtos'
+import { BaseViewModel, IViewModel } from '@/application/helpers'
 
-export class UserViewModel {
-  constructor(
-    public id: number,
-    public name: string,
-    public email: string,
-    public createdAt: string,
-    public updatedAt: string,
-  ) {}
+export type IUserViewModel = IViewModel & Pick<UserViewModel, 'name' | 'email'>
+
+export class UserViewModel extends BaseViewModel {
+  name: string
+  email: string
+
+  constructor({ name, email, ...entity }: IUserViewModel) {
+    super(entity)
+
+    this.name = name
+    this.email = email
+  }
 
   static fromDTO(user: IUserDTO) {
-    return new UserViewModel(
-      user.id,
-      user.name,
-      user.email,
-      user.createdAt.toISOString(),
-      user.updatedAt.toISOString(),
-    )
+    return new UserViewModel({
+      ...user,
+      createdAt: user.createdAt.toISOString(),
+      updatedAt: user.updatedAt.toISOString(),
+    })
   }
 
   toJSON() {
