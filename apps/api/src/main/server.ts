@@ -7,9 +7,9 @@ console.log(process.env.NODE_ENV)
 
 import { makeApp } from '@/main/config/app'
 import env from '@/main/config/env'
-import { makeTypeORMConnection } from '@/main/factories/helpers'
+import { makeDBClient } from '@/main/factories/helpers'
 
-makeTypeORMConnection()
+makeDBClient()
   .connect()
   .then(() => {
     const app = makeApp()

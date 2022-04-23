@@ -5,8 +5,7 @@ import { LoginUseCase } from '@/domain/usecases/login'
 
 import { LoginController } from '@/application/controllers/login'
 
-import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
-import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
+import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 
 import { makeApp } from '@/main/config/app'
 
@@ -20,17 +19,23 @@ jest.setTimeout(30000)
 let app: express.Express
 
 describe('POST /login', () => {
-  const getConnection = useTypeORMTestConnection(async () => {
+  const getClient = usePrismaTestClient(async () => {
     app = makeApp()
+  })
+
+  afterEach(async () => {
+    await getClient().user.deleteMany()
   })
 
   it('should return 200 on success', async () => {
     const user = mockUser()
 
-    await getConnection().manager.insert(TypeORMUserEntity, {
-      ...user,
-      // TODO: Put bcrypt salt in environment variable
-      password: await bcrypt.hash(user.password, 10),
+    await getClient().user.create({
+      data: {
+        ...user,
+        // TODO: Put bcrypt salt in environment variable
+        password: await bcrypt.hash(user.password, 10),
+      },
     })
 
     const response = await request(app).post('/api/login').send({
@@ -78,9 +83,11 @@ describe('POST /login', () => {
   it('should return 401 on wrong password', async () => {
     const user = mockUser()
 
-    await getConnection().manager.insert(TypeORMUserEntity, {
-      ...user,
-      password: faker.datatype.string(6),
+    await getClient().user.create({
+      data: {
+        ...user,
+        password: faker.datatype.string(6),
+      },
     })
 
     const response = await request(app)
