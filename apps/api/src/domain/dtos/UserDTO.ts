@@ -1,9 +1,7 @@
 export interface IUserDTO {
-  id: number
+  id: string
   name: string
   email: string
-  matriculation: string
-  course: string
   createdAt: Date
   updatedAt: Date
 }
