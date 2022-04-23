@@ -1,5 +1,5 @@
 import { UserEntity } from '@/domain/entities'
-import { ILoginOutput } from '@/domain/ports/outputs'
+import { ICreateUserOutput, ILoginOutput } from '@/domain/ports/outputs'
 
 import faker from 'faker'
 
@@ -16,9 +16,8 @@ export const mockLoginOutput = (user?: UserEntity): ILoginOutput => {
   }
 }
 
-export const mockCreateUserOutput = (user?: UserEntity): ILoginOutput => {
+export const mockCreateUserOutput = (user?: UserEntity): ICreateUserOutput => {
   return {
-    token: faker.datatype.uuid(),
     user: {
       id: user?.id || faker.datatype.uuid(),
       name: user?.name || faker.internet.userName(),

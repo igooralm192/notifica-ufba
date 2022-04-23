@@ -26,7 +26,6 @@ export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(
     private readonly findUserByEmailRepository: IFindUserByEmailRepository,
     private readonly generateHashCryptography: IGenerateHashCryptography,
-    private readonly generateTokenCryptography: IGenerateTokenCryptography,
     private readonly createUserRepository: ICreateUserRepository,
   ) {}
 
@@ -49,12 +48,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       password: hashedPassword,
     })
 
-    const token = await this.generateTokenCryptography.generate({
-      payload: createdUser.id,
-    })
-
     return right({
-      token,
       user: createdUser,
     })
   }

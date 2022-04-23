@@ -25,8 +25,9 @@ export class CreateUserController extends BaseController {
     const result = await this.createUserUseCase.run(request)
 
     if (result.isRight()) {
-      const { token, user } = result.value
-      return this.ok({ token, user: UserViewModel.fromDTO(user).toJSON() })
+      return this.ok({
+        user: UserViewModel.fromDTO(result.value.user).toJSON(),
+      })
     }
 
     switch (result.value.constructor) {

@@ -63,7 +63,6 @@ describe('CreateUserController', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
-      token: createUserOutput.token,
       user: UserViewModel.fromDTO(createUserOutput.user).toJSON(),
     })
   })
