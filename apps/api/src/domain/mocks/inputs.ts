@@ -14,7 +14,5 @@ export const mockCreateUserInput = (): ICreateUserInput => {
     name: faker.internet.userName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    matriculation: faker.datatype.uuid(),
-    course: faker.company.companyName(),
   }
 }

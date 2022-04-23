@@ -1,16 +1,15 @@
 import { UserEntity } from '@/domain/entities'
 
 import faker from 'faker'
+import { ObjectId } from 'mongodb'
 
 export const mockUser = (): UserEntity => {
-  return new UserEntity(
-    faker.datatype.number(),
-    faker.internet.userName(),
-    faker.internet.email(),
-    faker.internet.password(),
-    faker.datatype.uuid(),
-    faker.company.companyName(),
-    faker.datatype.datetime(),
-    faker.datatype.datetime(),
-  )
+  return new UserEntity({
+    id: new ObjectId().toString(),
+    name: faker.internet.userName(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+    createdAt: faker.datatype.datetime(),
+    updatedAt: faker.datatype.datetime(),
+  })
 }

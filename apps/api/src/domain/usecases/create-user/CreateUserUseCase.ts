@@ -34,8 +34,6 @@ export class CreateUserUseCase implements ICreateUserUseCase {
     name,
     email,
     password,
-    matriculation,
-    course,
   }: ICreateUserInput): Promise<Either<BaseError, ICreateUserOutput>> {
     const user = await this.findUserByEmailRepository.findByEmail(email)
 
@@ -49,8 +47,6 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       name,
       email,
       password: hashedPassword,
-      matriculation,
-      course,
     })
 
     const token = await this.generateTokenCryptography.generate({

@@ -17,8 +17,6 @@ export namespace ICreateUserRepository {
     name: string
     email: string
     password: string
-    matriculation: string
-    course: string
   }
   // TODO: Handle user error
   export type Output = UserEntity
