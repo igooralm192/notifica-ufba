@@ -76,6 +76,28 @@
         ]
       }
     },
+
+    "prisma:push": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "yarn prisma db push --schema=apps/api/src/infra/database/prisma/schemas/mongodb-schema.prisma"
+          }
+        ]
+      }
+    },
+
+    "prisma:generate": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "yarn prisma generate --schema=apps/api/src/infra/database/prisma/schemas/mongodb-schema.prisma"
+          }
+        ]
+      }
+    },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
@@ -90,7 +112,8 @@
         "jestConfig": "apps/api/jest.config.js",
         "passWithNoTests": true,
         "runInBand": true,
-        "testTimeout": 10000
+        "testTimeout": 10000,
+        "testEnvironment": "apps/api/.env.test"
       }
     }
   },
