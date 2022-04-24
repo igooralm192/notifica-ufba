@@ -19,8 +19,7 @@
       "@notifica-ufba/errors": ["libs/errors/src/index.ts"],
       "@notifica-ufba/utils": ["libs/utils/src/index.ts"],
       "@/*": ["./apps/app/src/*"]
-    },
-    "typeRoots": ["./apps/app/src/main/types"]
+    }
   },
   "files": ["../../node_modules/@nrwl/expo/typings/svg.d.ts", "src/main/types/theme.d.ts"],
   "include": [],
