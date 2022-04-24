@@ -1,31 +1,40 @@
-import { UserEntity } from '@/domain/entities'
+import { BaseModel, IModel } from '@/domain/helpers'
+import { IUserDTO } from '@/domain/dtos'
 
-export class UserModel {
-  constructor(
-    public id: number,
-    public name: string,
-    public email: string,
-    public createdAt: string,
-    public updatedAt: string,
-  ) {}
+export type IUserModel = IModel & Pick<UserModel, 'name' | 'email' | 'type'>
 
-  static fromJSON(data: Record<string, any>): UserModel {
-    return new UserModel(
-      data.id,
-      data.name,
-      data.email,
-      data.created_at,
-      data.updated_at,
-    )
+export class UserModel extends BaseModel {
+  name: string
+  email: string
+  type: 'STUDENT' | 'TEACHER'
+
+  constructor({ name, email, type, ...entity }: IUserModel) {
+    super(entity)
+
+    this.name = name
+    this.email = email
+    this.type = type
   }
 
-  toEntity(): UserEntity {
-    return new UserEntity(
-      this.id,
-      this.name,
-      this.email,
-      new Date(this.createdAt),
-      new Date(this.updatedAt),
-    )
+  static fromJSON(data: Record<string, any>) {
+    return new UserModel({
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      type: data.type,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+    })
+  }
+
+  toDTO(): IUserDTO {
+    return {
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      type: this.type,
+      createdAt: new Date(this.createdAt),
+      updatedAt: new Date(this.updatedAt),
+    }
   }
 }
