@@ -3,6 +3,7 @@
   "files": [],
   "include": ["**/*.json"],
   "compilerOptions": {
+    "strict": true,
     "paths": {
       "@notifica-ufba/domain/entities": ["libs/domain/entities/src/index.ts"],
       "@notifica-ufba/domain/errors": ["libs/domain/errors/src/index.ts"],
