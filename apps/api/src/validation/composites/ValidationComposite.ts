@@ -24,5 +24,7 @@ export class ValidationComposite<T extends string> implements IValidation {
         }
       }
     }
+
+    return null
   }
 }

@@ -1,4 +1,4 @@
-import { makeLoginRoutes } from '@/main/routes/login'
+import { makeCreateStudentRoute, makeLoginRoute } from '@/main/routes'
 
 import { Express, Router } from 'express'
 
@@ -7,5 +7,6 @@ export const makeRoutes = (app: Express) => {
 
   app.use('/api', router)
 
-  makeLoginRoutes(router)
+  makeCreateStudentRoute(router)
+  makeLoginRoute(router)
 }

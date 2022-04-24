@@ -2,7 +2,7 @@ import { JoiValidation } from '@/infra/validation/joi'
 
 import Joi from 'joi'
 
-export const makeCreateUserValidation = () => {
+export const makeCreateStudentValidation = () => {
   return new JoiValidation(
     Joi.object({
       name: Joi.string().required().messages({
@@ -21,6 +21,14 @@ export const makeCreateUserValidation = () => {
         'any.required': `Campo obrigatório.`,
         'string.empty': 'Campo obrigatório.',
         'string.min': `Senha precisa ter no mínimo 6 caracteres.`,
+      }),
+      matriculation: Joi.string().required().messages({
+        'any.required': `Campo obrigatório.`,
+        'string.empty': 'Campo obrigatório.',
+      }),
+      course: Joi.string().required().messages({
+        'any.required': `Campo obrigatório.`,
+        'string.empty': 'Campo obrigatório.',
       }),
     }),
   )
