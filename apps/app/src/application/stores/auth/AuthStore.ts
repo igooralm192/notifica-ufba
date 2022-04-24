@@ -1,18 +1,18 @@
-import { UserEntity } from '@/domain/entities'
+import { UserViewModel } from '@/application/models'
 
 export interface IAuthStore {
-  user: UserEntity | null
-  setUser(user: UserEntity | null): void
+  user: UserViewModel | null
+  setUser(user: UserViewModel | null): void
 }
 
 export class AuthStore implements IAuthStore {
-  private _user: UserEntity | null = null
+  private _user: UserViewModel | null = null
 
   get user() {
     return this._user
   }
 
-  setUser(user: UserEntity | null): void {
+  setUser(user: UserViewModel | null): void {
     this._user = user
   }
 }
