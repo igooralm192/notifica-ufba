@@ -2,16 +2,14 @@ import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right, UseCase } from '@notifica-ufba/utils'
 
 import { CommonError, CreateUserError } from '@/domain/errors'
-import {
-  IGenerateHashCryptography,
-  IGenerateTokenCryptography,
-} from '@/domain/ports/gateways'
+import { IGenerateHashCryptography } from '@/domain/ports/gateways'
 import { ICreateUserInput } from '@/domain/ports/inputs'
 import { ICreateUserOutput } from '@/domain/ports/outputs'
 import {
   ICreateUserRepository,
   IFindUserByEmailRepository,
 } from '@/domain/ports/repositories'
+import { IUserType } from '@/domain/entities'
 
 export type ICreateUserErrors =
   | CreateUserError.UserAlreadyExistsError
@@ -33,6 +31,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
     name,
     email,
     password,
+    type = IUserType.STUDENT,
   }: ICreateUserInput): Promise<Either<BaseError, ICreateUserOutput>> {
     const user = await this.findUserByEmailRepository.findByEmail(email)
 
@@ -46,6 +45,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       name,
       email,
       password: hashedPassword,
+      type,
     })
 
     return right({

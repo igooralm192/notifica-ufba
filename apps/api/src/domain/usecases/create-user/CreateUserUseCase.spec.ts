@@ -42,7 +42,7 @@ const makeSUT = () => {
 }
 
 describe('CreateUserUseCase', () => {
-  it('should create a user and get an access token and user info', async () => {
+  it('should create a user and return user info', async () => {
     const { SUT, createUserInput, user } = makeSUT()
 
     const resultOrError = await SUT.run(createUserInput)

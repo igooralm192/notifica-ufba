@@ -49,11 +49,15 @@ export class LoginUseCase implements ILoginUseCase {
       payload: { id: user.id },
     })
 
-    delete user.password
-
     return right({
       token,
-      user,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     })
   }
 }
