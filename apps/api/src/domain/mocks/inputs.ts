@@ -1,4 +1,9 @@
-import { ICreateUserInput, ILoginInput } from '@/domain/ports/inputs'
+import { IUserType } from '@/domain/entities'
+import {
+  ICreateStudentInput,
+  ICreateUserInput,
+  ILoginInput,
+} from '@/domain/ports/inputs'
 
 import faker from 'faker'
 
@@ -14,5 +19,16 @@ export const mockCreateUserInput = (): ICreateUserInput => {
     name: faker.internet.userName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
+    type: IUserType.STUDENT,
+  }
+}
+
+export const mockCreateStudentInput = (): ICreateStudentInput => {
+  return {
+    name: faker.internet.userName(),
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+    matriculation: faker.datatype.uuid(),
+    course: faker.company.companyName(),
   }
 }
