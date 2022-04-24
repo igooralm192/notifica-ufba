@@ -1,4 +1,4 @@
-import { UserEntity } from '@/domain/entities'
+import { IUserType, UserEntity } from '@/domain/entities'
 
 import {
   Entity,
@@ -12,20 +12,23 @@ import {
 @Entity('users')
 export class TypeORMUserEntity extends BaseEntity implements UserEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string
+  id!: string
 
   @Column()
-  name: string
+  name!: string
 
   @Column()
-  email: string
+  email!: string
 
   @Column()
-  password: string
+  password!: string
+
+  @Column({ enum: ['STUDENT', 'TEACHER'] })
+  type!: IUserType
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date
+  createdAt!: Date
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date
+  updatedAt!: Date
 }

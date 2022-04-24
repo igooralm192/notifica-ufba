@@ -6,9 +6,9 @@ export const useTypeORMTestConnection = (beforeAllCb?: () => Promise<void>) => {
   let datasource: DataSource
 
   beforeAll(async () => {
-    datasource = await TypeORMConnection.getInstance()
+    datasource = (await TypeORMConnection.getInstance()
       .setDataSource(new DataSource(config.test))
-      .connect()
+      .connect())!
 
     beforeAllCb?.()
   })

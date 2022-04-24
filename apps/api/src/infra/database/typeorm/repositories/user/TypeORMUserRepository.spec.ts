@@ -30,7 +30,7 @@ describe('TypeORMUserRepository', () => {
         },
       )
 
-      expect(createdUser).toMatchObject(findUser)
+      expect(createdUser).toMatchObject(findUser!)
     })
   })
 

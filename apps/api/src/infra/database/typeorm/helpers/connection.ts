@@ -24,7 +24,8 @@ export class TypeORMConnection {
     return this
   }
 
-  async connect(): Promise<DataSource> {
+  async connect(): Promise<DataSource | null> {
+    if (!this.datasource) return null
     return await this.datasource.initialize()
   }
 
