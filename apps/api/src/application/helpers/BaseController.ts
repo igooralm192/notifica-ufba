@@ -12,7 +12,7 @@ export abstract class BaseController {
 
       return response
     } catch (err) {
-      return this.fail(err)
+      return this.fail(err as Error)
     }
   }
 
