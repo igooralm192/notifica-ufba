@@ -15,17 +15,23 @@ model User {
   name      String
   email     String    @unique
   password  String
+  type      UserType  @default(STUDENT)
+  student   Student?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  student   Student?
 }
 
 model Student {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  matriculation String
+  matriculation String    @unique
   course        String
   userId        String    @db.ObjectId
   user          User?     @relation(fields: [userId], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+enum UserType {
+  STUDENT
+  TEACHER
 }
