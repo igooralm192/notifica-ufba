@@ -4,7 +4,7 @@ import { IValidator } from '@/validation/protocols'
 import Joi from 'joi'
 
 export class JoiEmailValidator implements IValidator {
-  validate(field: string, value: any): BaseError {
+  validate(field: string, value: any): BaseError | null {
     const error = Joi.string().email().validate(value).error
 
     if (error)

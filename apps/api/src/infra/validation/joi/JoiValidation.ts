@@ -15,9 +15,14 @@ export class JoiValidation implements IValidation {
     const fieldKey = error.details[0].context?.key
     const fieldValue = error.details[0].context?.value
 
-    return new CommonError.ValidationError(errorMessage, {
-      key: fieldKey,
-      value: fieldValue,
-    })
+    return new CommonError.ValidationError(
+      errorMessage,
+      fieldKey && fieldValue
+        ? {
+            key: fieldKey,
+            value: fieldValue,
+          }
+        : undefined,
+    )
   }
 }
