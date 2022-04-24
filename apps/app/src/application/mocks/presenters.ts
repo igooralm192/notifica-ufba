@@ -1,8 +1,10 @@
+import { BaseError } from '@notifica-ufba/errors'
+import { Either } from '@notifica-ufba/utils'
+
 import { ILoginPresenter } from '@/ui/presenters'
 
 export class MockedLoginPresenter implements ILoginPresenter {
-  isLoading = false
-  error: string | undefined = undefined
+  loading = false
   values = { email: '', password: '' }
   errors = {}
 
@@ -10,11 +12,7 @@ export class MockedLoginPresenter implements ILoginPresenter {
     throw new Error('Method not implemented.')
   }
 
-  login(): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-
-  setError(): void {
+  submit(): Promise<Either<BaseError, any>> {
     throw new Error('Method not implemented.')
   }
 }
