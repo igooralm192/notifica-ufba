@@ -1,13 +1,21 @@
-import { ILoginUseCase } from '@/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
+import { Either, left } from '@notifica-ufba/utils'
+
+import { CommonError } from '@/domain/errors'
+import { ILoginInput } from '@/domain/ports/inputs'
+import { ILoginOutput } from '@/domain/ports/outputs'
+import { ILoginErrors, ILoginUseCase } from '@/domain/usecases'
+
 import { IAuthStore } from '@/application/stores'
+import { UserViewModel } from '@/application/models'
+
 import { ILoginFormValues, ILoginPresenter } from '@/ui/presenters'
 import { IValidation } from '@/validation/protocols'
 
 import { makeAutoObservable } from 'mobx'
 
 export class LoginPresenter implements ILoginPresenter {
-  isLoading = false
-  error: ILoginPresenter['error'] = undefined
+  loading = false
   values: ILoginPresenter['values'] = { email: '', password: '' }
   errors: ILoginPresenter['errors'] = {}
 
@@ -27,40 +35,66 @@ export class LoginPresenter implements ILoginPresenter {
     this.errors[field] = error?.message
   }
 
-  async login(email: string, password: string): Promise<void> {
-    this.validate('email', email)
-    this.validate('password', password)
+  async submit(values: ILoginFormValues): Promise<Either<BaseError, any>> {
+    this.validate('email', values.email)
+    this.validate('password', values.password)
 
     if (this.hasErrors) {
-      return
+      const errorKey = this.firstError!.key as keyof ILoginFormValues
+      const errorMessage = this.firstError!.message
+
+      return left(
+        new CommonError.ValidationError(errorMessage, {
+          key: errorKey,
+          value: values[errorKey],
+        }),
+      )
     }
 
+    return await this.login(values)
+  }
+
+  private async login({
+    email,
+    password,
+  }: ILoginInput): Promise<Either<ILoginErrors, ILoginOutput>> {
     this.showLoading()
 
     const result = await this.loginUseCase.run({ email, password })
 
     if (result.isLeft()) {
-      this.setError(result.left().message)
-    } else {
-      this.authStore.setUser(result.right().user)
+      this.hideLoading()
+      return result
     }
 
+    this.authStore.setUser(UserViewModel.fromDTO(result.right().user))
     this.hideLoading()
-  }
 
-  setError(error?: string): void {
-    this.error = error
+    return result
   }
 
   private showLoading() {
-    this.isLoading = true
+    this.loading = true
   }
 
   private hideLoading() {
-    this.isLoading = false
+    this.loading = false
   }
 
   get hasErrors() {
     return Object.values(this.errors).some(value => value !== undefined)
+  }
+
+  get firstError() {
+    const error = Object.entries(this.errors).find(([, message]) => {
+      return !!message
+    })
+
+    return error
+      ? {
+          key: error[0],
+          message: error[1],
+        }
+      : undefined
   }
 }

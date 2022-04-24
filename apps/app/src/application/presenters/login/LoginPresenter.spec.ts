@@ -1,11 +1,12 @@
 import { left, right } from '@notifica-ufba/utils'
 
 import { CommonError } from '@/domain/errors'
-import { mockUser } from '@/domain/mocks/entities'
+import { mockUserDTO } from '@/domain/mocks/dtos'
 import { MockedLoginUseCase } from '@/domain/mocks/usecases'
 
 import { MockedAuthStore } from '@/application/mocks/stores'
 import { MockedValidation } from '@/application/mocks/validation'
+import { UserViewModel } from '@/application/models'
 
 import faker from 'faker'
 
@@ -14,7 +15,8 @@ import { LoginPresenter } from '.'
 const makeSUT = () => {
   const email = faker.internet.email()
   const password = faker.internet.password()
-  const user = mockUser()
+  const token = faker.datatype.uuid()
+  const userDTO = mockUserDTO()
 
   const authStore = new MockedAuthStore()
   const validation = new MockedValidation()
@@ -28,7 +30,7 @@ const makeSUT = () => {
   validateSpy.mockImplementation()
 
   const loginUseCaseSpy = jest.spyOn(loginUseCase, 'run')
-  loginUseCaseSpy.mockResolvedValue(right({ user }))
+  loginUseCaseSpy.mockResolvedValue(right({ token, user: userDTO }))
 
   return {
     SUT: presenter,
@@ -37,12 +39,13 @@ const makeSUT = () => {
     loginUseCaseSpy,
     email,
     password,
-    user,
+    token,
+    userDTO,
   }
 }
 
 describe('LoginPresenter', () => {
-  it('should call dependencies with correct params on validate and update state', () => {
+  it('should call validate with correct params and update state', () => {
     const { SUT, validateSpy, email, password } = makeSUT()
 
     SUT.validate('email', email)
@@ -61,9 +64,15 @@ describe('LoginPresenter', () => {
     const errorMessage = faker.random.words()
     const { SUT, validateSpy, email, password } = makeSUT()
 
-    validateSpy.mockReturnValue(new CommonError.ValidationError(errorMessage))
+    validateSpy.mockReturnValueOnce(
+      new CommonError.ValidationError(errorMessage),
+    )
 
     SUT.validate('email', email)
+
+    validateSpy.mockReturnValueOnce(
+      new CommonError.ValidationError(errorMessage),
+    )
     SUT.validate('password', password)
 
     expect(SUT).toMatchObject({
@@ -72,47 +81,69 @@ describe('LoginPresenter', () => {
     })
   })
 
-  it('should call dependencies with correct params on login and set current user', async () => {
-    const {
-      SUT,
-      setUserSpy,
-      validateSpy,
-      loginUseCaseSpy,
-      email,
-      password,
-      user,
-    } = makeSUT()
+  it('should call validate with correct params on submit', async () => {
+    const { SUT, validateSpy, email, password } = makeSUT()
 
-    await SUT.login(email, password)
+    await SUT.submit({ email, password })
 
     expect(validateSpy).toHaveBeenCalledWith('email', email)
     expect(validateSpy).toHaveBeenCalledWith('password', password)
-    expect(loginUseCaseSpy).toHaveBeenCalledWith({ email, password })
-    expect(setUserSpy).toHaveBeenCalledWith(user)
   })
 
-  it('should break if validation returns some error', async () => {
-    const errorMessage = faker.random.words()
-    const { SUT, validateSpy, loginUseCaseSpy, email, password } = makeSUT()
-
-    validateSpy.mockReturnValueOnce(
-      new CommonError.ValidationError(errorMessage),
-    )
-
-    await SUT.login(email, password)
-
-    expect(loginUseCaseSpy).not.toHaveBeenCalled()
-  })
-
-  it('should set error on login failure', async () => {
+  it('should call login usecase with correct params on submit if validation pass', async () => {
     const { SUT, loginUseCaseSpy, email, password } = makeSUT()
 
-    loginUseCaseSpy.mockResolvedValueOnce(
-      left(new CommonError.UnexpectedError(new Error())),
+    await SUT.submit({ email, password })
+
+    expect(loginUseCaseSpy).toHaveBeenCalledWith({ email, password })
+  })
+
+  it('should call set user with correct params on submit if usecase pass', async () => {
+    const { SUT, setUserSpy, email, password, userDTO } = makeSUT()
+
+    await SUT.submit({ email, password })
+
+    expect(setUserSpy).toHaveBeenCalledWith(UserViewModel.fromDTO(userDTO))
+  })
+
+  it('should return on submit if validation returns some error', async () => {
+    const errorMessage = faker.random.words()
+    const validationError = new CommonError.ValidationError(errorMessage)
+
+    const { SUT, validateSpy, loginUseCaseSpy, email, password } = makeSUT()
+
+    validateSpy.mockReturnValueOnce(validationError)
+
+    const resultOrError = await SUT.submit({ email, password })
+    const result = resultOrError.left()
+
+    expect(loginUseCaseSpy).not.toHaveBeenCalled()
+    expect(result).toEqual(validationError)
+  })
+
+  it('should return on submit if usecase returns some error', async () => {
+    const errorMessage = faker.random.words()
+    const unexpectedError = new CommonError.UnexpectedError(
+      new Error(errorMessage),
     )
 
-    await SUT.login(email, password)
+    const { SUT, loginUseCaseSpy, email, password } = makeSUT()
 
-    expect(SUT.error).toBe('Ocorreu um erro inesperado, tente novamente.')
+    loginUseCaseSpy.mockResolvedValueOnce(left(unexpectedError))
+
+    const resultOrError = await SUT.submit({ email, password })
+    const result = resultOrError.left()
+
+    expect(result).toEqual(unexpectedError)
+  })
+
+  it('should show loading on init and hide loading on finish submit', async () => {
+    const { SUT, email, password } = makeSUT()
+
+    const promise = SUT.submit({ email, password })
+    expect(SUT.loading).toBe(true)
+
+    await promise
+    expect(SUT.loading).toBe(false)
   })
 })
