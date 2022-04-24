@@ -1,4 +1,4 @@
-import { UserEntity } from '@/domain/entities'
+import { IUserType, UserEntity } from '@/domain/entities'
 
 export namespace IFindUserByEmailRepository {
   export type Input = string
@@ -17,6 +17,7 @@ export namespace ICreateUserRepository {
     name: string
     email: string
     password: string
+    type: IUserType
   }
   // TODO: Handle user error
   export type Output = UserEntity
