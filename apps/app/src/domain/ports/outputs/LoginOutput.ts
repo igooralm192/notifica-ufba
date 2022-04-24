@@ -1,5 +1,6 @@
-import { UserEntity } from '@/domain/entities'
+import { IUserDTO } from '@/domain/dtos'
 
 export interface ILoginOutput {
-  user: UserEntity
+  token: string
+  user: IUserDTO
 }

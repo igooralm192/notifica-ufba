@@ -35,7 +35,8 @@ export class LoginUseCase implements ILoginUseCase {
     switch (response.statusCode) {
       case 200:
         return right({
-          user: UserModel.fromJSON(response.body.user).toEntity(),
+          token: response.body.token,
+          user: UserModel.fromJSON(response.body.user).toDTO(),
         })
       case 400:
         return left(

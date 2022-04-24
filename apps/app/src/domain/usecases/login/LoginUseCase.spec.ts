@@ -37,9 +37,9 @@ const makeSUT = () => {
 
   return {
     SUT: loginUseCase,
+    httpRequestSpy,
     loginInput,
     loginHttpResponse,
-    httpRequestSpy,
   }
 }
 
@@ -63,7 +63,7 @@ describe('LoginUseCase', () => {
     const result = resultOrError.right()
 
     expect(result).toMatchObject({
-      user: UserModel.fromJSON(loginHttpResponse.user).toEntity(),
+      user: UserModel.fromJSON(loginHttpResponse.user).toDTO(),
     })
   })
 
