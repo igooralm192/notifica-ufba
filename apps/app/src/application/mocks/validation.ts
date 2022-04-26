@@ -1,9 +1,7 @@
-import { BaseError } from '@notifica-ufba/errors'
-
-import { IValidation } from '@/validation/protocols'
+import { IValidation, IValidationOutput } from '@/validation/protocols'
 
 export class MockedValidation implements IValidation {
-  validate(): BaseError | null {
+  validate(): IValidationOutput {
     throw new Error('Method not implemented.')
   }
 }
