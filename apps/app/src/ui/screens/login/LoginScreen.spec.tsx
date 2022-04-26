@@ -1,107 +1,129 @@
+import { BaseError } from '@notifica-ufba/errors'
+import { left, right } from '@notifica-ufba/utils'
+
+import { CommonError } from '@/domain/errors'
+import { mockLoginOutput } from '@/domain/mocks/outputs'
 import { MockedLoginPresenter } from '@/application/mocks/presenters'
-import { LoginScreen } from '@/ui/screens'
+import { MockedValidation } from '@/application/mocks/validation'
 import { AllProviders } from '@/ui/components'
 
 import { fireEvent, render, waitFor } from '@testing-library/react-native'
 import faker from 'faker'
 import React from 'react'
 
+import LoginScreen from './LoginScreen'
+
 jest.mock('@react-navigation/native', () => ({
   useNavigate: jest.fn(),
 }))
 
-const makeSUT = (
-  values = { email: '', password: '' },
-  errors = {},
-  error?: string,
-) => {
-  const email = faker.internet.email()
-  const password = faker.internet.password(6)
+const makeSUT = () => {
+  const values = {
+    email: faker.internet.email(),
+    password: faker.internet.password(6),
+  }
 
+  const errors = {
+    email: faker.random.words(),
+    password: faker.random.words(),
+  }
+
+  const loginValidation = new MockedValidation()
   const loginPresenter = new MockedLoginPresenter()
-  loginPresenter.values = values
-  loginPresenter.errors = errors
-  loginPresenter.error = error
 
-  const validateSpy = jest.spyOn(loginPresenter, 'validate')
-  validateSpy.mockImplementation()
+  const validateSpy = jest.spyOn(loginValidation, 'validate')
+  validateSpy.mockReturnValue({ errors: {} })
 
   const loginSpy = jest.spyOn(loginPresenter, 'login')
-  loginSpy.mockImplementation()
+  loginSpy.mockResolvedValue(right(mockLoginOutput()))
 
-  const setErrorSpy = jest.spyOn(loginPresenter, 'setError')
-  setErrorSpy.mockImplementation()
-
-  const screen = render(<LoginScreen presenter={loginPresenter} />, {
-    wrapper: AllProviders,
-  })
+  const screen = render(
+    <LoginScreen validation={loginValidation} presenter={loginPresenter} />,
+    {
+      wrapper: AllProviders,
+    },
+  )
 
   return {
     SUT: screen,
+    loginPresenter,
     validateSpy,
     loginSpy,
-    setErrorSpy,
-    loginPresenter,
-    email,
-    password,
+    values,
+    errors,
   }
 }
 
 describe('LoginScreen', () => {
-  it('should call validate when input change text', async () => {
-    const { SUT, validateSpy, email, password } = makeSUT()
+  it('should call validate when input change text and update values', async () => {
+    const { SUT, validateSpy, values } = makeSUT()
 
     const emailInput = await SUT.findByTestId('login-email-input')
-    fireEvent.changeText(emailInput, email)
+    fireEvent.changeText(emailInput, values.email)
 
     const passwordInput = await SUT.findByTestId('login-password-input')
-    fireEvent.changeText(passwordInput, password)
+    fireEvent.changeText(passwordInput, values.password)
 
-    expect(validateSpy).toHaveBeenCalledWith('email', email)
-    expect(validateSpy).toHaveBeenCalledWith('password', password)
+    await waitFor(() => expect(validateSpy).toHaveBeenCalledWith(values))
+    expect(emailInput.props.value).toBe(values.email)
+    expect(passwordInput.props.value).toBe(values.password)
   })
 
-  it('should update values based on presenter values', async () => {
-    const values = {
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-    }
-    const { SUT } = makeSUT(values)
+  it('should show error messages if validation returns errors', async () => {
+    const { SUT, validateSpy, values, errors } = makeSUT()
 
-    expect(SUT.getByTestId('login-email-input').props.value).toBe(values.email)
-    expect(SUT.getByTestId('login-password-input').props.value).toBe(
-      values.password,
-    )
+    validateSpy.mockReturnValueOnce({
+      errors: {
+        email: new CommonError.ValidationError(errors.email, {
+          key: 'email',
+          value: values.email,
+        }),
+      },
+    })
+
+    const emailInput = await SUT.findByTestId('login-email-input')
+    fireEvent.changeText(emailInput, values.email)
+
+    await waitFor(() => expect(SUT.queryByText(errors.email)).toBeTruthy())
+
+    validateSpy.mockReturnValueOnce({
+      errors: {
+        password: new CommonError.ValidationError(errors.password, {
+          key: 'password',
+          value: values.password,
+        }),
+      },
+    })
+
+    const passwordInput = await SUT.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, values.password)
+
+    await waitFor(() => expect(SUT.queryByText(errors.password)).toBeTruthy())
   })
 
-  it('should show error messages if presenter has errors', async () => {
-    const errors = {
-      email: faker.random.words(),
-      password: faker.random.words(),
-    }
-    const { SUT } = makeSUT(undefined, errors)
+  it('should call login with email and password after submit', async () => {
+    const { SUT, loginSpy, values } = makeSUT()
 
-    expect(SUT.queryByText(errors.email)).toBeTruthy()
-    expect(SUT.queryByText(errors.password)).toBeTruthy()
-  })
+    const emailInput = await SUT.findByTestId('login-email-input')
+    fireEvent.changeText(emailInput, values.email)
 
-  it('should call login with email and password from presenter values on press button', async () => {
-    const values = {
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-    }
-    const { SUT, loginSpy } = makeSUT(values)
+    const passwordInput = await SUT.findByTestId('login-password-input')
+    fireEvent.changeText(passwordInput, values.password)
 
     fireEvent.press(SUT.getByText('Entrar'))
 
-    expect(loginSpy).toHaveBeenCalledWith(values.email, values.password)
+    await waitFor(() => expect(loginSpy).toHaveBeenCalledWith(values))
   })
 
-  it('should show toast message if presenter has main error', async () => {
-    const error = faker.random.words()
-    const { SUT } = makeSUT(undefined, undefined, error)
+  it('should show toast message if login returns errors', async () => {
+    const error = new BaseError(faker.random.word(), faker.random.words())
+
+    const { SUT, loginSpy } = makeSUT()
+    loginSpy.mockResolvedValueOnce(left(error))
+
+    fireEvent.press(SUT.getByText('Entrar'))
 
     await waitFor(() => expect(SUT.getByText('Erro ao fazer login.')))
-    expect(SUT.getByText(error)).toBeTruthy()
+    expect(SUT.getByText(error.message))
   })
 })

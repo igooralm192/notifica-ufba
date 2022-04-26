@@ -1,14 +1,10 @@
 import LogoSVG from '@/ui/assets/logo.svg'
+import { Form } from '@/ui/components'
 
 import { Text } from '@rneui/themed'
 import styled from 'styled-components/native'
 
-export const Container = styled.ScrollView.attrs({
-  contentContainerStyle: {
-    paddingHorizontal: 16,
-    paddingBottom: 32,
-  },
-})``
+export const Container = styled(Form)``
 
 export const Logo = styled(LogoSVG)`
   align-self: center;

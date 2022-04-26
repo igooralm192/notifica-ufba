@@ -1,14 +1,12 @@
 import { Button, Input } from '@/ui/components'
-import { ILoginPresenter } from '@/ui/presenters'
+import { useValidationResolver } from '@/ui/hooks'
+import { ILoginFormValues, ILoginPresenter } from '@/ui/presenters'
+import { IValidation } from '@/validation/protocols'
 
 import { observer } from 'mobx-react'
-import React, { useEffect } from 'react'
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import React, { useRef } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Keyboard, TextInput } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 import {
@@ -19,88 +17,102 @@ import {
   ButtonContainer,
 } from './LoginStyles'
 
-const FormContainer: React.FC = ({ children }) => {
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior="position"
-        keyboardVerticalOffset={Platform.select({
-          ios: 120,
-          android: 10,
-        })}
-      >
-        {children}
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-  )
+interface LoginScreenProps {
+  validation: IValidation
+  presenter: ILoginPresenter
 }
 
-const LoginScreen: React.FC<{ presenter: ILoginPresenter }> = ({
-  presenter,
-}) => {
-  const { isLoading, values, errors, error } = presenter
+const LoginScreen: React.FC<LoginScreenProps> = ({ validation, presenter }) => {
+  const resolver = useValidationResolver<ILoginFormValues>(validation)
 
-  useEffect(() => {
-    if (error) {
+  const form = useForm<ILoginFormValues>({
+    mode: 'onChange',
+    resolver,
+  })
+
+  const passwordRef = useRef() as React.MutableRefObject<TextInput>
+
+  const handleSubmit = async (values: ILoginFormValues) => {
+    Keyboard.dismiss()
+
+    const resultOrError = await presenter.login(values)
+
+    if (resultOrError.isLeft()) {
+      const error = resultOrError.left()
+
       Toast.show({
         type: 'error',
         text1: 'Erro ao fazer login.',
-        text2: error,
-        onHide: () => presenter.setError(undefined),
+        text2: error.message,
       })
     }
-  }, [error])
+  }
+
+  const submitForm = form.handleSubmit(handleSubmit)
 
   return (
-    <Container
-      keyboardShouldPersistTaps="handled"
-      onScrollBeginDrag={Keyboard.dismiss}
-    >
-      <FormContainer>
-        <Logo />
+    <Container>
+      <Logo />
 
-        <WelcomeText>
-          Bem vindo de volta.{'\n'}Faça login na sua conta!
-        </WelcomeText>
+      <WelcomeText>
+        Bem vindo de volta.{'\n'}Faça login na sua conta!
+      </WelcomeText>
 
-        <InputContainer>
-          <Input
-            placeholder="E-mail"
-            leftIcon={{ name: 'email' }}
-            value={values.email}
-            onChangeText={value => presenter.validate('email', value)}
-            errorMessage={errors.email}
-            renderErrorMessage={!!errors.email}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            testID="login-email-input"
-          />
-        </InputContainer>
+      <InputContainer>
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              placeholder="E-mail"
+              leftIcon={{ name: 'email' }}
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              onSubmitEditing={() => passwordRef?.current?.focus()}
+              errorMessage={fieldState.error?.message}
+              renderErrorMessage={!!fieldState.error}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              testID="login-email-input"
+            />
+          )}
+        />
+      </InputContainer>
 
-        <InputContainer>
-          <Input
-            placeholder="Senha"
-            leftIcon={{ name: 'lock' }}
-            value={values.password}
-            onChangeText={value => presenter.validate('password', value)}
-            errorMessage={errors.password}
-            renderErrorMessage={!!errors.password}
-            textContentType="password"
-            secureTextEntry
-            testID="login-password-input"
-          />
-        </InputContainer>
+      <InputContainer>
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Input
+              ref={passwordRef}
+              placeholder="Senha"
+              leftIcon={{ name: 'lock' }}
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              onSubmitEditing={submitForm}
+              errorMessage={fieldState.error?.message}
+              renderErrorMessage={!!fieldState.error}
+              textContentType="password"
+              secureTextEntry
+              testID="login-password-input"
+            />
+          )}
+        />
+      </InputContainer>
 
-        <ButtonContainer>
-          <Button
-            title="Entrar"
-            loading={isLoading}
-            onPress={() => presenter.login(values.email, values.password)}
-            loadingProps={{ testID: 'login-loading' }}
-          />
-        </ButtonContainer>
-      </FormContainer>
+      <ButtonContainer>
+        <Button
+          title="Entrar"
+          loading={presenter.loading}
+          disabled={presenter.loading || form.formState.isSubmitting}
+          onPress={submitForm}
+          loadingProps={{ testID: 'login-loading' }}
+        />
+      </ButtonContainer>
     </Container>
   )
 }
