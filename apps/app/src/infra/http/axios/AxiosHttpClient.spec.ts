@@ -20,7 +20,7 @@ const mockHttpRequest = (): IHttpRequest => {
 
 const makeSUT = () => {
   const httpRequest = mockHttpRequest()
-  const httpClient = new AxiosHttpClient()
+  const httpClient = new AxiosHttpClient(faker.internet.url())
 
   return {
     SUT: httpClient,
