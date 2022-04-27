@@ -1,1 +1,1 @@
-export * from './AxiosHttpClientFactory'
+export * from './HttpClientFactory'

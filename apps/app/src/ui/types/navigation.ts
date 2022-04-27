@@ -1,4 +1,5 @@
 export type AppNavigation = {
-  WelcomeScreen: undefined
   LoginScreen: undefined
+  RegisterScreen: undefined
+  WelcomeScreen: undefined
 }

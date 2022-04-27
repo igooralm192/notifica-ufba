@@ -2,6 +2,7 @@ import { Header } from '@/ui/components/Header'
 import { AppNavigation } from '@/ui/types/navigation'
 import {
   LoginScreenFactory,
+  RegisterScreenFactory,
   WelcomeScreenFactory,
 } from '@/main/factories/screens'
 
@@ -14,13 +15,17 @@ const Stack = createNativeStackNavigator<AppNavigation>()
 const Routes: React.FC = () => {
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator screenOptions={{ header: Header }}>
+      <Stack.Navigator
+        initialRouteName="WelcomeScreen"
+        screenOptions={{ header: Header, animation: 'slide_from_right' }}
+      >
+        <Stack.Screen name="LoginScreen" component={LoginScreenFactory} />
+        <Stack.Screen name="RegisterScreen" component={RegisterScreenFactory} />
         <Stack.Screen
           name="WelcomeScreen"
           component={WelcomeScreenFactory}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="LoginScreen" component={LoginScreenFactory} />
       </Stack.Navigator>
     </NavigationContainer>
   )
