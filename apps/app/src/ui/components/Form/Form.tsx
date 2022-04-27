@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import { Keyboard, KeyboardAvoidingView } from 'react-native'
 
 import { Container } from './FormStyles'
 
@@ -12,20 +7,16 @@ export interface FormProps {}
 
 const Form: React.FC<FormProps> = ({ children }) => {
   return (
-    <Container
-      keyboardShouldPersistTaps="handled"
-      onScrollBeginDrag={Keyboard.dismiss}
-    >
-      <KeyboardAvoidingView
-        behavior="position"
-        keyboardVerticalOffset={Platform.select({
-          ios: 120,
-          android: 10,
-        })}
+    <KeyboardAvoidingView behavior="position">
+      <Container
+        contentInsetAdjustmentBehavior="automatic"
+        overScrollMode="always"
+        keyboardShouldPersistTaps="handled"
+        onScrollBeginDrag={Keyboard.dismiss}
       >
         {children}
-      </KeyboardAvoidingView>
-    </Container>
+      </Container>
+    </KeyboardAvoidingView>
   )
 }
 
