@@ -73,7 +73,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
           render={({ field, fieldState }) => (
             <Input
               placeholder="Nome"
-              leftIcon={{ name: 'email' }}
+              leftIcon={{ name: 'person' }}
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
@@ -120,7 +120,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             <Input
               ref={matriculationRef}
               placeholder="Matrícula"
-              leftIcon={{ name: 'email' }}
+              leftIcon={{ name: 'app-registration' }}
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
@@ -142,7 +142,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             <Input
               ref={courseRef}
               placeholder="Curso"
-              leftIcon={{ name: 'email' }}
+              leftIcon={{ name: 'library-books' }}
               value={field.value}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
