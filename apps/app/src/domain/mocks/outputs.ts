@@ -1,5 +1,5 @@
-import { IUserDTO } from '@/domain/dtos'
-import { ILoginOutput } from '@/domain/ports/outputs'
+import { IStudentDTO, IUserDTO } from '@/domain/dtos'
+import { ICreateStudentOutput, ILoginOutput } from '@/domain/ports/outputs'
 
 import faker from 'faker'
 
@@ -13,6 +13,22 @@ export const mockLoginOutput = (user?: IUserDTO): ILoginOutput => {
       type: user?.type || 'STUDENT',
       createdAt: user?.createdAt || faker.datatype.datetime(),
       updatedAt: user?.updatedAt || faker.datatype.datetime(),
+    },
+  }
+}
+
+export const mockCreateStudentOutput = (
+  student?: IStudentDTO,
+): ICreateStudentOutput => {
+  return {
+    student: {
+      id: student?.id || faker.datatype.uuid(),
+      matriculation: student?.matriculation || faker.datatype.uuid(),
+      course: student?.course || faker.company.companyName(),
+      userId: student?.userId || faker.datatype.uuid(),
+      user: student?.user,
+      createdAt: student?.createdAt || faker.datatype.datetime(),
+      updatedAt: student?.updatedAt || faker.datatype.datetime(),
     },
   }
 }
