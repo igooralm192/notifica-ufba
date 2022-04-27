@@ -21,6 +21,7 @@ const WelcomeScreen: React.FC = () => {
   const navigation = useNavigation()
 
   const navigateToLogin = () => navigation.navigate('LoginScreen')
+  const navigateToRegister = () => navigation.navigate('RegisterScreen')
 
   return (
     <Container style={{ marginTop: insets.top }}>
@@ -39,7 +40,7 @@ const WelcomeScreen: React.FC = () => {
           <LoginButton title="Entrar" onPress={navigateToLogin} />
         </ButtonContainer>
         <ButtonContainer>
-          <RegisterButton title="Cadastrar" />
+          <RegisterButton title="Cadastrar" onPress={navigateToRegister} />
         </ButtonContainer>
       </ButtonsContainer>
     </Container>

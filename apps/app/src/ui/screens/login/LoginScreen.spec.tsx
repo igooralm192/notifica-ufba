@@ -65,6 +65,7 @@ describe('LoginScreen', () => {
     fireEvent.changeText(passwordInput, values.password)
 
     await waitFor(() => expect(validateSpy).toHaveBeenCalledWith(values))
+
     expect(emailInput.props.value).toBe(values.email)
     expect(passwordInput.props.value).toBe(values.password)
   })
