@@ -6,6 +6,7 @@
     "start": {
       "executor": "@nrwl/expo:start",
       "options": {
+        "clear": true,
         "port": 8081
       }
     },

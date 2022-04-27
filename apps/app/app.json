@@ -25,7 +25,8 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.notifica_ufba",
-      "versionCode": 1
+      "versionCode": 1,
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "favicon": "./assets/favicon.png"
