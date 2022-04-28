@@ -1,8 +1,8 @@
 import { ILoginUseCase, LoginUseCase } from '@/domain/usecases'
-import { makeHttpClient } from '@/main/factories/http'
+import { makeHttpApi } from '@/main/factories/api'
 
 export const makeLoginUseCase = (): ILoginUseCase => {
-  const httpClient = makeHttpClient()
+  const httpApi = makeHttpApi()
 
-  return new LoginUseCase(httpClient)
+  return new LoginUseCase(httpApi)
 }

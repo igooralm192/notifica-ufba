@@ -1,8 +1,8 @@
 import { ICreateStudentUseCase, CreateStudentUseCase } from '@/domain/usecases'
-import { makeHttpClient } from '@/main/factories/http'
+import { makeHttpApi } from '@/main/factories/api'
 
 export const makeCreateStudentUseCase = (): ICreateStudentUseCase => {
-  const httpClient = makeHttpClient()
+  const httpApi = makeHttpApi()
 
-  return new CreateStudentUseCase(httpClient)
+  return new CreateStudentUseCase(httpApi)
 }

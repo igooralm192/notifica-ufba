@@ -1,7 +1,7 @@
 import { left } from '@notifica-ufba/utils'
 
 import { CommonError, LoginError } from '@/domain/errors'
-import { MockedHttpClient } from '@/domain/mocks/gateways'
+import { MockedHttpApi } from '@/domain/mocks/gateways'
 import { mockLoginInput } from '@/domain/mocks/inputs'
 import { UserModel } from '@/domain/models'
 
@@ -26,10 +26,10 @@ const makeSUT = () => {
   const loginInput = mockLoginInput()
   const loginHttpResponse = mockLoginHttpResponse()
 
-  const httpClient = new MockedHttpClient()
-  const loginUseCase = new LoginUseCase(httpClient)
+  const httpApi = new MockedHttpApi()
+  const loginUseCase = new LoginUseCase(httpApi)
 
-  const httpRequestSpy = jest.spyOn(httpClient, 'request')
+  const httpRequestSpy = jest.spyOn(httpApi, 'request')
   httpRequestSpy.mockResolvedValue({
     statusCode: 200,
     body: loginHttpResponse,

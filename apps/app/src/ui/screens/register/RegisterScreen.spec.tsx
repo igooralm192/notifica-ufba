@@ -142,7 +142,7 @@ describe('RegisterScreen', () => {
     const passwordInput = await SUT.findByTestId('register-password-input')
     fireEvent.changeText(passwordInput, values.password)
 
-    fireEvent.press(SUT.getByText('Entrar'))
+    fireEvent.press(SUT.getByText('Cadastrar'))
 
     await waitFor(() => expect(registerSpy).toHaveBeenCalledWith(values))
   })
@@ -153,7 +153,7 @@ describe('RegisterScreen', () => {
     const { SUT, registerSpy } = makeSUT()
     registerSpy.mockResolvedValueOnce(left(error))
 
-    fireEvent.press(SUT.getByText('Entrar'))
+    fireEvent.press(SUT.getByText('Cadastrar'))
 
     await waitFor(() => expect(SUT.getByText('Erro ao fazer cadastro.')))
     expect(SUT.getByText(error.message))

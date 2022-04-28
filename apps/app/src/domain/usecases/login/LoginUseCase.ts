@@ -3,7 +3,7 @@ import { Either, left, right, UseCase } from '@notifica-ufba/utils'
 import { CommonError, LoginError } from '@/domain/errors'
 import { UserModel } from '@/domain/models'
 import { ILoginInput } from '@/domain/ports/inputs'
-import { IHttpClient } from '@/domain/ports/gateways'
+import { IHttpApi } from '@/domain/ports/gateways'
 import { ILoginOutput } from '@/domain/ports/outputs'
 
 export type ILoginErrors =
@@ -18,13 +18,13 @@ export type ILoginUseCase = UseCase<
 >
 
 export class LoginUseCase implements ILoginUseCase {
-  constructor(private readonly httpClient: IHttpClient) {}
+  constructor(private readonly httpApi: IHttpApi) {}
 
   async run({
     email,
     password,
   }: ILoginInput): Promise<Either<ILoginErrors, ILoginOutput>> {
-    const response = await this.httpClient.request({
+    const response = await this.httpApi.request({
       url: '/login',
       method: 'post',
       body: { email, password },

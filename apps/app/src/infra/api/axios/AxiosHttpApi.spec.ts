@@ -1,15 +1,16 @@
-import { IHttpRequest } from '@/domain/ports/gateways'
+import { IHttpApiRequest } from '@/domain/ports/gateways'
 
-import { AxiosHttpClient } from '@/infra/http/axios'
 import { mockAxiosHttpResponse } from '@/infra/mocks'
 
 import axios from 'axios'
 import faker from 'faker'
 import { mocked } from 'jest-mock'
 
+import { AxiosHttpApi } from './AxiosHttpApi'
+
 jest.mock('axios')
 
-const mockHttpRequest = (): IHttpRequest => {
+const mockHttpRequest = (): IHttpApiRequest => {
   return {
     url: faker.internet.url(),
     method: 'post',
@@ -20,15 +21,15 @@ const mockHttpRequest = (): IHttpRequest => {
 
 const makeSUT = () => {
   const httpRequest = mockHttpRequest()
-  const httpClient = new AxiosHttpClient(faker.internet.url())
+  const httpApi = new AxiosHttpApi(faker.internet.url())
 
   return {
-    SUT: httpClient,
+    SUT: httpApi,
     httpRequest,
   }
 }
 
-describe('AxiosHttpClient', () => {
+describe('AxiosHttpApi', () => {
   const axiosMocked = mocked(axios)
 
   it('should make axios call with correct params', async () => {

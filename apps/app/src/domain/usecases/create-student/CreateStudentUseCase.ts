@@ -3,7 +3,7 @@ import { Either, left, right, UseCase } from '@notifica-ufba/utils'
 import { CommonError, CreateStudentError } from '@/domain/errors'
 import { StudentModel } from '@/domain/models'
 import { ICreateStudentInput } from '@/domain/ports/inputs'
-import { IHttpClient } from '@/domain/ports/gateways'
+import { IHttpApi } from '@/domain/ports/gateways'
 import { ICreateStudentOutput } from '@/domain/ports/outputs'
 
 export type ICreateStudentErrors =
@@ -17,7 +17,7 @@ export type ICreateStudentUseCase = UseCase<
 >
 
 export class CreateStudentUseCase implements ICreateStudentUseCase {
-  constructor(private readonly httpClient: IHttpClient) {}
+  constructor(private readonly httpApi: IHttpApi) {}
 
   async run({
     name,
@@ -28,7 +28,7 @@ export class CreateStudentUseCase implements ICreateStudentUseCase {
   }: ICreateStudentInput): Promise<
     Either<ICreateStudentErrors, ICreateStudentOutput>
   > {
-    const response = await this.httpClient.request({
+    const response = await this.httpApi.request({
       url: '/students',
       method: 'post',
       body: { name, email, password, matriculation, course },

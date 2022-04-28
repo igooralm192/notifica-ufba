@@ -1,12 +1,12 @@
 import {
-  IHttpClient,
-  IHttpRequest,
-  IHttpResponse,
+  IHttpApi,
+  IHttpApiRequest,
+  IHttpApiResponse,
 } from '@/domain/ports/gateways'
 
 import axios, { AxiosError, AxiosInstance } from 'axios'
 
-export class AxiosHttpClient implements IHttpClient {
+export class AxiosHttpApi implements IHttpApi {
   private api: AxiosInstance
 
   constructor(apiUrl: string) {
@@ -18,7 +18,7 @@ export class AxiosHttpClient implements IHttpClient {
     method,
     body,
     headers,
-  }: IHttpRequest): Promise<IHttpResponse> {
+  }: IHttpApiRequest): Promise<IHttpApiResponse> {
     try {
       const response = await this.api({ url, method, data: body, headers })
 

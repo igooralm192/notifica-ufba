@@ -1,5 +1,5 @@
 import { CommonError, CreateStudentError } from '@/domain/errors'
-import { MockedHttpClient } from '@/domain/mocks/gateways'
+import { MockedHttpApi } from '@/domain/mocks/gateways'
 import { mockCreateStudentInput } from '@/domain/mocks/inputs'
 import { StudentModel } from '@/domain/models'
 
@@ -32,10 +32,10 @@ const makeSUT = () => {
   const createStudentInput = mockCreateStudentInput()
   const createStudentHttpResponse = mockCreateStudentHttpResponse()
 
-  const httpClient = new MockedHttpClient()
-  const createStudentUseCase = new CreateStudentUseCase(httpClient)
+  const httpApi = new MockedHttpApi()
+  const createStudentUseCase = new CreateStudentUseCase(httpApi)
 
-  const httpRequestSpy = jest.spyOn(httpClient, 'request')
+  const httpRequestSpy = jest.spyOn(httpApi, 'request')
   httpRequestSpy.mockResolvedValue({
     statusCode: 200,
     body: createStudentHttpResponse,
