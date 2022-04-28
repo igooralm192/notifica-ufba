@@ -1,6 +1,6 @@
 import { IStudentDTO } from '@/domain/dtos'
 import { BaseModel, IModel } from '@/domain/helpers'
-import { UserModel } from '@/domain/models'
+import { UserModel } from './UserModel'
 
 export type IStudentModel = IModel &
   Pick<StudentModel, 'matriculation' | 'course' | 'userId' | 'user'>
