@@ -33,7 +33,11 @@ export const makeRegisterValidation = () => {
       confirmPassword: Joi.any()
         .equal(Joi.ref('password'))
         .required()
-        .messages({ 'any.only': 'As senhas não conferem.' }),
+        .messages({
+          'any.only': 'As senhas não conferem.',
+          'any.required': `Campo obrigatório.`,
+          'string.empty': 'Campo obrigatório.',
+        }),
     }),
   )
 }
