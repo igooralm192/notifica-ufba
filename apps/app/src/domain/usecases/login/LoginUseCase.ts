@@ -36,7 +36,7 @@ export class LoginUseCase implements ILoginUseCase {
     switch (response.statusCode) {
       case 200:
         await this.saveCacheStorage.save({
-          key: 'ANY_KEY',
+          key: 'TOKEN',
           value: response.body.token,
         })
 

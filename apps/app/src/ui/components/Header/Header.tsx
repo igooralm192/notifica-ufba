@@ -1,11 +1,11 @@
-import { NativeStackHeaderProps } from '@react-navigation/native-stack'
+import { StackHeaderProps } from '@react-navigation/stack'
 import { Button } from '@rneui/themed'
 import React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Container, Title, Action } from './HeaderStyles'
 
-export interface HeaderProps extends NativeStackHeaderProps {}
+export interface HeaderProps extends StackHeaderProps {}
 
 const Header: React.FC<HeaderProps> = ({ navigation, options, back }) => {
   const insets = useSafeAreaInsets()

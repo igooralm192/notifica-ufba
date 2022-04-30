@@ -16,7 +16,7 @@ export namespace IGetCacheStorage {
     key: string
   }
 
-  export type Output = string
+  export type Output = string | null
 }
 
 export interface IGetCacheStorage {

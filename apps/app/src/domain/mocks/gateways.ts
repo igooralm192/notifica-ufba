@@ -1,4 +1,5 @@
 import {
+  IGetCacheStorage,
   IHttpApi,
   IHttpApiRequest,
   IHttpApiResponse,
@@ -11,7 +12,11 @@ export class MockedHttpApi implements IHttpApi {
   }
 }
 
-export class MockedCacheStorage implements ISaveCacheStorage {
+export class MockedCacheStorage implements IGetCacheStorage, ISaveCacheStorage {
+  get(): Promise<IGetCacheStorage.Output> {
+    throw new Error('Method not implemented.')
+  }
+
   save(): Promise<void> {
     throw new Error('Method not implemented.')
   }
