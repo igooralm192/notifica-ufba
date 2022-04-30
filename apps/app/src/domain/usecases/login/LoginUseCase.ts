@@ -3,7 +3,7 @@ import { Either, left, right, UseCase } from '@notifica-ufba/utils'
 import { CommonError, LoginError } from '@/domain/errors'
 import { UserModel } from '@/domain/models'
 import { ILoginInput } from '@/domain/ports/inputs'
-import { IHttpApi } from '@/domain/ports/gateways'
+import { IHttpApi, ISaveCacheStorage } from '@/domain/ports/gateways'
 import { ILoginOutput } from '@/domain/ports/outputs'
 
 export type ILoginErrors =
@@ -18,7 +18,10 @@ export type ILoginUseCase = UseCase<
 >
 
 export class LoginUseCase implements ILoginUseCase {
-  constructor(private readonly httpApi: IHttpApi) {}
+  constructor(
+    private readonly httpApi: IHttpApi,
+    private readonly saveCacheStorage: ISaveCacheStorage,
+  ) {}
 
   async run({
     email,
@@ -30,10 +33,13 @@ export class LoginUseCase implements ILoginUseCase {
       body: { email, password },
     })
 
-    // TODO: Save token on storage
-
     switch (response.statusCode) {
       case 200:
+        await this.saveCacheStorage.save({
+          key: 'ANY_KEY',
+          value: response.body.token,
+        })
+
         return right({
           token: response.body.token,
           user: UserModel.fromJSON(response.body.user).toDTO(),

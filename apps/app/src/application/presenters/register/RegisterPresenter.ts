@@ -55,7 +55,10 @@ export class RegisterPresenter implements IRegisterPresenter {
       return left(loginResult.value)
     }
 
-    this.authStore.setUser(UserViewModel.fromDTO(loginResult.right().user))
+    const { token, user } = loginResult.value
+
+    this.authStore.setUser(UserViewModel.fromDTO(user))
+    this.authStore.setToken(token)
     this.hideLoading()
 
     return loginResult

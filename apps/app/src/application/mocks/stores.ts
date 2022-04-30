@@ -6,4 +6,8 @@ export class MockedAuthStore implements IAuthStore {
   setUser(): void {
     throw new Error('Method not implemented.')
   }
+
+  setToken(): void {
+    throw new Error('Method not implemented.')
+  }
 }

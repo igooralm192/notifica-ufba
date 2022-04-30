@@ -8,7 +8,7 @@ export namespace IGenerateHashCryptography {
 
 export interface IGenerateHashCryptography {
   generate(
-    Input: IGenerateHashCryptography.Input,
+    input: IGenerateHashCryptography.Input,
   ): Promise<IGenerateHashCryptography.Output>
 }
 
@@ -23,6 +23,6 @@ export namespace ICompareHashCryptography {
 
 export interface ICompareHashCryptography {
   compare(
-    Input: ICompareHashCryptography.Input,
+    input: ICompareHashCryptography.Input,
   ): Promise<ICompareHashCryptography.Output>
 }
