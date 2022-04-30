@@ -21,16 +21,20 @@ const makeSUT = () => {
   const loginUseCase = new MockedLoginUseCase()
   const presenter = new LoginPresenter(authStore, loginUseCase)
 
-  const setUserSpy = jest.spyOn(authStore, 'setUser')
-  setUserSpy.mockImplementation()
-
   const loginUseCaseSpy = jest.spyOn(loginUseCase, 'run')
   loginUseCaseSpy.mockResolvedValue(right({ token, user: userDTO }))
 
+  const setUserSpy = jest.spyOn(authStore, 'setUser')
+  setUserSpy.mockImplementation()
+
+  const setTokenSpy = jest.spyOn(authStore, 'setToken')
+  setTokenSpy.mockImplementation()
+
   return {
     SUT: presenter,
-    setUserSpy,
     loginUseCaseSpy,
+    setUserSpy,
+    setTokenSpy,
     email,
     password,
     token,
@@ -53,6 +57,14 @@ describe('LoginPresenter', () => {
     await SUT.login({ email, password })
 
     expect(setUserSpy).toHaveBeenCalledWith(UserViewModel.fromDTO(userDTO))
+  })
+
+  it('should call set token with correct params on login', async () => {
+    const { SUT, setTokenSpy, email, password, token } = makeSUT()
+
+    await SUT.login({ email, password })
+
+    expect(setTokenSpy).toHaveBeenCalledWith(token)
   })
 
   it('should return on login if usecase returns some error', async () => {

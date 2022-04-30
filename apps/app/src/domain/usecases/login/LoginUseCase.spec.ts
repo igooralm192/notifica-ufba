@@ -1,7 +1,7 @@
 import { left } from '@notifica-ufba/utils'
 
 import { CommonError, LoginError } from '@/domain/errors'
-import { MockedHttpApi } from '@/domain/mocks/gateways'
+import { MockedCacheStorage, MockedHttpApi } from '@/domain/mocks/gateways'
 import { mockLoginInput } from '@/domain/mocks/inputs'
 import { UserModel } from '@/domain/models'
 
@@ -27,7 +27,8 @@ const makeSUT = () => {
   const loginHttpResponse = mockLoginHttpResponse()
 
   const httpApi = new MockedHttpApi()
-  const loginUseCase = new LoginUseCase(httpApi)
+  const cacheStorage = new MockedCacheStorage()
+  const loginUseCase = new LoginUseCase(httpApi, cacheStorage)
 
   const httpRequestSpy = jest.spyOn(httpApi, 'request')
   httpRequestSpy.mockResolvedValue({
@@ -35,9 +36,13 @@ const makeSUT = () => {
     body: loginHttpResponse,
   })
 
+  const saveSpy = jest.spyOn(cacheStorage, 'save')
+  saveSpy.mockImplementation()
+
   return {
     SUT: loginUseCase,
     httpRequestSpy,
+    saveSpy,
     loginInput,
     loginHttpResponse,
   }
@@ -53,6 +58,17 @@ describe('LoginUseCase', () => {
       url: '/login',
       method: 'post',
       body: loginInput,
+    })
+  })
+
+  it('should call save cache storage with correct params', async () => {
+    const { SUT, loginInput, loginHttpResponse, saveSpy } = makeSUT()
+
+    await SUT.run(loginInput)
+
+    expect(saveSpy).toHaveBeenCalledWith({
+      key: 'ANY_KEY',
+      value: loginHttpResponse.token,
     })
   })
 

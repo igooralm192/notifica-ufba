@@ -35,6 +35,7 @@ export class LoginPresenter implements ILoginPresenter {
     }
 
     this.authStore.setUser(UserViewModel.fromDTO(result.right().user))
+    this.authStore.setToken(result.right().token)
     this.hideLoading()
 
     return result

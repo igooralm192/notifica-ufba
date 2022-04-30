@@ -40,11 +40,15 @@ const makeSUT = () => {
   const setUserSpy = jest.spyOn(authStore, 'setUser')
   setUserSpy.mockImplementation()
 
+  const setTokenSpy = jest.spyOn(authStore, 'setToken')
+  setTokenSpy.mockImplementation()
+
   return {
     SUT: presenter,
     createStudentUseCaseSpy,
     loginUseCaseSpy,
     setUserSpy,
+    setTokenSpy,
     createStudentInput,
     token,
     userDTO,
@@ -91,6 +95,14 @@ describe('RegisterPresenter', () => {
     await SUT.register(createStudentInput)
 
     expect(setUserSpy).toHaveBeenCalledWith(UserViewModel.fromDTO(userDTO))
+  })
+
+  it('should call set token with correct params on register', async () => {
+    const { SUT, setTokenSpy, createStudentInput, token } = makeSUT()
+
+    await SUT.register(createStudentInput)
+
+    expect(setTokenSpy).toHaveBeenCalledWith(token)
   })
 
   it('should return on register if create student usecase returns some error', async () => {
