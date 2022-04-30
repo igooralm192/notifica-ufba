@@ -55,6 +55,7 @@ export class LoginUseCase implements ILoginUseCase {
         id: user.id,
         name: user.name,
         email: user.email,
+        type: user.type,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },

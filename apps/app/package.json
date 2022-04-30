@@ -37,7 +37,10 @@
     "expo-app-loading": "*",
     "react-native-toast-message": "*",
     "mobx-react": "*",
-    "react-native-dotenv": "*"
+    "react-native-dotenv": "*",
+    "@react-native-async-storage/async-storage": "*",
+    "react-native-keyboard-aware-scroll-view": "*",
+    "react-hook-form": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && cp yarn.lock ./apps/app/ && mv ./apps/app/eas.js ./index.js",

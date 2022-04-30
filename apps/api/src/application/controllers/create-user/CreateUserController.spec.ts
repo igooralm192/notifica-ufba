@@ -4,8 +4,8 @@ import { left, right } from '@notifica-ufba/utils'
 import { CreateUserError } from '@/domain/errors'
 import { mockCreateUserInput } from '@/domain/mocks/inputs'
 import { mockCreateUserOutput } from '@/domain/mocks/outputs'
+import { MockedCreateUserUseCase } from '@/domain/mocks/usecases'
 
-import { MockedCreateUserUseCase } from '@/application/mocks/usecases'
 import { MockedValidation } from '@/application/mocks/validation'
 
 import faker from 'faker'

@@ -52,11 +52,16 @@ describe('LoginUseCase', () => {
       payload: { id: user.id },
     })
 
-    expect(user.password).not.toBeDefined()
-
     expect(result).toMatchObject({
       token,
-      user,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        type: user.type,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     })
   })
 
