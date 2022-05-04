@@ -1,7 +1,7 @@
 import {
   IGenerateHashCryptography,
   ICompareHashCryptography,
-} from '@/domain/ports/gateways'
+} from '@/data/contracts'
 
 import bcrypt from 'bcryptjs'
 

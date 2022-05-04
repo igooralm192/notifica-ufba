@@ -1,5 +1,4 @@
-import { CreateStudentUseCase } from '@/domain/usecases'
-import { makeHashCryptography } from '@/main/factories/gateways'
+import { CreateStudentUseCase } from '@/data/usecases/student'
 import { makeStudentRepository } from '@/main/factories/repositories'
 import { makeCreateUserUseCase } from '@/main/factories/usecases'
 

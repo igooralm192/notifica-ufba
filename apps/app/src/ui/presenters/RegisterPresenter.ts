@@ -1,8 +1,5 @@
+import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
 import { Either } from '@notifica-ufba/utils'
-
-import { ICreateStudentInput } from '@/domain/ports/inputs'
-import { ILoginOutput } from '@/domain/ports/outputs'
-import { ILoginErrors } from '@/domain/usecases'
 
 export interface IRegisterFormValues {
   name: string
@@ -16,6 +13,8 @@ export interface IRegisterFormValues {
 export interface IRegisterPresenter {
   loading: boolean
   register(
-    input: ICreateStudentInput,
-  ): Promise<Either<ILoginErrors, ILoginOutput>>
+    input: IAuthenticateUserUseCase.Input,
+  ): Promise<
+    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  >
 }

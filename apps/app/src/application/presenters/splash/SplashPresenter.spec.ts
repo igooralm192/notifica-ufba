@@ -1,4 +1,4 @@
-import { MockedCacheStorage } from '@/domain/mocks/gateways'
+import { MockedCacheStorage } from '@/data/mocks/storage'
 import { MockedAuthStore } from '@/application/mocks/stores'
 
 import faker from 'faker'

@@ -1,4 +1,4 @@
-import { CryptographyError } from '@/domain/errors'
+import { ExpiredTokenError, InvalidTokenError } from '@/data/errors'
 
 import faker from 'faker'
 import jwt from 'jsonwebtoken'
@@ -65,7 +65,7 @@ describe('JwtTokenCryptography', () => {
     const resultOrError = await SUT.decode({ token })
     const error = resultOrError.left()
 
-    expect(error).toBeInstanceOf(CryptographyError.InvalidTokenError)
+    expect(error).toBeInstanceOf(InvalidTokenError)
     expect(jwtVerifySpy).toHaveBeenCalledWith(token, secretKey)
   })
 
@@ -84,7 +84,7 @@ describe('JwtTokenCryptography', () => {
     const resultOrError = await SUT.decode({ token })
     const error = resultOrError.left()
 
-    expect(error).toBeInstanceOf(CryptographyError.ExpiredTokenError)
+    expect(error).toBeInstanceOf(ExpiredTokenError)
     expect(jwtVerifySpy).toHaveBeenCalledWith(token, secretKey)
   })
 })

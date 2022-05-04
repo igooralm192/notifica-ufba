@@ -1,4 +1,4 @@
-import { CommonError } from '@/domain/errors'
+import { CommonError } from '@notifica-ufba/domain/errors'
 import { IValidation, IValidationOutput } from '@/validation/protocols'
 
 import Joi from 'joi'
@@ -10,9 +10,7 @@ export class JoiValidation implements IValidation {
     const { error } = this.schema.validate(input, { abortEarly: false })
 
     if (!error) {
-      return {
-        errors: {},
-      }
+      return { errors: {} }
     }
 
     return {

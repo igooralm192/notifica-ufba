@@ -1,7 +1,7 @@
 import {
   ICreateStudentRepository,
   IFindOneStudentRepository,
-} from '@/domain/ports/repositories'
+} from '@/data/contracts'
 import { PrismaStudentRepository } from '@/infra/database/prisma/repositories'
 
 type IStudentRepository = ICreateStudentRepository & IFindOneStudentRepository

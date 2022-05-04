@@ -1,34 +1,30 @@
-import { IUserDTO } from '@/domain/dtos'
+import { IUserDTO } from '@notifica-ufba/domain/dtos'
 import { BaseViewModel, IViewModel } from '@/application/helpers'
 
-export type IUserViewModel = IViewModel & Pick<UserViewModel, 'name' | 'email'>
+export type IUserViewModel = IViewModel &
+  Pick<UserViewModel, 'name' | 'email' | 'type'>
 
 export class UserViewModel extends BaseViewModel {
   name: string
   email: string
+  type?: 'STUDENT' | 'TEACHER'
 
-  constructor({ name, email, ...entity }: IUserViewModel) {
+  constructor({ name, email, type, ...entity }: IUserViewModel) {
     super(entity)
 
     this.name = name
     this.email = email
+    this.type = type
   }
 
   static fromDTO(user: IUserDTO) {
     return new UserViewModel({
-      ...user,
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      type: user.type,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     })
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      name: this.name,
-      email: this.email,
-      created_at: this.createdAt,
-      updated_at: this.updatedAt,
-    }
   }
 }

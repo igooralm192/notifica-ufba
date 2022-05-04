@@ -1,4 +1,4 @@
-import { IUserDTO } from '@/domain/dtos'
+import { IUserDTO } from '@notifica-ufba/domain/dtos'
 import { BaseViewModel, IViewModel } from '@/application/helpers'
 
 export type IUserViewModel = IViewModel &

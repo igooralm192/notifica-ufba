@@ -1,28 +1,28 @@
 import {
   ICreateUserRepository,
-  IFindUserByEmailRepository,
-} from '@/domain/ports/repositories'
+  IFindOneUserRepository,
+} from '@/data/contracts/'
 import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
 import { TypeORMRepository } from '@/infra/database/typeorm/helpers'
 
 export class TypeORMUserRepository
   extends TypeORMRepository
-  implements ICreateUserRepository, IFindUserByEmailRepository
+  implements ICreateUserRepository, IFindOneUserRepository
 {
   private repository = this.getRepository(TypeORMUserEntity)
 
   async create(
-    params: ICreateUserRepository.Input,
+    input: ICreateUserRepository.Input,
   ): Promise<ICreateUserRepository.Output> {
-    const user = this.repository.create(params)
+    const user = this.repository.create(input)
 
     return await this.repository.save(user)
   }
 
-  async findByEmail(
-    email: IFindUserByEmailRepository.Input,
-  ): Promise<IFindUserByEmailRepository.Output> {
-    const user = await this.repository.findOneBy({ email })
+  async findOne(
+    input: IFindOneUserRepository.Input,
+  ): Promise<IFindOneUserRepository.Output> {
+    const user = await this.repository.findOneBy(input)
 
     return user ?? null
   }

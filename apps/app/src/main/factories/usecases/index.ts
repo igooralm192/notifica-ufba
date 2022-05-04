@@ -1,2 +1,2 @@
 export * from './CreateStudentUseCaseFactory'
-export * from './LoginUseCaseFactory'
+export * from './AuthenticateUserUseCaseFactory'

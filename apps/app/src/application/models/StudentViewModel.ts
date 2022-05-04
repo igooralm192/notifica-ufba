@@ -1,4 +1,4 @@
-import { IStudentDTO } from '@/domain/dtos'
+import { IStudentDTO } from '@notifica-ufba/domain/dtos'
 import { BaseViewModel, IViewModel } from '@/application/helpers'
 
 import { UserViewModel } from './UserViewModel'

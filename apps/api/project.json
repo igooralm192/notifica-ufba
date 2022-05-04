@@ -76,7 +76,6 @@
         ]
       }
     },
-
     "prisma:push": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
@@ -87,7 +86,6 @@
         ]
       }
     },
-
     "prisma:generate": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

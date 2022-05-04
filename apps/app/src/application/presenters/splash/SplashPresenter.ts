@@ -1,4 +1,4 @@
-import { IGetCacheStorage } from '@/domain/ports/gateways'
+import { IGetCacheStorage } from '@/data/contracts'
 import { IAuthStore } from '@/application/stores'
 import { ISplashPresenter } from '@/ui/presenters'
 

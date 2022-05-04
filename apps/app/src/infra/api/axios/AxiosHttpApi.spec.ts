@@ -1,4 +1,4 @@
-import { IHttpApiRequest } from '@/domain/ports/gateways'
+import { IHttpApiRequest } from '@/data/contracts'
 
 import { mockAxiosHttpResponse } from '@/infra/mocks'
 

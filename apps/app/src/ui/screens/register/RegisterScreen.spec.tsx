@@ -1,8 +1,8 @@
 import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
 
-import { CommonError } from '@/domain/errors'
-import { mockLoginOutput } from '@/domain/mocks/outputs'
+import { CommonError } from '@notifica-ufba/domain/errors'
+import { mockAuthenticateUserOutput } from '@notifica-ufba/domain/mocks'
 import { MockedRegisterPresenter } from '@/application/mocks/presenters'
 import { MockedValidation } from '@/application/mocks/validation'
 import { AllProviders } from '@/ui/components'
@@ -38,7 +38,7 @@ const makeSUT = () => {
   validateSpy.mockReturnValue({ errors: {} })
 
   const registerSpy = jest.spyOn(registerPresenter, 'register')
-  registerSpy.mockResolvedValue(right(mockLoginOutput()))
+  registerSpy.mockResolvedValue(right(mockAuthenticateUserOutput()))
 
   const screen = render(
     <RegisterScreen

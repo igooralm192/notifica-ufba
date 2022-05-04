@@ -1,10 +1,10 @@
-import { mockUser } from '@/domain/mocks/entities'
+import { mockUserEntity } from '@notifica-ufba/domain/mocks'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 
 import { PrismaUserRepository } from '.'
 
 const makeSUT = () => {
-  const user = mockUser()
+  const user = mockUserEntity()
   const userRepository = new PrismaUserRepository()
 
   return {
@@ -34,12 +34,12 @@ describe('TypeORMUserRepository', () => {
     })
   })
 
-  describe('findByEmail', () => {
+  describe('findOne', () => {
     it('should return user if email exist', async () => {
       const { SUT, user } = makeSUT()
       await getClient().user.create({ data: user })
 
-      const findUser = await SUT.findByEmail(user.email)
+      const findUser = await SUT.findOne({ email: user.email })
 
       expect(findUser).toMatchObject(user)
     })
@@ -47,7 +47,7 @@ describe('TypeORMUserRepository', () => {
     it('should return null if email not exist', async () => {
       const { SUT } = makeSUT()
 
-      const user = await SUT.findByEmail('non-existent-email')
+      const user = await SUT.findOne({ email: 'non-existent-email' })
 
       expect(user).toBeNull()
     })

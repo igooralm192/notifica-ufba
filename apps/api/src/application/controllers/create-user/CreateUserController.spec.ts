@@ -1,17 +1,18 @@
+import { CreateUserError } from '@notifica-ufba/domain/errors'
+import {
+  mockCreateUserInput,
+  mockCreateUserOutput,
+  MockedCreateUserUseCase,
+} from '@notifica-ufba/domain/mocks'
 import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
 
-import { CreateUserError } from '@/domain/errors'
-import { mockCreateUserInput } from '@/domain/mocks/inputs'
-import { mockCreateUserOutput } from '@/domain/mocks/outputs'
-import { MockedCreateUserUseCase } from '@/domain/mocks/usecases'
-
 import { MockedValidation } from '@/application/mocks/validation'
+import { UserViewModel } from '@/application/models'
 
 import faker from 'faker'
 
 import { CreateUserController } from '.'
-import { UserViewModel } from '@/application/models'
 
 const makeSUT = () => {
   const createUserInput = mockCreateUserInput()
@@ -63,7 +64,7 @@ describe('CreateUserController', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
-      user: UserViewModel.fromDTO(createUserOutput.user).toJSON(),
+      user: UserViewModel.fromDTO(createUserOutput.user),
     })
   })
 

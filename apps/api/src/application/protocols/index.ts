@@ -1,1 +1,1 @@
-export * from './DBConnection'
+export * from './DBClient'

@@ -1,5 +1,5 @@
-import { CreateStudentError } from '@/domain/errors'
-import { ICreateStudentUseCase } from '@/domain/usecases'
+import { CreateStudentError } from '@notifica-ufba/domain/errors'
+import { ICreateStudentUseCase } from '@notifica-ufba/domain/usecases'
 
 import { IControllerResponseDTO } from '@/application/dtos'
 import { BaseController } from '@/application/helpers'
@@ -26,7 +26,7 @@ export class CreateStudentController extends BaseController {
 
     if (result.isRight()) {
       return this.ok({
-        student: StudentViewModel.fromDTO(result.value.student).toJSON(),
+        student: StudentViewModel.fromDTO(result.value.student),
       })
     }
 

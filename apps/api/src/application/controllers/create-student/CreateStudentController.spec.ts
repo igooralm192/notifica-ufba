@@ -1,10 +1,11 @@
+import { CreateStudentError } from '@notifica-ufba/domain/errors'
+import {
+  mockCreateStudentInput,
+  mockCreateStudentOutput,
+  MockedCreateStudentUseCase,
+} from '@notifica-ufba/domain/mocks'
 import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
-
-import { CreateStudentError } from '@/domain/errors'
-import { mockCreateStudentInput } from '@/domain/mocks/inputs'
-import { mockCreateStudentOutput } from '@/domain/mocks/outputs'
-import { MockedCreateStudentUseCase } from '@/domain/mocks/usecases'
 
 import { MockedValidation } from '@/application/mocks/validation'
 import { StudentViewModel } from '@/application/models'
@@ -63,7 +64,7 @@ describe('CreateStudentController', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
-      student: StudentViewModel.fromDTO(createStudentOutput.student).toJSON(),
+      student: StudentViewModel.fromDTO(createStudentOutput.student),
     })
   })
 

@@ -1,6 +1,9 @@
 import 'reflect-metadata'
 
-import { DatabaseError } from '@/domain/errors'
+import {
+  ConnectionNotFoundError,
+  TransactionNotFoundError,
+} from '@/data/errors'
 
 import { QueryRunner, Repository, ObjectType, DataSource } from 'typeorm'
 
@@ -31,7 +34,7 @@ export class TypeORMConnection {
 
   async disconnect(): Promise<void> {
     if (!this.datasource || !this.datasource.isInitialized)
-      throw new DatabaseError.ConnectionNotFoundError()
+      throw new ConnectionNotFoundError()
 
     await this.datasource?.destroy()
 
@@ -40,7 +43,7 @@ export class TypeORMConnection {
 
   // async openTransaction(): Promise<void> {
   //   if (this.connection === undefined)
-  //     throw new DatabaseError.ConnectionNotFoundError()
+  //     throw new ConnectionNotFoundError()
 
   //   this.query = this.connection.createQueryRunner()
   //   await this.query.startTransaction()
@@ -69,7 +72,7 @@ export class TypeORMConnection {
 
   getRepository<Entity>(entity: ObjectType<Entity>): Repository<Entity> {
     if (!this.datasource || !this.datasource.isInitialized)
-      throw new DatabaseError.ConnectionNotFoundError()
+      throw new ConnectionNotFoundError()
 
     if (this.query !== undefined)
       return this.query.manager.getRepository(entity)

@@ -1,8 +1,8 @@
 import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
 
-import { CommonError } from '@/domain/errors'
-import { mockLoginOutput } from '@/domain/mocks/outputs'
+import { CommonError } from '@notifica-ufba/domain/errors'
+import { mockAuthenticateUserOutput } from '@notifica-ufba/domain/mocks'
 import { MockedLoginPresenter } from '@/application/mocks/presenters'
 import { MockedValidation } from '@/application/mocks/validation'
 import { AllProviders } from '@/ui/components'
@@ -35,7 +35,7 @@ const makeSUT = () => {
   validateSpy.mockReturnValue({ errors: {} })
 
   const loginSpy = jest.spyOn(loginPresenter, 'login')
-  loginSpy.mockResolvedValue(right(mockLoginOutput()))
+  loginSpy.mockResolvedValue(right(mockAuthenticateUserOutput()))
 
   const screen = render(
     <LoginScreen validation={loginValidation} presenter={loginPresenter} />,

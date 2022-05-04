@@ -1,8 +1,9 @@
+import { CommonError } from '@notifica-ufba/domain/errors'
+import {
+  mockUserDTO,
+  MockedAuthenticateUserUseCase,
+} from '@notifica-ufba/domain/mocks'
 import { left, right } from '@notifica-ufba/utils'
-
-import { CommonError } from '@/domain/errors'
-import { mockUserDTO } from '@/domain/mocks/dtos'
-import { MockedLoginUseCase } from '@/domain/mocks/usecases'
 
 import { MockedAuthStore } from '@/application/mocks/stores'
 import { UserViewModel } from '@/application/models'
@@ -18,11 +19,11 @@ const makeSUT = () => {
   const userDTO = mockUserDTO()
 
   const authStore = new MockedAuthStore()
-  const loginUseCase = new MockedLoginUseCase()
-  const presenter = new LoginPresenter(authStore, loginUseCase)
+  const authenticateUserUseCase = new MockedAuthenticateUserUseCase()
+  const loginPresenter = new LoginPresenter(authStore, authenticateUserUseCase)
 
-  const loginUseCaseSpy = jest.spyOn(loginUseCase, 'run')
-  loginUseCaseSpy.mockResolvedValue(right({ token, user: userDTO }))
+  const authenticateUserUseCaseSpy = jest.spyOn(authenticateUserUseCase, 'run')
+  authenticateUserUseCaseSpy.mockResolvedValue(right({ token, user: userDTO }))
 
   const setUserSpy = jest.spyOn(authStore, 'setUser')
   setUserSpy.mockImplementation()
@@ -31,8 +32,8 @@ const makeSUT = () => {
   setTokenSpy.mockImplementation()
 
   return {
-    SUT: presenter,
-    loginUseCaseSpy,
+    SUT: loginPresenter,
+    authenticateUserUseCaseSpy,
     setUserSpy,
     setTokenSpy,
     email,
@@ -44,11 +45,11 @@ const makeSUT = () => {
 
 describe('LoginPresenter', () => {
   it('should call usecase with correct params on login', async () => {
-    const { SUT, loginUseCaseSpy, email, password } = makeSUT()
+    const { SUT, authenticateUserUseCaseSpy, email, password } = makeSUT()
 
     await SUT.login({ email, password })
 
-    expect(loginUseCaseSpy).toHaveBeenCalledWith({ email, password })
+    expect(authenticateUserUseCaseSpy).toHaveBeenCalledWith({ email, password })
   })
 
   it('should call set user with correct params on login', async () => {
@@ -69,13 +70,13 @@ describe('LoginPresenter', () => {
 
   it('should return on login if usecase returns some error', async () => {
     const errorMessage = faker.random.words()
-    const unexpectedError = new CommonError.UnexpectedError(
+    const unexpectedError = new CommonError.InternalServerError(
       new Error(errorMessage),
     )
 
-    const { SUT, loginUseCaseSpy, email, password } = makeSUT()
+    const { SUT, authenticateUserUseCaseSpy, email, password } = makeSUT()
 
-    loginUseCaseSpy.mockResolvedValueOnce(left(unexpectedError))
+    authenticateUserUseCaseSpy.mockResolvedValueOnce(left(unexpectedError))
 
     const resultOrError = await SUT.login({ email, password })
     const result = resultOrError.left()

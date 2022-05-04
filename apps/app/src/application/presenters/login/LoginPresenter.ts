@@ -1,12 +1,8 @@
+import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
 import { Either } from '@notifica-ufba/utils'
-
-import { ILoginInput } from '@/domain/ports/inputs'
-import { ILoginOutput } from '@/domain/ports/outputs'
-import { ILoginErrors, ILoginUseCase } from '@/domain/usecases'
 
 import { IAuthStore } from '@/application/stores'
 import { UserViewModel } from '@/application/models'
-
 import { ILoginPresenter } from '@/ui/presenters'
 
 import { makeAutoObservable } from 'mobx'
@@ -16,7 +12,7 @@ export class LoginPresenter implements ILoginPresenter {
 
   constructor(
     private readonly authStore: IAuthStore,
-    private readonly loginUseCase: ILoginUseCase,
+    private readonly authenticateUserUseCase: IAuthenticateUserUseCase,
   ) {
     makeAutoObservable(this)
   }
@@ -24,10 +20,12 @@ export class LoginPresenter implements ILoginPresenter {
   async login({
     email,
     password,
-  }: ILoginInput): Promise<Either<ILoginErrors, ILoginOutput>> {
+  }: IAuthenticateUserUseCase.Input): Promise<
+    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  > {
     this.showLoading()
 
-    const result = await this.loginUseCase.run({ email, password })
+    const result = await this.authenticateUserUseCase.run({ email, password })
 
     if (result.isLeft()) {
       this.hideLoading()

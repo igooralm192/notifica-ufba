@@ -1,13 +1,14 @@
 import { Either } from '@notifica-ufba/utils'
 
-import { ILoginOutput } from '@/domain/ports/outputs'
-import { ILoginErrors } from '@/domain/usecases'
+import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
 import { ILoginPresenter, IRegisterPresenter } from '@/ui/presenters'
 
 export class MockedLoginPresenter implements ILoginPresenter {
   loading = false
 
-  login(): Promise<Either<ILoginErrors, ILoginOutput>> {
+  login(): Promise<
+    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  > {
     throw new Error('Method not implemented.')
   }
 }
@@ -15,7 +16,9 @@ export class MockedLoginPresenter implements ILoginPresenter {
 export class MockedRegisterPresenter implements IRegisterPresenter {
   loading = false
 
-  register(): Promise<Either<ILoginErrors, ILoginOutput>> {
+  register(): Promise<
+    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  > {
     throw new Error('Method not implemented.')
   }
 }

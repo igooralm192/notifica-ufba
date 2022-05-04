@@ -1,10 +1,10 @@
 import { LoginPresenter } from '@/application/presenters/login'
 import { makeAuthStore } from '@/main/factories/stores'
-import { makeLoginUseCase } from '@/main/factories/usecases'
+import { makeAuthenticateUserUseCase } from '@/main/factories/usecases'
 
 export const makeLoginPresenter = () => {
   const authStore = makeAuthStore()
-  const loginUseCase = makeLoginUseCase()
+  const authenticateUserUseCase = makeAuthenticateUserUseCase()
 
-  return new LoginPresenter(authStore, loginUseCase)
+  return new LoginPresenter(authStore, authenticateUserUseCase)
 }

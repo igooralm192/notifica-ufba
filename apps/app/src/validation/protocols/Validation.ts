@@ -1,4 +1,4 @@
-import { CommonError } from '@/domain/errors'
+import { CommonError } from '@notifica-ufba/domain/errors'
 
 export interface IValidationOutput {
   errors: Record<string, CommonError.ValidationError | null>

@@ -1,4 +1,4 @@
-import { mockStudent, mockUser } from '@/domain/mocks/entities'
+import { mockStudentEntity, mockUserEntity } from '@notifica-ufba/domain/mocks'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 
 import faker from 'faker'
@@ -6,8 +6,8 @@ import faker from 'faker'
 import { PrismaStudentRepository } from '.'
 
 const makeSUT = () => {
-  const user = mockUser()
-  const student = mockStudent(user)
+  const user = mockUserEntity()
+  const student = mockStudentEntity(user)
   const studentRepository = new PrismaStudentRepository()
 
   return {
@@ -36,8 +36,9 @@ describe('TypeORMStudentRepository', () => {
         where: { matriculation: student.matriculation },
       })
 
-      expect(createdStudent).toMatchObject({
+      expect(createdStudent).toEqual({
         ...findStudent,
+        user: null,
       })
     })
   })

@@ -1,0 +1,43 @@
+import { AuthenticateUserError } from '@notifica-ufba/domain/errors'
+import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
+
+import { IControllerResponseDTO } from '@/application/dtos'
+import { BaseController } from '@/application/helpers'
+import { UserViewModel } from '@/application/models'
+
+import { IValidation } from '@/validation/protocols'
+
+export class AuthenticateUserController extends BaseController {
+  constructor(
+    private readonly validation: IValidation,
+    private readonly authenticateUserUseCase: IAuthenticateUserUseCase,
+  ) {
+    super()
+  }
+
+  async handle(request: any): Promise<IControllerResponseDTO> {
+    const validationError = this.validation.validate(request)
+
+    if (validationError) {
+      return this.badRequest(validationError)
+    }
+
+    const result = await this.authenticateUserUseCase.run(request)
+
+    if (result.isRight()) {
+      const { token, user } = result.value
+      return this.ok({ token, user: UserViewModel.fromDTO(user) })
+    }
+
+    switch (result.value.constructor) {
+      case AuthenticateUserError.UserDoesNotExistError:
+        return this.notFound(result.value)
+
+      case AuthenticateUserError.WrongPasswordError:
+        return this.unauthorized(result.value)
+
+      default:
+        return this.fail(result.value)
+    }
+  }
+}

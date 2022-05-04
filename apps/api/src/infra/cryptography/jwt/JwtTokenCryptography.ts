@@ -1,10 +1,10 @@
 import { left, right } from '@notifica-ufba/utils'
 
-import { CryptographyError } from '@/domain/errors'
+import { ExpiredTokenError, InvalidTokenError } from '@/data/errors'
 import {
   IGenerateTokenCryptography,
   IDecodeTokenCryptography,
-} from '@/domain/ports/gateways'
+} from '@/data/contracts'
 
 import jwt from 'jsonwebtoken'
 
@@ -22,9 +22,9 @@ export class JwtTokenCryptography
   ): IDecodeTokenCryptography.Errors {
     switch (error?.name as string) {
       case 'TokenExpiredError':
-        return new CryptographyError.ExpiredTokenError()
+        return new ExpiredTokenError()
       default:
-        return new CryptographyError.InvalidTokenError()
+        return new InvalidTokenError()
     }
   }
 

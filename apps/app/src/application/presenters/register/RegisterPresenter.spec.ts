@@ -1,12 +1,13 @@
 import { left, right } from '@notifica-ufba/utils'
 
-import { mockStudentDTO, mockUserDTO } from '@/domain/mocks/dtos'
-import { CommonError } from '@/domain/errors'
-import { mockCreateStudentInput } from '@/domain/mocks/inputs'
 import {
+  mockStudentDTO,
+  mockUserDTO,
   MockedCreateStudentUseCase,
-  MockedLoginUseCase,
-} from '@/domain/mocks/usecases'
+  MockedAuthenticateUserUseCase,
+  mockCreateStudentInput,
+} from '@notifica-ufba/domain/mocks'
+import { CommonError } from '@notifica-ufba/domain/errors'
 
 import { MockedAuthStore } from '@/application/mocks/stores'
 import { UserViewModel } from '@/application/models'
@@ -23,19 +24,19 @@ const makeSUT = () => {
 
   const authStore = new MockedAuthStore()
   const createStudentUseCase = new MockedCreateStudentUseCase()
-  const loginUseCase = new MockedLoginUseCase()
+  const authenticateUserUseCase = new MockedAuthenticateUserUseCase()
 
-  const presenter = new RegisterPresenter(
+  const registerPresenter = new RegisterPresenter(
     authStore,
     createStudentUseCase,
-    loginUseCase,
+    authenticateUserUseCase,
   )
 
   const createStudentUseCaseSpy = jest.spyOn(createStudentUseCase, 'run')
   createStudentUseCaseSpy.mockResolvedValue(right({ student: studentDTO }))
 
-  const loginUseCaseSpy = jest.spyOn(loginUseCase, 'run')
-  loginUseCaseSpy.mockResolvedValue(right({ token, user: userDTO }))
+  const authenticateUserUseCaseSpy = jest.spyOn(authenticateUserUseCase, 'run')
+  authenticateUserUseCaseSpy.mockResolvedValue(right({ token, user: userDTO }))
 
   const setUserSpy = jest.spyOn(authStore, 'setUser')
   setUserSpy.mockImplementation()
@@ -44,9 +45,9 @@ const makeSUT = () => {
   setTokenSpy.mockImplementation()
 
   return {
-    SUT: presenter,
+    SUT: registerPresenter,
     createStudentUseCaseSpy,
-    loginUseCaseSpy,
+    authenticateUserUseCaseSpy,
     setUserSpy,
     setTokenSpy,
     createStudentInput,
@@ -61,7 +62,7 @@ describe('RegisterPresenter', () => {
     const {
       SUT,
       createStudentUseCaseSpy,
-      loginUseCaseSpy,
+      authenticateUserUseCaseSpy,
       createStudentInput,
     } = makeSUT()
 
@@ -70,14 +71,14 @@ describe('RegisterPresenter', () => {
     const { email, password } = createStudentInput
 
     expect(createStudentUseCaseSpy).toHaveBeenCalledWith(createStudentInput)
-    expect(loginUseCaseSpy).toHaveBeenCalledWith({ email, password })
+    expect(authenticateUserUseCaseSpy).toHaveBeenCalledWith({ email, password })
   })
 
-  it('should call login usecase with correct params on register', async () => {
+  it('should call authenticateUser usecase with correct params on register', async () => {
     const {
       SUT,
       createStudentUseCaseSpy,
-      loginUseCaseSpy,
+      authenticateUserUseCaseSpy,
       createStudentInput,
     } = makeSUT()
 
@@ -86,7 +87,7 @@ describe('RegisterPresenter', () => {
     const { email, password } = createStudentInput
 
     expect(createStudentUseCaseSpy).toHaveBeenCalledWith(createStudentInput)
-    expect(loginUseCaseSpy).toHaveBeenCalledWith({ email, password })
+    expect(authenticateUserUseCaseSpy).toHaveBeenCalledWith({ email, password })
   })
 
   it('should call set user with correct params on register', async () => {
@@ -107,7 +108,7 @@ describe('RegisterPresenter', () => {
 
   it('should return on register if create student usecase returns some error', async () => {
     const errorMessage = faker.random.words()
-    const unexpectedError = new CommonError.UnexpectedError(
+    const unexpectedError = new CommonError.InternalServerError(
       new Error(errorMessage),
     )
 
@@ -121,15 +122,15 @@ describe('RegisterPresenter', () => {
     expect(result).toEqual(unexpectedError)
   })
 
-  it('should return on register if login usecase returns some error', async () => {
+  it('should return on register if authenticateUser usecase returns some error', async () => {
     const errorMessage = faker.random.words()
-    const unexpectedError = new CommonError.UnexpectedError(
+    const unexpectedError = new CommonError.InternalServerError(
       new Error(errorMessage),
     )
 
-    const { SUT, loginUseCaseSpy, createStudentInput } = makeSUT()
+    const { SUT, authenticateUserUseCaseSpy, createStudentInput } = makeSUT()
 
-    loginUseCaseSpy.mockResolvedValueOnce(left(unexpectedError))
+    authenticateUserUseCaseSpy.mockResolvedValueOnce(left(unexpectedError))
 
     const resultOrError = await SUT.register(createStudentInput)
     const result = resultOrError.left()

@@ -1,8 +1,5 @@
+import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
 import { Either } from '@notifica-ufba/utils'
-
-import { ILoginInput } from '@/domain/ports/inputs'
-import { ILoginOutput } from '@/domain/ports/outputs'
-import { ILoginErrors } from '@/domain/usecases'
 
 export interface ILoginFormValues {
   email: string
@@ -11,5 +8,9 @@ export interface ILoginFormValues {
 
 export interface ILoginPresenter {
   loading: boolean
-  login(input: ILoginInput): Promise<Either<ILoginErrors, ILoginOutput>>
+  login(
+    input: IAuthenticateUserUseCase.Input,
+  ): Promise<
+    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  >
 }

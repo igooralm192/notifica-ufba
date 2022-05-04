@@ -1,8 +1,4 @@
-import {
-  IHttpApi,
-  IHttpApiRequest,
-  IHttpApiResponse,
-} from '@/domain/ports/gateways'
+import { IHttpApi, IHttpApiRequest, IHttpApiResponse } from '@/data/contracts'
 
 import axios, { AxiosError, AxiosInstance } from 'axios'
 

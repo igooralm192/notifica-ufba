@@ -1,35 +1,27 @@
-import { IUserType, UserEntity } from '@/domain/entities'
-import {
-  ICreateUserRepository,
-  IFindUserByEmailRepository,
-} from '@/domain/ports/repositories'
+import { ICreateUserRepository, IFindOneUserRepository } from '@/data/contracts'
 import { PrismaRepository } from '@/infra/database/prisma/helpers'
-import { User } from '@prisma/client'
 
 export class PrismaUserRepository
   extends PrismaRepository
-  implements ICreateUserRepository, IFindUserByEmailRepository
+  implements ICreateUserRepository, IFindOneUserRepository
 {
-  async create(params: ICreateUserRepository.Input): Promise<UserEntity> {
-    const user = await this.client.user.create({ data: params })
+  async create(
+    input: ICreateUserRepository.Input,
+  ): Promise<ICreateUserRepository.Output> {
+    const user = await this.client.user.create({ data: input })
 
-    return this.parseUser(user)
+    return user
   }
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
+  async findOne(
+    input: IFindOneUserRepository.Input,
+  ): Promise<IFindOneUserRepository.Output> {
     const user = await this.client.user.findFirst({
-      where: { email },
+      where: input,
     })
 
     if (!user) return null
 
-    return this.parseUser(user)
-  }
-
-  private parseUser(user: User): UserEntity {
-    return {
-      ...user,
-      type: IUserType[user.type],
-    }
+    return user
   }
 }

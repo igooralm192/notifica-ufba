@@ -1,2 +1,5 @@
-export * as UserMocks from './lib/user'
-export * as LoginMocks from './lib/login'
+export * from './lib/dtos'
+export * from './lib/entities'
+export * from './lib/inputs'
+export * from './lib/outputs'
+export * from './lib/usecases'

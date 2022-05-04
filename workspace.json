@@ -4,6 +4,7 @@
     "api": "apps/api",
     "app": "apps/app",
     "app-e2e": "apps/app-e2e",
+    "domain-dtos": "libs/domain/dtos",
     "domain-entities": "libs/domain/entities",
     "domain-errors": "libs/domain/errors",
     "domain-mocks": "libs/domain/mocks",

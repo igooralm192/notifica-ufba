@@ -1,10 +1,7 @@
-import {
-  ICreateUserRepository,
-  IFindUserByEmailRepository,
-} from '@/domain/ports/repositories'
+import { ICreateUserRepository, IFindOneUserRepository } from '@/data/contracts'
 import { PrismaUserRepository } from '@/infra/database/prisma/repositories'
 
-type IUserRepository = ICreateUserRepository & IFindUserByEmailRepository
+type IUserRepository = ICreateUserRepository & IFindOneUserRepository
 
 export const makeUserRepository = (): IUserRepository => {
   return new PrismaUserRepository()

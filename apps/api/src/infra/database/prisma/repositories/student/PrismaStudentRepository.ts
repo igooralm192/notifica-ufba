@@ -1,8 +1,7 @@
-import { StudentEntity } from '@/domain/entities'
 import {
   ICreateStudentRepository,
   IFindOneStudentRepository,
-} from '@/domain/ports/repositories'
+} from '@/data/contracts'
 import { PrismaRepository } from '@/infra/database/prisma/helpers'
 
 export class PrismaStudentRepository
@@ -13,25 +12,35 @@ export class PrismaStudentRepository
     matriculation,
     course,
     userId,
-  }: ICreateStudentRepository.Input): Promise<StudentEntity> {
+  }: ICreateStudentRepository.Input): Promise<ICreateStudentRepository.Output> {
     const student = await this.client.student.create({
       data: {
         matriculation,
         course,
         userId,
       },
+      include: { user: true },
     })
 
-    return student
+    return {
+      ...student,
+      user: student.user || undefined,
+    }
   }
 
   async findOne(
     input: IFindOneStudentRepository.Input,
-  ): Promise<StudentEntity | null> {
-    const student = await this.client.student.findFirst({ where: input })
+  ): Promise<IFindOneStudentRepository.Output> {
+    const student = await this.client.student.findFirst({
+      where: input,
+      include: { user: true },
+    })
 
     if (!student) return null
 
-    return student
+    return {
+      ...student,
+      user: student.user || undefined,
+    }
   }
 }

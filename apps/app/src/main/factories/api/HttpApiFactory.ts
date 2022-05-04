@@ -1,4 +1,4 @@
-import { IHttpApi } from '@/domain/ports/gateways'
+import { IHttpApi } from '@/data/contracts'
 import { AxiosHttpApi } from '@/infra/api/axios'
 import env from '@/main/config/env'
 

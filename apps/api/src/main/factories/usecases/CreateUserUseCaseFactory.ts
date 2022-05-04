@@ -1,5 +1,5 @@
-import { CreateUserUseCase } from '@/domain/usecases'
-import { makeHashCryptography } from '@/main/factories/gateways'
+import { CreateUserUseCase } from '@/data/usecases/user'
+import { makeHashCryptography } from '@/main/factories/cryptography'
 import { makeUserRepository } from '@/main/factories/repositories'
 
 export const makeCreateUserUseCase = () => {

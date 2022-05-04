@@ -1,6 +1,6 @@
+import { CommonError } from '@notifica-ufba/domain/errors'
 import { BaseError } from '@notifica-ufba/errors'
 
-import { CommonError } from '@/domain/errors'
 import { IControllerResponseDTO } from '@/application/dtos'
 
 export abstract class BaseController {

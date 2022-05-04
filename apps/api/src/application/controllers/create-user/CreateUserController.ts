@@ -1,5 +1,5 @@
-import { CreateUserError } from '@/domain/errors'
-import { ICreateUserUseCase } from '@/domain/usecases'
+import { CreateUserError } from '@notifica-ufba/domain/errors'
+import { ICreateUserUseCase } from '@notifica-ufba/domain/usecases'
 
 import { IControllerResponseDTO } from '@/application/dtos'
 import { BaseController } from '@/application/helpers'
@@ -26,7 +26,7 @@ export class CreateUserController extends BaseController {
 
     if (result.isRight()) {
       return this.ok({
-        user: UserViewModel.fromDTO(result.value.user).toJSON(),
+        user: UserViewModel.fromDTO(result.value.user),
       })
     }
 

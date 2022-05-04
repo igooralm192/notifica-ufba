@@ -1,4 +1,4 @@
-import { CommonError } from '@/domain/errors'
+import { CommonError } from '@notifica-ufba/domain/errors'
 import { IValidation } from '@/validation/protocols'
 
 import Joi from 'joi'

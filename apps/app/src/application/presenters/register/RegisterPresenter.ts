@@ -1,12 +1,8 @@
-import { Either, left } from '@notifica-ufba/utils'
-
-import { ICreateStudentInput } from '@/domain/ports/inputs'
-import { ILoginOutput } from '@/domain/ports/outputs'
 import {
+  IAuthenticateUserUseCase,
   ICreateStudentUseCase,
-  ILoginErrors,
-  ILoginUseCase,
-} from '@/domain/usecases'
+} from '@notifica-ufba/domain/usecases'
+import { Either, left } from '@notifica-ufba/utils'
 
 import { IAuthStore } from '@/application/stores'
 import { UserViewModel } from '@/application/models'
@@ -21,7 +17,7 @@ export class RegisterPresenter implements IRegisterPresenter {
   constructor(
     private readonly authStore: IAuthStore,
     private readonly createStudentUseCase: ICreateStudentUseCase,
-    private readonly loginUseCase: ILoginUseCase,
+    private readonly authenticateUserUseCase: IAuthenticateUserUseCase,
   ) {
     makeAutoObservable(this)
   }
@@ -32,7 +28,9 @@ export class RegisterPresenter implements IRegisterPresenter {
     password,
     matriculation,
     course,
-  }: ICreateStudentInput): Promise<Either<ILoginErrors, ILoginOutput>> {
+  }: ICreateStudentUseCase.Input): Promise<
+    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  > {
     this.showLoading()
 
     const createStudentResult = await this.createStudentUseCase.run({
@@ -48,7 +46,10 @@ export class RegisterPresenter implements IRegisterPresenter {
       return left(createStudentResult.value)
     }
 
-    const loginResult = await this.loginUseCase.run({ email, password })
+    const loginResult = await this.authenticateUserUseCase.run({
+      email,
+      password,
+    })
 
     if (loginResult.isLeft()) {
       this.hideLoading()

@@ -1,4 +1,5 @@
-import { IGetCacheStorage, ISaveCacheStorage } from '@/domain/ports/gateways'
+import { IGetCacheStorage, ISaveCacheStorage } from '@/data/contracts'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export class AsyncStorageCacheStorage

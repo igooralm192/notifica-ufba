@@ -1,4 +1,4 @@
-import { IStudentDTO } from '@/domain/dtos'
+import { IStudentDTO } from '@notifica-ufba/domain/dtos'
 import { BaseViewModel, IViewModel } from '@/application/helpers'
 
 import { UserViewModel } from './UserViewModel'
@@ -29,22 +29,13 @@ export class StudentViewModel extends BaseViewModel {
 
   static fromDTO(student: IStudentDTO) {
     return new StudentViewModel({
-      ...student,
+      id: student.id,
+      matriculation: student.matriculation,
+      course: student.course,
+      userId: student.userId,
       user: student.user ? UserViewModel.fromDTO(student.user) : undefined,
       createdAt: student.createdAt.toISOString(),
       updatedAt: student.updatedAt.toISOString(),
     })
-  }
-
-  toJSON() {
-    return {
-      id: this.id,
-      matriculation: this.matriculation,
-      course: this.course,
-      userId: this.userId,
-      user: this.user ? this.user.toJSON() : undefined,
-      created_at: this.createdAt,
-      updated_at: this.updatedAt,
-    }
   }
 }
