@@ -38,7 +38,7 @@ describe('TypeORMStudentRepository', () => {
 
       expect(createdStudent).toEqual({
         ...findStudent,
-        user: null,
+        user: undefined,
       })
     })
   })
