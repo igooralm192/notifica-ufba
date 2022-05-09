@@ -13,7 +13,7 @@ const makeSUT = () => {
   }
 }
 
-describe('TypeORMUserRepository', () => {
+describe('PrismaUserRepository', () => {
   const getClient = usePrismaTestClient()
 
   afterEach(async () => {
