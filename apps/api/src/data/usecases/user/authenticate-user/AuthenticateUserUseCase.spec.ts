@@ -23,7 +23,7 @@ const makeSUT = () => {
   const userRepository = new MockedUserRepository()
   const hashCryptography = new MockedHashCryptography()
   const tokenCryptography = new MockedTokenCryptography()
-  const loginUseCase = new AuthenticateUserUseCase(
+  const authenticateUserUseCase = new AuthenticateUserUseCase(
     userRepository,
     hashCryptography,
     tokenCryptography,
@@ -39,7 +39,7 @@ const makeSUT = () => {
   generateTokenSpy.mockResolvedValue(token)
 
   return {
-    SUT: loginUseCase,
+    SUT: authenticateUserUseCase,
     findOneSpy,
     compareHashSpy,
     generateTokenSpy,
