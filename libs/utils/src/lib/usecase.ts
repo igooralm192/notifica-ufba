@@ -1,3 +1,3 @@
-export interface UseCase<T = void, U = void> {
-  run(params: T): Promise<U>
+export interface UseCase<I = void, O = void> {
+  run(input: I): Promise<O>
 }

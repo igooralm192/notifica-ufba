@@ -1,2 +1,2 @@
-export * from './FindAllRepositoryInput'
+export * from './RepositoryListInput'
 export * from './RepositoryWhereInput'

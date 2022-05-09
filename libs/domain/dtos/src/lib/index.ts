@@ -1,3 +1,5 @@
-export * from './DisciplineDTO'
-export * from './StudentDTO'
-export * from './UserDTO'
+export * from './entities/DisciplineDTO'
+export * from './entities/StudentDTO'
+export * from './entities/UserDTO'
+
+export * from './inputs/PaginateListInputDTO'

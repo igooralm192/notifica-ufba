@@ -1,17 +1,19 @@
 import {
+  ICountDisciplineRepository,
   ICreateStudentRepository,
   ICreateUserRepository,
+  IFindAllDisciplineRepository,
   IFindOneStudentRepository,
   IFindOneUserRepository,
 } from '@/data/contracts'
 
-export class MockedUserRepository
-  implements ICreateUserRepository, IFindOneUserRepository
+export class MockedDisciplineRepository
+  implements ICountDisciplineRepository, IFindAllDisciplineRepository
 {
-  create(): Promise<ICreateUserRepository.Output> {
+  count(): Promise<ICountDisciplineRepository.Output> {
     throw new Error('Method not implemented.')
   }
-  findOne(): Promise<IFindOneUserRepository.Output> {
+  findAll(): Promise<IFindAllDisciplineRepository.Output> {
     throw new Error('Method not implemented.')
   }
 }
@@ -23,6 +25,17 @@ export class MockedStudentRepository
     throw new Error('Method not implemented.')
   }
   findOne(): Promise<IFindOneStudentRepository.Output> {
+    throw new Error('Method not implemented.')
+  }
+}
+
+export class MockedUserRepository
+  implements ICreateUserRepository, IFindOneUserRepository
+{
+  create(): Promise<ICreateUserRepository.Output> {
+    throw new Error('Method not implemented.')
+  }
+  findOne(): Promise<IFindOneUserRepository.Output> {
     throw new Error('Method not implemented.')
   }
 }

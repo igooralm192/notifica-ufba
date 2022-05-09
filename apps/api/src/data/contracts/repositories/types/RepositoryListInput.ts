@@ -1,6 +1,6 @@
 import { RepositoryWhereInput } from './RepositoryWhereInput'
 
-export interface FindAllRepositoryInput {
+export interface RepositoryListInput {
   where?: RepositoryWhereInput
   take?: number
   skip?: number

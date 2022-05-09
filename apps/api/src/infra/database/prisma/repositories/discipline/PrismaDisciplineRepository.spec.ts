@@ -19,6 +19,34 @@ describe('PrismaDisciplineRepository', () => {
     await getClient().discipline.deleteMany()
   })
 
+  describe('count', () => {
+    it('should return total of disciplines', async () => {
+      const { SUT } = makeSUT()
+
+      await getClient().discipline.create({
+        data: {
+          name: faker.name.title(),
+          code: faker.random.word(),
+          course: faker.name.jobTitle(),
+          semester: faker.random.word(),
+        },
+      })
+
+      await getClient().discipline.create({
+        data: {
+          name: faker.name.title(),
+          code: faker.random.word(),
+          course: faker.name.jobTitle(),
+          semester: faker.random.word(),
+        },
+      })
+
+      const total = await SUT.count()
+
+      expect(total).toBe(2)
+    })
+  })
+
   describe('findAll', () => {
     it('should return all disciplines', async () => {
       const { SUT } = makeSUT()
