@@ -1,7 +1,9 @@
+import { mockDisciplineDTO } from '@notifica-ufba/domain/mocks'
 import {
   IAuthenticateUserUseCase,
   ICreateStudentUseCase,
   ICreateUserUseCase,
+  IReadDisciplinesUseCase,
 } from '@notifica-ufba/domain/usecases'
 
 import faker from 'faker'
@@ -24,4 +26,10 @@ export const mockCreateUserOutput = (
   user = mockUserDTO(),
 ): ICreateUserUseCase.Output => {
   return { user }
+}
+
+export const mockReadDisciplinesOutput = (
+  discipline = mockDisciplineDTO(),
+): IReadDisciplinesUseCase.Output => {
+  return { disciplines: [discipline], total: 1 }
 }
