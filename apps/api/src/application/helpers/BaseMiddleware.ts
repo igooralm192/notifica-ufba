@@ -1,12 +1,12 @@
 import { CommonError } from '@notifica-ufba/domain/errors'
 import { BaseError } from '@notifica-ufba/errors'
 
-export namespace BaseController {
+export namespace BaseMiddleware {
   export type Request = {
     body?: any
     query?: any
     params?: any
-    context?: any
+    headers?: any
   }
 
   export type Response = {
@@ -15,14 +15,14 @@ export namespace BaseController {
   }
 }
 
-export abstract class BaseController {
+export abstract class BaseMiddleware {
   abstract handle(
-    request: BaseController.Request,
-  ): Promise<BaseController.Response>
+    request: BaseMiddleware.Request,
+  ): Promise<BaseMiddleware.Response>
 
   public async perform(
-    request: BaseController.Request,
-  ): Promise<BaseController.Response> {
+    request: BaseMiddleware.Request,
+  ): Promise<BaseMiddleware.Response> {
     try {
       const response = await this.handle(request)
 
@@ -32,14 +32,14 @@ export abstract class BaseController {
     }
   }
 
-  private response(statusCode: number, body: any): BaseController.Response {
+  private response(statusCode: number, body: any): BaseMiddleware.Response {
     return { statusCode, body }
   }
 
   public errorResponse(
     statusCode: number,
     error: BaseError,
-  ): BaseController.Response {
+  ): BaseMiddleware.Response {
     return this.response(statusCode, {
       code: error.code,
       message: error.message,

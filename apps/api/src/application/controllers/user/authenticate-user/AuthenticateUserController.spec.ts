@@ -49,7 +49,7 @@ describe('AuthenticateUserController', () => {
       authenticateUserOutput,
     } = makeSUT()
 
-    const response = await SUT.handle(authenticateUserInput)
+    const response = await SUT.handle({ body: authenticateUserInput })
 
     expect(authenticateUserUseCaseSpy).toHaveBeenCalledWith(
       authenticateUserInput,
@@ -74,7 +74,7 @@ describe('AuthenticateUserController', () => {
     const { SUT, validateSpy, authenticateUserInput } = makeSUT()
     validateSpy.mockReturnValueOnce(validationError)
 
-    const response = await SUT.handle(authenticateUserInput)
+    const response = await SUT.handle({ body: authenticateUserInput })
 
     expect(response.statusCode).toBe(400)
     expect(response.body).toMatchObject({
@@ -93,7 +93,7 @@ describe('AuthenticateUserController', () => {
       left(authenticateUserError),
     )
 
-    const response = await SUT.handle(authenticateUserInput)
+    const response = await SUT.handle({ body: authenticateUserInput })
 
     expect(response.statusCode).toBe(404)
     expect(response.body).toMatchObject({
@@ -110,7 +110,7 @@ describe('AuthenticateUserController', () => {
       left(authenticateUserError),
     )
 
-    const httpResponse = await SUT.handle(authenticateUserInput)
+    const httpResponse = await SUT.handle({ body: authenticateUserInput })
 
     expect(httpResponse.statusCode).toBe(401)
     expect(httpResponse.body).toMatchObject({

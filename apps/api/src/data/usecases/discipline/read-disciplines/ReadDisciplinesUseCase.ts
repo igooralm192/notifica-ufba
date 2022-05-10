@@ -21,8 +21,8 @@ export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
     const { paginate } = input
 
     const listInput = {
-      take: paginate?.page,
-      skip: paginate?.limit,
+      skip: paginate?.page,
+      take: paginate?.limit,
     }
 
     const [disciplines, totalDisciplines] = await Promise.all([

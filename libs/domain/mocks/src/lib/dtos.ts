@@ -1,6 +1,22 @@
-import { IStudentDTO, IUserDTO } from '@notifica-ufba/domain/dtos'
+import {
+  IDisciplineDTO,
+  IStudentDTO,
+  IUserDTO,
+} from '@notifica-ufba/domain/dtos'
 
 import faker from 'faker'
+
+export const mockDisciplineDTO = (): IDisciplineDTO => {
+  return {
+    id: faker.datatype.uuid(),
+    name: faker.name.title(),
+    code: faker.random.word(),
+    course: faker.name.jobTitle(),
+    semester: faker.random.word(),
+    createdAt: faker.datatype.datetime(),
+    updatedAt: faker.datatype.datetime(),
+  }
+}
 
 export const mockStudentDTO = (user = mockUserDTO()): IStudentDTO => {
   return {

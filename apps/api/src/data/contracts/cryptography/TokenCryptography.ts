@@ -27,7 +27,7 @@ export namespace IDecodeTokenCryptography {
 }
 
 export interface IDecodeTokenCryptography {
-  decode(
+  decode<T = any>(
     input: IDecodeTokenCryptography.Input,
-  ): Promise<IDecodeTokenCryptography.Output>
+  ): Promise<IDecodeTokenCryptography.Output<T>>
 }
