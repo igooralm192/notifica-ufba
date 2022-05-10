@@ -40,8 +40,8 @@ describe('ReadDisciplinesUseCase', () => {
     await SUT.run({ paginate: paginateListInput })
 
     expect(findAllSpy).toHaveBeenCalledWith({
-      take: paginateListInput.page,
-      skip: paginateListInput.limit,
+      take: paginateListInput.limit,
+      skip: paginateListInput.page,
     })
   })
 
