@@ -1,12 +1,28 @@
 import { CommonError } from '@notifica-ufba/domain/errors'
 import { BaseError } from '@notifica-ufba/errors'
 
-import { IControllerResponseDTO } from '@/application/dtos'
+export namespace BaseController {
+  export type Request = {
+    body?: any
+    query?: any
+    params?: any
+    context?: any
+  }
+
+  export type Response = {
+    statusCode: number
+    body: any
+  }
+}
 
 export abstract class BaseController {
-  abstract handle(request: any): Promise<IControllerResponseDTO>
+  abstract handle(
+    request: BaseController.Request,
+  ): Promise<BaseController.Response>
 
-  public async perform(request: any): Promise<IControllerResponseDTO> {
+  public async perform(
+    request: BaseController.Request,
+  ): Promise<BaseController.Response> {
     try {
       const response = await this.handle(request)
 
@@ -16,14 +32,14 @@ export abstract class BaseController {
     }
   }
 
-  private response(statusCode: number, body: any): IControllerResponseDTO {
+  private response(statusCode: number, body: any): BaseController.Response {
     return { statusCode, body }
   }
 
-  private errorResponse(
+  public errorResponse(
     statusCode: number,
     error: BaseError,
-  ): IControllerResponseDTO {
+  ): BaseController.Response {
     return this.response(statusCode, {
       code: error.code,
       message: error.message,

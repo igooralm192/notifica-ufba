@@ -1,7 +1,6 @@
 import { AuthenticateUserError } from '@notifica-ufba/domain/errors'
 import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
 
-import { IControllerResponseDTO } from '@/application/dtos'
 import { BaseController } from '@/application/helpers'
 import { UserViewModel } from '@/application/models'
 
@@ -15,14 +14,16 @@ export class AuthenticateUserController extends BaseController {
     super()
   }
 
-  async handle(request: any): Promise<IControllerResponseDTO> {
-    const validationError = this.validation.validate(request)
+  async handle(
+    request: BaseController.Request,
+  ): Promise<BaseController.Response> {
+    const validationError = this.validation.validate(request.body)
 
     if (validationError) {
       return this.badRequest(validationError)
     }
 
-    const result = await this.authenticateUserUseCase.run(request)
+    const result = await this.authenticateUserUseCase.run(request.body)
 
     if (result.isRight()) {
       const { token, user } = result.value

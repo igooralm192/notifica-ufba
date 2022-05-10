@@ -44,7 +44,7 @@ describe('CreateUserController', () => {
   it('should call validation correctly', async () => {
     const { SUT, validateSpy, createUserInput } = makeSUT()
 
-    await SUT.handle(createUserInput)
+    await SUT.handle({ body: createUserInput })
 
     expect(validateSpy).toHaveBeenCalledWith(createUserInput)
   })
@@ -52,7 +52,7 @@ describe('CreateUserController', () => {
   it('should call create user usecase correctly', async () => {
     const { SUT, createUserUseCaseSpy, createUserInput } = makeSUT()
 
-    await SUT.handle(createUserInput)
+    await SUT.handle({ body: createUserInput })
 
     expect(createUserUseCaseSpy).toHaveBeenCalledWith(createUserInput)
   })
@@ -60,7 +60,7 @@ describe('CreateUserController', () => {
   it('should return 200 if valid credentials are provided', async () => {
     const { SUT, createUserInput, createUserOutput } = makeSUT()
 
-    const response = await SUT.handle(createUserInput)
+    const response = await SUT.handle({ body: createUserInput })
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
@@ -81,7 +81,7 @@ describe('CreateUserController', () => {
     const { SUT, validateSpy, createUserInput } = makeSUT()
     validateSpy.mockReturnValueOnce(validationError)
 
-    const response = await SUT.handle(createUserInput)
+    const response = await SUT.handle({ body: createUserInput })
 
     expect(response.statusCode).toBe(400)
     expect(response.body).toMatchObject({
@@ -97,7 +97,7 @@ describe('CreateUserController', () => {
     const { SUT, createUserUseCaseSpy, createUserInput } = makeSUT()
     createUserUseCaseSpy.mockResolvedValueOnce(left(createUserError))
 
-    const response = await SUT.handle(createUserInput)
+    const response = await SUT.handle({ body: createUserInput })
 
     expect(response.statusCode).toBe(403)
     expect(response.body).toMatchObject({
