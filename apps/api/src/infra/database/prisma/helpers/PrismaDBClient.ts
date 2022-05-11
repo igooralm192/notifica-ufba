@@ -9,7 +9,6 @@ export class PrismaDBClient implements IDBClient<PrismaClient> {
 
   static getInstance(): PrismaDBClient {
     if (!PrismaDBClient.instance) PrismaDBClient.instance = new PrismaDBClient()
-
     return PrismaDBClient.instance
   }
 
