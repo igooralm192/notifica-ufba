@@ -26,7 +26,7 @@ const makeSUT = () => {
   )
 
   const findOneSpy = jest.spyOn(userRepository, 'findOne')
-  findOneSpy.mockResolvedValue(undefined)
+  findOneSpy.mockResolvedValue(null)
 
   const generateHashSpy = jest.spyOn(hashCryptography, 'generate')
   generateHashSpy.mockResolvedValue(hashedPassword)

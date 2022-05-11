@@ -5,7 +5,7 @@ import {
 import { mockAuthenticateUserInput } from '@notifica-ufba/domain/mocks'
 
 import { AuthenticateUserUseCase } from '@/data/usecases/user'
-import { AuthenticateUserController } from '@/application/controllers/authenticate-user'
+import { AuthenticateUserController } from '@/application/controllers/user'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 import { makeApp } from '@/main/config/app'
 

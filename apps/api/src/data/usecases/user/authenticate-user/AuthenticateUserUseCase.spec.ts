@@ -70,7 +70,7 @@ describe('AuthenticateUserUseCase', () => {
   it('should not be able to authenticate if user does not exist', async () => {
     const { SUT, findOneSpy, authenticateUserInput } = makeSUT()
 
-    findOneSpy.mockResolvedValueOnce(undefined)
+    findOneSpy.mockResolvedValueOnce(null)
 
     const resultOrError = await SUT.run(authenticateUserInput)
     const error = resultOrError.left()

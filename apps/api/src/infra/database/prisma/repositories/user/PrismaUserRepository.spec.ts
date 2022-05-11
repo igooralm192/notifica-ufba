@@ -30,7 +30,7 @@ describe('PrismaUserRepository', () => {
         where: { email: user.email },
       })
 
-      expect(createdUser).toMatchObject(findUser)
+      expect(createdUser).toMatchObject(findUser!)
     })
   })
 

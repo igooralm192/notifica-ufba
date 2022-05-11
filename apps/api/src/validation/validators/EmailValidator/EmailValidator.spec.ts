@@ -7,7 +7,7 @@ import faker from 'faker'
 import { EmailValidator } from '.'
 
 class MockedEmailValidator implements IValidator {
-  validate(): BaseError {
+  validate(): BaseError | null {
     throw new Error('Method not implemented.')
   }
 }
