@@ -19,3 +19,8 @@ makeDBClient()
     )
   })
   .catch(console.error)
+
+// Fix ts-node-dev on reload with Prisma connection
+process.on('SIGTERM', () => {
+  process.exit()
+})
