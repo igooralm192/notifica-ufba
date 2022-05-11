@@ -1,4 +1,4 @@
-import { CreateUserController } from '@/application/controllers'
+import { CreateUserController } from '@/application/controllers/user'
 import { makeCreateUserUseCase } from '@/main/factories/usecases'
 import { makeCreateUserValidation } from '@/main/factories/validation'
 

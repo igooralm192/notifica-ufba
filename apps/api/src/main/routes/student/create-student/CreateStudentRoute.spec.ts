@@ -2,7 +2,7 @@ import { CommonError, CreateStudentError } from '@notifica-ufba/domain/errors'
 import { mockCreateStudentInput } from '@notifica-ufba/domain/mocks'
 
 import { CreateStudentUseCase } from '@/data/usecases/student'
-import { CreateStudentController } from '@/application/controllers/create-student'
+import { CreateStudentController } from '@/application/controllers/student/create-student'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 import { makeApp } from '@/main/config/app'
 

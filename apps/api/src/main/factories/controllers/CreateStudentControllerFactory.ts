@@ -1,4 +1,4 @@
-import { CreateStudentController } from '@/application/controllers'
+import { CreateStudentController } from '@/application/controllers/student'
 import { makeCreateStudentUseCase } from '@/main/factories/usecases'
 import { makeCreateStudentValidation } from '@/main/factories/validation'
 
