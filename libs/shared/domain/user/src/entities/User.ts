@@ -1,10 +1,11 @@
-import { IEntity } from '../interfaces'
-
 export type IUserType = 'STUDENT' | 'TEACHER'
 
-export interface IUserEntity extends IEntity {
+export interface IUser {
+  id: string
   name: string
   email: string
   password: string
   type: IUserType
+  createdAt: Date
+  updatedAt: Date
 }

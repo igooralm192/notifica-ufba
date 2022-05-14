@@ -1,20 +1,7 @@
-import { BaseEntity, IEntity } from '../helpers'
+import { IEntity } from '../interfaces'
 
-export type IDisciplineEntity = IEntity &
-  Pick<DisciplineEntity, 'name' | 'code' | 'course' | 'semester'>
-
-export class DisciplineEntity extends BaseEntity {
+export interface IDisciplineEntity extends IEntity {
   name: string
   code: string
   course: string
-  semester: string
-
-  constructor({ name, code, course, semester, ...entity }: IDisciplineEntity) {
-    super(entity)
-
-    this.name = name
-    this.code = code
-    this.course = course
-    this.semester = semester
-  }
 }

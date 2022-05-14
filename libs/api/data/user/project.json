@@ -1,0 +1,23 @@
+{
+  "root": "libs/api/data/user",
+  "sourceRoot": "libs/api/data/user/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/api/data/user/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/api/data/user"],
+      "options": {
+        "jestConfig": "libs/api/data/user/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

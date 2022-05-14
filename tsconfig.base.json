@@ -18,12 +18,16 @@
     "resolveJsonModule": true,
     "strict": true,
     "paths": {
+      "@notifica-ufba/api/data/user": ["libs/api/data/user/src/index.ts"],
       "@notifica-ufba/domain/dtos": ["libs/domain/dtos/src/index.ts"],
       "@notifica-ufba/domain/entities": ["libs/domain/entities/src/index.ts"],
       "@notifica-ufba/domain/errors": ["libs/domain/errors/src/index.ts"],
       "@notifica-ufba/domain/mocks": ["libs/domain/mocks/src/index.ts"],
       "@notifica-ufba/domain/usecases": ["libs/domain/usecases/src/index.ts"],
       "@notifica-ufba/errors": ["libs/errors/src/index.ts"],
+      "@notifica-ufba/shared/domain/user": [
+        "libs/shared/domain/user/src/index.ts"
+      ],
       "@notifica-ufba/utils": ["libs/utils/src/index.ts"]
     }
   },

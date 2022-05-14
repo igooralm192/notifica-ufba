@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "api-data-user": "libs/api/data/user",
     "app": "apps/app",
     "app-e2e": "apps/app-e2e",
     "domain-dtos": "libs/domain/dtos",
@@ -10,6 +11,7 @@
     "domain-mocks": "libs/domain/mocks",
     "domain-usecases": "libs/domain/usecases",
     "errors": "libs/errors",
+    "shared-domain-user": "libs/shared/domain/user",
     "utils": "libs/utils"
   }
 }

@@ -1,2 +1,2 @@
 export * from './lib'
-export * from './helpers'
+export * from './interfaces'
