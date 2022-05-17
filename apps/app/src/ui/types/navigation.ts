@@ -1,6 +1,6 @@
 export type AppNavigation = {
+  DisciplinesScreen: undefined
   LoginScreen: undefined
-  MessagesScreen: undefined
   RegisterScreen: undefined
   SplashScreen: undefined
   WelcomeScreen: undefined

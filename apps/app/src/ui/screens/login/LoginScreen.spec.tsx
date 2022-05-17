@@ -35,13 +35,11 @@ const makeSUT = () => {
   validateSpy.mockReturnValue({ errors: {} })
 
   const loginSpy = jest.spyOn(loginPresenter, 'login')
-  loginSpy.mockResolvedValue(right(mockAuthenticateUserOutput()))
+  loginSpy.mockImplementation()
 
   const screen = render(
     <LoginScreen validation={loginValidation} presenter={loginPresenter} />,
-    {
-      wrapper: AllProviders,
-    },
+    { wrapper: AllProviders },
   )
 
   return {
@@ -114,17 +112,5 @@ describe('LoginScreen', () => {
     fireEvent.press(SUT.getByText('Entrar'))
 
     await waitFor(() => expect(loginSpy).toHaveBeenCalledWith(values))
-  })
-
-  it('should show toast message if login returns errors', async () => {
-    const error = new BaseError(faker.random.word(), faker.random.words())
-
-    const { SUT, loginSpy } = makeSUT()
-    loginSpy.mockResolvedValueOnce(left(error))
-
-    fireEvent.press(SUT.getByText('Entrar'))
-
-    await waitFor(() => expect(SUT.getByText('Erro ao fazer login.')))
-    expect(SUT.getByText(error.message))
   })
 })

@@ -38,7 +38,7 @@ const makeSUT = () => {
   validateSpy.mockReturnValue({ errors: {} })
 
   const registerSpy = jest.spyOn(registerPresenter, 'register')
-  registerSpy.mockResolvedValue(right(mockAuthenticateUserOutput()))
+  registerSpy.mockImplementation()
 
   const screen = render(
     <RegisterScreen
@@ -145,17 +145,5 @@ describe('RegisterScreen', () => {
     fireEvent.press(SUT.getByText('Cadastrar'))
 
     await waitFor(() => expect(registerSpy).toHaveBeenCalledWith(values))
-  })
-
-  it('should show toast message if register returns errors', async () => {
-    const error = new BaseError(faker.random.word(), faker.random.words())
-
-    const { SUT, registerSpy } = makeSUT()
-    registerSpy.mockResolvedValueOnce(left(error))
-
-    fireEvent.press(SUT.getByText('Cadastrar'))
-
-    await waitFor(() => expect(SUT.getByText('Erro ao fazer cadastro.')))
-    expect(SUT.getByText(error.message))
   })
 })

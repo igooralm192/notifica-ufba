@@ -7,7 +7,6 @@ import { observer } from 'mobx-react'
 import React, { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Keyboard, TextInput } from 'react-native'
-import Toast from 'react-native-toast-message'
 
 import {
   Container,
@@ -42,17 +41,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const handleSubmit = async (values: IRegisterFormValues) => {
     Keyboard.dismiss()
 
-    const resultOrError = await presenter.register(values)
-
-    if (resultOrError.isLeft()) {
-      const error = resultOrError.left()
-
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao fazer cadastro.',
-        text2: error.message,
-      })
-    }
+    await presenter.register(values)
   }
 
   const submitForm = form.handleSubmit(handleSubmit)

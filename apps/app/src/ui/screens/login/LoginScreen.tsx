@@ -7,7 +7,6 @@ import { observer } from 'mobx-react'
 import React, { useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { Keyboard, TextInput } from 'react-native'
-import Toast from 'react-native-toast-message'
 
 import {
   Container,
@@ -35,17 +34,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ validation, presenter }) => {
   const handleSubmit = async (values: ILoginFormValues) => {
     Keyboard.dismiss()
 
-    const resultOrError = await presenter.login(values)
-
-    if (resultOrError.isLeft()) {
-      const error = resultOrError.left()
-
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao fazer login.',
-        text2: error.message,
-      })
-    }
+    await presenter.login(values)
   }
 
   const submitForm = form.handleSubmit(handleSubmit)
