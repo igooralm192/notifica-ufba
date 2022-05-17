@@ -40,7 +40,9 @@
     "react-native-dotenv": "*",
     "@react-native-async-storage/async-storage": "*",
     "react-native-keyboard-aware-scroll-view": "*",
-    "react-hook-form": "*"
+    "react-hook-form": "*",
+    "mongodb": "*",
+    "@react-navigation/stack": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && cp yarn.lock ./apps/app/ && mv ./apps/app/eas.js ./index.js",

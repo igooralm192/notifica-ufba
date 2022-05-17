@@ -1,5 +1,5 @@
+export * from './DisciplinesScreenFactory'
 export * from './LoginScreenFactory'
-export * from './MessagesScreenFactory'
 export * from './RegisterScreenFactory'
 export * from './SplashScreenFactory'
 export * from './WelcomeScreenFactory'

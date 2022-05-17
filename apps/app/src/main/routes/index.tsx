@@ -2,8 +2,8 @@ import { AuthState } from '@/application/stores'
 import { Header } from '@/ui/components/Header'
 import { AppNavigation } from '@/ui/types/navigation'
 import {
+  DisciplinesScreenFactory,
   LoginScreenFactory,
-  MessagesScreenFactory,
   RegisterScreenFactory,
   SplashScreenFactory,
   WelcomeScreenFactory,
@@ -38,8 +38,9 @@ const getAuthScreens = (state: AuthState) => {
       return (
         <Stack.Group>
           <Stack.Screen
-            name="MessagesScreen"
-            component={MessagesScreenFactory}
+            name="DisciplinesScreen"
+            component={DisciplinesScreenFactory}
+            options={{ title: 'Disciplinas' }}
           />
         </Stack.Group>
       )
