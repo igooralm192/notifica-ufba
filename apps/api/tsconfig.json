@@ -3,7 +3,6 @@
   "files": [],
   "include": ["**/*.json"],
   "compilerOptions": {
-    "strict": true,
     "paths": {
       "@notifica-ufba/domain/dtos": ["libs/domain/dtos/src/index.ts"],
       "@notifica-ufba/domain/entities": ["libs/domain/entities/src/index.ts"],
@@ -13,7 +12,8 @@
       "@notifica-ufba/errors": ["libs/errors/src/index.ts"],
       "@notifica-ufba/utils": ["libs/utils/src/index.ts"],
       "@/*": ["apps/api/src/*"]
-    }
+    },
+    "typeRoots": ["./src/@types", "../../node_modules/@types"]
   },
   "references": [
     {

@@ -16,7 +16,6 @@
     "baseUrl": "./",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "strict": true,
     "paths": {
       "@notifica-ufba/domain/dtos": ["libs/domain/dtos/src/index.ts"],
       "@notifica-ufba/domain/entities": ["libs/domain/entities/src/index.ts"],
