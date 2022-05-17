@@ -2,11 +2,11 @@ import {
   IAuthenticateUserUseCase,
   ICreateStudentUseCase,
 } from '@notifica-ufba/domain/usecases'
-import { Either, left } from '@notifica-ufba/utils'
+import { BaseError } from '@notifica-ufba/errors'
 
+import { IAlertManager } from '@/application/managers'
+import { UserMapper } from '@/application/mappers'
 import { IAuthStore } from '@/application/stores'
-import { UserViewModel } from '@/application/models'
-
 import { IRegisterPresenter } from '@/ui/presenters'
 
 import { makeAutoObservable } from 'mobx'
@@ -16,6 +16,7 @@ export class RegisterPresenter implements IRegisterPresenter {
 
   constructor(
     private readonly authStore: IAuthStore,
+    private readonly alertManager: IAlertManager,
     private readonly createStudentUseCase: ICreateStudentUseCase,
     private readonly authenticateUserUseCase: IAuthenticateUserUseCase,
   ) {
@@ -28,9 +29,7 @@ export class RegisterPresenter implements IRegisterPresenter {
     password,
     matriculation,
     course,
-  }: ICreateStudentUseCase.Input): Promise<
-    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
-  > {
+  }: ICreateStudentUseCase.Input): Promise<void> {
     this.showLoading()
 
     const createStudentResult = await this.createStudentUseCase.run({
@@ -42,8 +41,9 @@ export class RegisterPresenter implements IRegisterPresenter {
     })
 
     if (createStudentResult.isLeft()) {
+      this.showError(createStudentResult.value)
       this.hideLoading()
-      return left(createStudentResult.value)
+      return
     }
 
     const loginResult = await this.authenticateUserUseCase.run({
@@ -52,17 +52,27 @@ export class RegisterPresenter implements IRegisterPresenter {
     })
 
     if (loginResult.isLeft()) {
+      this.showError(loginResult.value)
       this.hideLoading()
-      return left(loginResult.value)
+      return
     }
 
     const { token, user } = loginResult.value
 
-    this.authStore.setUser(UserViewModel.fromDTO(user))
+    this.authStore.setUser(UserMapper.toViewModel(user))
     this.authStore.setToken(token)
+
     this.hideLoading()
 
-    return loginResult
+    return
+  }
+
+  private showError(error: BaseError) {
+    this.alertManager.show({
+      type: 'error',
+      title: 'Erro ao fazer cadastro.',
+      message: error.message,
+    })
   }
 
   private showLoading() {

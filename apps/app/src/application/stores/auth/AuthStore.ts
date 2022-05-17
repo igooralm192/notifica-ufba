@@ -1,4 +1,4 @@
-import { UserViewModel } from '@/application/models'
+import { IUserViewModel } from '@/ui/models'
 import { makeAutoObservable } from 'mobx'
 
 export enum AuthState {
@@ -9,15 +9,15 @@ export enum AuthState {
 
 export interface IAuthStore {
   state: AuthState
-  user: UserViewModel | null
+  user: IUserViewModel | null
   isAuthenticated: boolean
-  setUser(user: UserViewModel | null): void
+  setUser(user: IUserViewModel | null): void
   setToken(token: string | null): void
 }
 
 export class AuthStore implements IAuthStore {
   private _state: AuthState = AuthState.UNKNOWN
-  private _user: UserViewModel | null = null
+  private _user: IUserViewModel | null = null
   private _token: string | null = null
 
   constructor() {
@@ -40,7 +40,7 @@ export class AuthStore implements IAuthStore {
     return this._state === AuthState.AUTHENTICATED
   }
 
-  setUser(user: UserViewModel | null): void {
+  setUser(user: IUserViewModel | null): void {
     this._user = user
   }
 

@@ -1,8 +1,8 @@
 import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
-import { Either } from '@notifica-ufba/utils'
 
+import { IAlertManager } from '@/application/managers'
+import { UserMapper } from '@/application/mappers'
 import { IAuthStore } from '@/application/stores'
-import { UserViewModel } from '@/application/models'
 import { ILoginPresenter } from '@/ui/presenters'
 
 import { makeAutoObservable } from 'mobx'
@@ -12,6 +12,7 @@ export class LoginPresenter implements ILoginPresenter {
 
   constructor(
     private readonly authStore: IAuthStore,
+    private readonly alertManager: IAlertManager,
     private readonly authenticateUserUseCase: IAuthenticateUserUseCase,
   ) {
     makeAutoObservable(this)
@@ -20,23 +21,31 @@ export class LoginPresenter implements ILoginPresenter {
   async login({
     email,
     password,
-  }: IAuthenticateUserUseCase.Input): Promise<
-    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
-  > {
+  }: IAuthenticateUserUseCase.Input): Promise<void> {
     this.showLoading()
 
     const result = await this.authenticateUserUseCase.run({ email, password })
 
     if (result.isLeft()) {
+      const error = result.value
+
+      this.alertManager.show({
+        type: 'error',
+        title: 'Erro ao fazer login.',
+        message: error.message,
+      })
+
       this.hideLoading()
-      return result
+      return
     }
 
-    this.authStore.setUser(UserViewModel.fromDTO(result.right().user))
-    this.authStore.setToken(result.right().token)
-    this.hideLoading()
+    const { token, user } = result.value
 
-    return result
+    this.authStore.setUser(UserMapper.toViewModel(user))
+    this.authStore.setToken(token)
+
+    this.hideLoading()
+    return
   }
 
   private showLoading() {
