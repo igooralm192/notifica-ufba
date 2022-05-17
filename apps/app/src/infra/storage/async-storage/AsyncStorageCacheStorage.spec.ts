@@ -20,12 +20,12 @@ describe('AsyncStorageCacheStorage', () => {
     expect(item).toEqual(value)
   })
 
-  it('Should receive key and value and save on storage', async () => {
+  it('Should receive key and value and set on storage', async () => {
     const key = 'any-key'
     const value = 'any-value'
     const cacheStorage = new AsyncStorageCacheStorage()
 
-    await cacheStorage.save({ key, value })
+    await cacheStorage.set({ key, value })
 
     const item = await AsyncStorage.getItem(key)
 

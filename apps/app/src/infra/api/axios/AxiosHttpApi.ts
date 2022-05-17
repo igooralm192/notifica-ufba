@@ -1,4 +1,4 @@
-import { IHttpApi, IHttpApiRequest, IHttpApiResponse } from '@/data/contracts'
+import { IHttpApi } from '@/data/contracts'
 
 import axios, { AxiosError, AxiosInstance } from 'axios'
 
@@ -14,7 +14,7 @@ export class AxiosHttpApi implements IHttpApi {
     method,
     body,
     headers,
-  }: IHttpApiRequest): Promise<IHttpApiResponse> {
+  }: IHttpApi.Request): Promise<IHttpApi.Response> {
     try {
       const response = await this.api({ url, method, data: body, headers })
 

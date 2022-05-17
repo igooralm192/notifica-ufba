@@ -1,5 +1,4 @@
-import { IHttpApiRequest } from '@/data/contracts'
-
+import { IHttpApi } from '@/data/contracts'
 import { mockAxiosHttpResponse } from '@/infra/mocks'
 
 import axios from 'axios'
@@ -10,7 +9,7 @@ import { AxiosHttpApi } from './AxiosHttpApi'
 
 jest.mock('axios')
 
-const mockHttpRequest = (): IHttpApiRequest => {
+const mockHttpRequest = (): IHttpApi.Request => {
   return {
     url: faker.internet.url(),
     method: 'post',

@@ -1,9 +1,9 @@
-import { IGetCacheStorage, ISaveCacheStorage } from '@/data/contracts'
+import { IGetCacheStorage, ISetCacheStorage } from '@/data/contracts'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export class AsyncStorageCacheStorage
-  implements IGetCacheStorage, ISaveCacheStorage
+  implements IGetCacheStorage, ISetCacheStorage
 {
   async get({ key }: IGetCacheStorage.Input): Promise<IGetCacheStorage.Output> {
     try {
@@ -15,7 +15,7 @@ export class AsyncStorageCacheStorage
     }
   }
 
-  async save({ key, value }: ISaveCacheStorage.Input): Promise<void> {
+  async set({ key, value }: ISetCacheStorage.Input): Promise<void> {
     try {
       await AsyncStorage.setItem(key, value)
     } catch (e) {
