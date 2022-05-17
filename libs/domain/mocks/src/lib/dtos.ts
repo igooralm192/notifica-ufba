@@ -12,7 +12,6 @@ export const mockDisciplineDTO = (): IDisciplineDTO => {
     name: faker.name.title(),
     code: faker.random.word(),
     course: faker.name.jobTitle(),
-    semester: faker.random.word(),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
   }

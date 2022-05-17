@@ -1,4 +1,3 @@
-import { IUserType } from '@notifica-ufba/domain/entities'
 import {
   IAuthenticateUserUseCase,
   ICreateStudentUseCase,

@@ -1,4 +1,3 @@
-import { mockDisciplineDTO } from '@notifica-ufba/domain/mocks'
 import {
   IAuthenticateUserUseCase,
   ICreateStudentUseCase,
@@ -8,28 +7,28 @@ import {
 
 import faker from 'faker'
 
-import { mockStudentDTO, mockUserDTO } from './dtos'
+import { mockDiscipline, mockStudent, mockUser } from './entities'
 
 export const mockAuthenticateUserOutput = (
-  user = mockUserDTO(),
+  user = mockUser(),
 ): IAuthenticateUserUseCase.Output => {
   return { token: faker.datatype.uuid(), user }
 }
 
 export const mockCreateStudentOutput = (
-  student = mockStudentDTO(),
+  student = mockStudent(),
 ): ICreateStudentUseCase.Output => {
   return { student }
 }
 
 export const mockCreateUserOutput = (
-  user = mockUserDTO(),
+  user = mockUser(),
 ): ICreateUserUseCase.Output => {
   return { user }
 }
 
 export const mockReadDisciplinesOutput = (
-  discipline = mockDisciplineDTO(),
+  disciplines = [mockDiscipline()],
 ): IReadDisciplinesUseCase.Output => {
-  return { disciplines: [discipline], total: 1 }
+  return { results: disciplines, total: disciplines.length }
 }

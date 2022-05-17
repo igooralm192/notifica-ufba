@@ -1,29 +1,21 @@
-import {
-  DisciplineEntity,
-  IDisciplineEntity,
-  IStudentEntity,
-  IUserEntity,
-  StudentEntity,
-  UserEntity,
-} from '@notifica-ufba/domain/entities'
+import { IDiscipline, IStudent, IUser } from '@notifica-ufba/domain/entities'
 
 import faker from 'faker'
 import { ObjectId } from 'mongodb'
 
-export const mockDisciplineEntity = (): IDisciplineEntity => {
-  return new DisciplineEntity({
+export const mockDiscipline = (): IDiscipline => {
+  return {
     id: new ObjectId().toString(),
     name: faker.name.title(),
     code: faker.random.word(),
     course: faker.name.jobTitle(),
-    semester: faker.random.word(),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
-  })
+  }
 }
 
-export const mockStudentEntity = (user?: IUserEntity): IStudentEntity => {
-  return new StudentEntity({
+export const mockStudent = (user = mockUser()): IStudent => {
+  return {
     id: new ObjectId().toString(),
     matriculation: faker.datatype.uuid(),
     course: faker.company.companyName(),
@@ -31,11 +23,11 @@ export const mockStudentEntity = (user?: IUserEntity): IStudentEntity => {
     userId: user?.id || new ObjectId().toString(),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
-  })
+  }
 }
 
-export const mockUserEntity = (): IUserEntity => {
-  return new UserEntity({
+export const mockUser = (): IUser => {
+  return {
     id: new ObjectId().toString(),
     name: faker.internet.userName(),
     email: faker.internet.email(),
@@ -43,5 +35,5 @@ export const mockUserEntity = (): IUserEntity => {
     type: 'STUDENT',
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
-  })
+  }
 }
