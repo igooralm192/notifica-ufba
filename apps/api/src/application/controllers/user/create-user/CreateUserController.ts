@@ -2,7 +2,7 @@ import { CreateUserError } from '@notifica-ufba/domain/errors'
 import { ICreateUserUseCase } from '@notifica-ufba/domain/usecases'
 
 import { BaseController } from '@/application/helpers'
-import { UserViewModel } from '@/application/models'
+import { UserMapper } from '@/application/mappers'
 
 import { IValidation } from '@/validation/protocols'
 
@@ -17,7 +17,7 @@ export class CreateUserController extends BaseController {
   async handle(
     request: BaseController.Request,
   ): Promise<BaseController.Response> {
-    const validationError = this.validation.validate(request)
+    const validationError = this.validation.validate(request.body)
 
     if (validationError) {
       return this.badRequest(validationError)
@@ -27,7 +27,7 @@ export class CreateUserController extends BaseController {
 
     if (result.isRight()) {
       return this.ok({
-        user: UserViewModel.fromDTO(result.value.user),
+        user: UserMapper.toDTO(result.value.user),
       })
     }
 

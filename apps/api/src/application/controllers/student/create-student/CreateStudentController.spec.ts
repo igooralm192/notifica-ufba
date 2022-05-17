@@ -8,7 +8,6 @@ import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
 
 import { MockedValidation } from '@/application/mocks/validation'
-import { StudentViewModel } from '@/application/models'
 
 import faker from 'faker'
 
@@ -62,9 +61,18 @@ describe('CreateStudentController', () => {
 
     const response = await SUT.handle({ body: createStudentInput })
 
+    const { student } = createStudentOutput
+
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
-      student: StudentViewModel.fromDTO(createStudentOutput.student),
+      student: {
+        id: student.id,
+        matriculation: student.matriculation,
+        course: student.course,
+        userId: student.userId,
+        createdAt: student.createdAt,
+        updatedAt: student.updatedAt,
+      },
     })
   })
 

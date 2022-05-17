@@ -8,7 +8,6 @@ import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
 
 import { MockedValidation } from '@/application/mocks/validation'
-import { UserViewModel } from '@/application/models'
 
 import faker from 'faker'
 
@@ -64,7 +63,14 @@ describe('CreateUserController', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
-      user: UserViewModel.fromDTO(createUserOutput.user),
+      user: {
+        id: createUserOutput.user.id,
+        name: createUserOutput.user.name,
+        email: createUserOutput.user.email,
+        type: createUserOutput.user.type,
+        createdAt: createUserOutput.user.createdAt,
+        updatedAt: createUserOutput.user.updatedAt,
+      },
     })
   })
 

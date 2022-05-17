@@ -1,14 +1,13 @@
+import { IPaginateListInputDTO } from '@notifica-ufba/domain/dtos'
 import {
   mockReadDisciplinesOutput,
   MockedReadDisciplinesUseCase,
 } from '@notifica-ufba/domain/mocks'
 import { right } from '@notifica-ufba/utils'
 
-import { DisciplineViewModel } from '@/application/models'
 import { MockedListParamsParser } from '@/application/mocks/parsers'
 
 import { ReadDisciplinesController } from '.'
-import { IPaginateListInputDTO } from '@notifica-ufba/domain/dtos'
 
 const makeSUT = () => {
   const paginateListInput: IPaginateListInputDTO = { page: 1, limit: 2 }
@@ -71,13 +70,20 @@ describe('ReadDisciplinesController', () => {
 
     const response = await SUT.handle(controllerRequest)
 
-    const { disciplines, total } = readDisciplinesOutput
+    const { results, total } = readDisciplinesOutput
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
-      results: disciplines.map(discipline =>
-        DisciplineViewModel.fromDTO(discipline),
-      ),
+      results: [
+        {
+          id: results[0].id,
+          name: results[0].name,
+          code: results[0].code,
+          course: results[0].course,
+          createdAt: results[0].createdAt,
+          updatedAt: results[0].updatedAt,
+        },
+      ],
       total,
     })
   })

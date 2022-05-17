@@ -2,7 +2,7 @@ import { CreateStudentError } from '@notifica-ufba/domain/errors'
 import { ICreateStudentUseCase } from '@notifica-ufba/domain/usecases'
 
 import { BaseController } from '@/application/helpers'
-import { StudentViewModel } from '@/application/models'
+import { StudentMapper } from '@/application/mappers'
 
 import { IValidation } from '@/validation/protocols'
 
@@ -17,7 +17,7 @@ export class CreateStudentController extends BaseController {
   async handle(
     request: BaseController.Request,
   ): Promise<BaseController.Response> {
-    const validationError = this.validation.validate(request)
+    const validationError = this.validation.validate(request.body)
 
     if (validationError) {
       return this.badRequest(validationError)
@@ -26,9 +26,7 @@ export class CreateStudentController extends BaseController {
     const result = await this.createStudentUseCase.run(request.body)
 
     if (result.isRight()) {
-      return this.ok({
-        student: StudentViewModel.fromDTO(result.value.student),
-      })
+      return this.ok({ student: StudentMapper.toDTO(result.value.student) })
     }
 
     switch (result.value.constructor) {

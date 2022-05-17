@@ -12,7 +12,6 @@ import { MockedValidation } from '@/application/mocks/validation'
 import faker from 'faker'
 
 import { AuthenticateUserController } from '.'
-import { UserViewModel } from '@/application/models'
 
 const makeSUT = () => {
   const authenticateUserInput = mockAuthenticateUserInput()
@@ -41,6 +40,24 @@ const makeSUT = () => {
 }
 
 describe('AuthenticateUserController', () => {
+  it('should call validation correctly', async () => {
+    const { SUT, validateSpy, authenticateUserInput } = makeSUT()
+
+    await SUT.handle({ body: authenticateUserInput })
+
+    expect(validateSpy).toHaveBeenCalledWith(authenticateUserInput)
+  })
+
+  it('should call create user usecase correctly', async () => {
+    const { SUT, authenticateUserUseCaseSpy, authenticateUserInput } = makeSUT()
+
+    await SUT.handle({ body: authenticateUserInput })
+
+    expect(authenticateUserUseCaseSpy).toHaveBeenCalledWith(
+      authenticateUserInput,
+    )
+  })
+
   it('should return 200 if valid credentials are provided', async () => {
     const {
       SUT,
@@ -57,7 +74,14 @@ describe('AuthenticateUserController', () => {
     expect(response.statusCode).toBe(200)
     expect(response.body).toMatchObject({
       token: authenticateUserOutput.token,
-      user: UserViewModel.fromDTO(authenticateUserOutput.user),
+      user: {
+        id: authenticateUserOutput.user.id,
+        name: authenticateUserOutput.user.name,
+        email: authenticateUserOutput.user.email,
+        type: authenticateUserOutput.user.type,
+        createdAt: authenticateUserOutput.user.createdAt,
+        updatedAt: authenticateUserOutput.user.updatedAt,
+      },
     })
   })
 

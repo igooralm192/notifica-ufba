@@ -1,7 +1,7 @@
 import { IReadDisciplinesUseCase } from '@notifica-ufba/domain/usecases'
 
 import { BaseController } from '@/application/helpers'
-import { DisciplineViewModel } from '@/application/models'
+import { DisciplineMapper } from '@/application/mappers'
 import { IListParamsParser } from '@/application/protocols'
 
 export class ReadDisciplinesController extends BaseController {
@@ -23,12 +23,10 @@ export class ReadDisciplinesController extends BaseController {
       return this.fail(result.value)
     }
 
-    const { disciplines, total } = result.value
+    const { results, total } = result.value
 
     return this.ok({
-      results: disciplines.map(discipline =>
-        DisciplineViewModel.fromDTO(discipline),
-      ),
+      results: results.map(discipline => DisciplineMapper.toDTO(discipline)),
       total,
     })
   }
