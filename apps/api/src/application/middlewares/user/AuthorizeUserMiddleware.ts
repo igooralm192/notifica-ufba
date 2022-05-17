@@ -1,6 +1,11 @@
 import { IGetUserIdByTokenUseCase } from '@notifica-ufba/domain/usecases'
 import { BaseMiddleware } from '@/application/helpers'
-import { ExpiredTokenError } from '@/data/errors'
+
+import {
+  ExpiredTokenError,
+  InvalidTokenError,
+  MissingTokenError,
+} from '@/data/errors'
 
 export class AuthorizeUserMiddleware extends BaseMiddleware {
   constructor(
@@ -14,9 +19,11 @@ export class AuthorizeUserMiddleware extends BaseMiddleware {
   ): Promise<BaseMiddleware.Response> {
     const token = this.parseAuthorizationToken(request.headers)
 
-    
+    if (!token) {
+      return this.badRequest(new MissingTokenError())
+    }
 
-    const result = await this.getUserIdByTokenUsecase.run(request.body)
+    const result = await this.getUserIdByTokenUsecase.run({ token })
 
     if (result.isRight()) {
       const { userId } = result.value
@@ -24,8 +31,9 @@ export class AuthorizeUserMiddleware extends BaseMiddleware {
     }
 
     switch (result.value.constructor) {
+      case InvalidTokenError:
       case ExpiredTokenError:
-        return this.badRequest(result.value)
+        return this.unauthorized(result.value)
 
       default:
         return this.fail(result.value)

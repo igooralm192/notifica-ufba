@@ -1,1 +1,1 @@
-export * from './TypeORMUserEntity'
+export * from './TypeORMUser'

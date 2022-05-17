@@ -36,7 +36,6 @@ model Discipline {
   name      String
   code      String   @unique
   course    String
-  semester  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
