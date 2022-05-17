@@ -1,16 +1,3 @@
-export namespace ISaveCacheStorage {
-  export type Input = {
-    key: string
-    value: any
-  }
-
-  export type Output = void
-}
-
-export interface ISaveCacheStorage {
-  save(input: ISaveCacheStorage.Input): Promise<ISaveCacheStorage.Output>
-}
-
 export namespace IGetCacheStorage {
   export type Input = {
     key: string
@@ -21,4 +8,17 @@ export namespace IGetCacheStorage {
 
 export interface IGetCacheStorage {
   get(input: IGetCacheStorage.Input): Promise<IGetCacheStorage.Output>
+}
+
+export namespace ISetCacheStorage {
+  export type Input = {
+    key: string
+    value: any
+  }
+
+  export type Output = void
+}
+
+export interface ISetCacheStorage {
+  set(input: ISetCacheStorage.Input): Promise<ISetCacheStorage.Output>
 }

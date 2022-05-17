@@ -1,52 +1,38 @@
-import { IStudentDTO } from '@notifica-ufba/domain/dtos'
-import { BaseModel, IModel } from '@/data/helpers'
+import { IStudent } from '@notifica-ufba/domain/entities'
 import { UserModel } from './UserModel'
 
-export type IStudentModel = IModel &
-  Pick<StudentModel, 'matriculation' | 'course' | 'userId' | 'user'>
-
-export class StudentModel extends BaseModel {
-  matriculation: string
-  course: string
-  userId: string
-  user?: UserModel
-
-  constructor({
-    matriculation,
-    course,
-    userId,
-    user,
-    ...entity
-  }: IStudentModel) {
-    super(entity)
-
-    this.matriculation = matriculation
-    this.course = course
-    this.userId = userId
-    this.user = user
-  }
+export class StudentModel {
+  constructor(
+    public id: string,
+    public matriculation: string,
+    public course: string,
+    public userId: string,
+    public user: Record<string, any> | undefined,
+    public createdAt: string,
+    public updatedAt: string,
+  ) {}
 
   static fromJSON(data: Record<string, any>) {
-    return new StudentModel({
-      id: data.id,
-      matriculation: data.matriculation,
-      course: data.course,
-      userId: data.userId,
-      user: data.user ? UserModel.fromJSON(data.user) : undefined,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    })
+    return new StudentModel(
+      data.id,
+      data.matriculation,
+      data.course,
+      data.userId,
+      data.user,
+      data.createdAt,
+      data.updatedAt,
+    )
   }
 
-  toDTO(): IStudentDTO {
+  toEntity(): IStudent {
     return {
       id: this.id,
       matriculation: this.matriculation,
       course: this.course,
       userId: this.userId,
-      user: this.user?.toDTO(),
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      user: this.user ? UserModel.fromJSON(this.user).toEntity() : undefined,
+      createdAt: new Date(this.createdAt),
+      updatedAt: new Date(this.updatedAt),
     }
   }
 }

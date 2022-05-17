@@ -3,22 +3,23 @@ import {
   AuthenticateUserError,
 } from '@notifica-ufba/domain/errors'
 import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
 
-import { IHttpApi, ISaveCacheStorage } from '@/data/contracts'
+import { IHttpApi, ISetCacheStorage } from '@/data/contracts'
 import { UserModel } from '@/data/models'
 
 export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
   constructor(
     private readonly httpApi: IHttpApi,
-    private readonly saveCacheStorage: ISaveCacheStorage,
+    private readonly setCacheStorage: ISetCacheStorage,
   ) {}
 
   async run({
     email,
     password,
   }: IAuthenticateUserUseCase.Input): Promise<
-    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+    Either<BaseError, IAuthenticateUserUseCase.Output>
   > {
     const response = await this.httpApi.request({
       url: '/auth/user',
@@ -28,14 +29,14 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
     switch (response.statusCode) {
       case 200:
-        await this.saveCacheStorage.save({
+        await this.setCacheStorage.set({
           key: 'TOKEN',
           value: response.body.token,
         })
 
         return right({
           token: response.body.token,
-          user: UserModel.fromJSON(response.body.user).toDTO(),
+          user: UserModel.fromJSON(response.body.user).toEntity(),
         })
       case 400:
         return left(

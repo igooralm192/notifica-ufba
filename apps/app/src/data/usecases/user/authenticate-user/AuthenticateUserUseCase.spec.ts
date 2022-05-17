@@ -2,16 +2,15 @@ import {
   CommonError,
   AuthenticateUserError,
 } from '@notifica-ufba/domain/errors'
+import { mockAuthenticateUserInput } from '@notifica-ufba/domain/mocks'
 import { left } from '@notifica-ufba/utils'
 
 import { MockedHttpApi } from '@/data/mocks/api'
 import { MockedCacheStorage } from '@/data/mocks/storage'
-import { UserModel } from '@/data/models'
 
 import faker from 'faker'
 
 import { AuthenticateUserUseCase } from '.'
-import { mockAuthenticateUserInput } from '@notifica-ufba/domain/mocks'
 
 const mockAuthenticateUserHttpResponse = () => {
   return {
@@ -20,8 +19,9 @@ const mockAuthenticateUserHttpResponse = () => {
       id: faker.datatype.number(),
       name: faker.internet.userName(),
       email: faker.internet.email(),
-      created_at: faker.datatype.datetime().toISOString(),
-      updated_at: faker.datatype.datetime().toISOString(),
+      type: 'STUDENT',
+      createdAt: faker.datatype.datetime().toISOString(),
+      updatedAt: faker.datatype.datetime().toISOString(),
     },
   }
 }
@@ -43,13 +43,13 @@ const makeSUT = () => {
     body: authenticateUserHttpResponse,
   })
 
-  const saveSpy = jest.spyOn(cacheStorage, 'save')
-  saveSpy.mockImplementation()
+  const setCacheSpy = jest.spyOn(cacheStorage, 'set')
+  setCacheSpy.mockImplementation()
 
   return {
     SUT: authenticateUserUseCase,
     httpRequestSpy,
-    saveSpy,
+    setCacheSpy,
     authenticateUserInput,
     authenticateUserHttpResponse,
   }
@@ -68,17 +68,17 @@ describe('AuthenticateUserUseCase', () => {
     })
   })
 
-  it('should call save cache storage with correct params', async () => {
+  it('should call set cache storage with correct params', async () => {
     const {
       SUT,
       authenticateUserInput,
       authenticateUserHttpResponse,
-      saveSpy,
+      setCacheSpy,
     } = makeSUT()
 
     await SUT.run(authenticateUserInput)
 
-    expect(saveSpy).toHaveBeenCalledWith({
+    expect(setCacheSpy).toHaveBeenCalledWith({
       key: 'TOKEN',
       value: authenticateUserHttpResponse.token,
     })
@@ -91,8 +91,18 @@ describe('AuthenticateUserUseCase', () => {
     const resultOrError = await SUT.run(authenticateUserInput)
     const result = resultOrError.right()
 
+    const { token, user } = authenticateUserHttpResponse
+
     expect(result).toMatchObject({
-      user: UserModel.fromJSON(authenticateUserHttpResponse.user).toDTO(),
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        type: user.type,
+        createdAt: new Date(user.createdAt),
+        updatedAt: new Date(user.updatedAt),
+      },
     })
   })
 

@@ -2,7 +2,6 @@ import { CommonError, CreateStudentError } from '@notifica-ufba/domain/errors'
 import { mockCreateStudentInput } from '@notifica-ufba/domain/mocks'
 
 import { MockedHttpApi } from '@/data/mocks/api'
-import { StudentModel } from '@/data/models'
 
 import faker from 'faker'
 
@@ -19,12 +18,12 @@ const mockCreateStudentHttpResponse = () => {
         name: faker.internet.userName(),
         email: faker.internet.email(),
         type: 'STUDENT',
-        created_at: faker.datatype.datetime().toISOString(),
-        updated_at: faker.datatype.datetime().toISOString(),
+        createdAt: faker.datatype.datetime().toISOString(),
+        updatedAt: faker.datatype.datetime().toISOString(),
       },
-      user_id: faker.datatype.uuid(),
-      created_at: faker.datatype.datetime().toISOString(),
-      updated_at: faker.datatype.datetime().toISOString(),
+      userId: faker.datatype.uuid(),
+      createdAt: faker.datatype.datetime().toISOString(),
+      updatedAt: faker.datatype.datetime().toISOString(),
     },
   }
 }
@@ -69,8 +68,25 @@ describe('CreateStudentUseCase', () => {
     const resultOrError = await SUT.run(createStudentInput)
     const result = resultOrError.right()
 
+    const { student } = createStudentHttpResponse
+
     expect(result).toMatchObject({
-      student: StudentModel.fromJSON(createStudentHttpResponse.student).toDTO(),
+      student: {
+        id: student.id,
+        matriculation: student.matriculation,
+        course: student.course,
+        userId: student.userId,
+        user: {
+          id: student.user.id,
+          name: student.user.name,
+          email: student.user.email,
+          type: student.user.type,
+          createdAt: new Date(student.user.createdAt),
+          updatedAt: new Date(student.user.updatedAt),
+        },
+        createdAt: new Date(student.createdAt),
+        updatedAt: new Date(student.updatedAt),
+      },
     })
   })
 

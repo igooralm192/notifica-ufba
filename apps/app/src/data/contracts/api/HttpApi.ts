@@ -1,16 +1,19 @@
-export interface IHttpApiRequest {
-  url: string
-  method: 'post'
-  body?: any
-  headers?: Record<string, string>
-}
+export namespace IHttpApi {
+  export type Request = {
+    url: string
+    method: 'get' | 'post'
+    body?: any
+    params?: Record<string, any>
+    headers?: Record<string, string>
+  }
 
-export interface IHttpApiResponse {
-  statusCode: number
-  body?: any
-  stack?: string
+  export type Response = {
+    statusCode: number
+    body?: any
+    stack?: string
+  }
 }
 
 export interface IHttpApi {
-  request(data: IHttpApiRequest): Promise<IHttpApiResponse>
+  request(request: IHttpApi.Request): Promise<IHttpApi.Response>
 }

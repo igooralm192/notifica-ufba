@@ -1,5 +1,6 @@
 import { CommonError, CreateStudentError } from '@notifica-ufba/domain/errors'
 import { ICreateStudentUseCase } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import { IHttpApi } from '@/data/contracts'
@@ -15,7 +16,7 @@ export class CreateStudentUseCase implements ICreateStudentUseCase {
     matriculation,
     course,
   }: ICreateStudentUseCase.Input): Promise<
-    Either<ICreateStudentUseCase.Errors, ICreateStudentUseCase.Output>
+    Either<BaseError, ICreateStudentUseCase.Output>
   > {
     const response = await this.httpApi.request({
       url: '/students',
@@ -26,7 +27,7 @@ export class CreateStudentUseCase implements ICreateStudentUseCase {
     switch (response.statusCode) {
       case 200:
         return right({
-          student: StudentModel.fromJSON(response.body.student).toDTO(),
+          student: StudentModel.fromJSON(response.body.student).toEntity(),
         })
       case 400:
         return left(

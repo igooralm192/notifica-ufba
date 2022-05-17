@@ -1,11 +1,11 @@
-import { IGetCacheStorage, ISaveCacheStorage } from '@/domain/ports/gateways'
+import { IGetCacheStorage, ISetCacheStorage } from '@/data/contracts'
 
-export class MockedCacheStorage implements IGetCacheStorage, ISaveCacheStorage {
+export class MockedCacheStorage implements IGetCacheStorage, ISetCacheStorage {
   get(): Promise<IGetCacheStorage.Output> {
     throw new Error('Method not implemented.')
   }
 
-  save(): Promise<void> {
+  set(): Promise<void> {
     throw new Error('Method not implemented.')
   }
 }
