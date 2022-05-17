@@ -1,2 +1,3 @@
-export * from './lib'
-export * from './helpers'
+export * from './lib/Discipline'
+export * from './lib/Student'
+export * from './lib/User'
