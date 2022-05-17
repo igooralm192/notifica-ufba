@@ -1,12 +1,11 @@
-import { mockDisciplineEntity } from '@notifica-ufba/domain/mocks'
+import { mockDiscipline } from '@notifica-ufba/domain/mocks'
 
 import { MockedDisciplineRepository } from '@/data/mocks/repositories'
-import { DisciplineModel } from '@/data/models'
 
 import { ReadDisciplinesUseCase } from '.'
 
 const makeSUT = () => {
-  const discipline = mockDisciplineEntity()
+  const discipline = mockDiscipline()
 
   const disciplineRepository = new MockedDisciplineRepository()
   const readDisciplinesUseCase = new ReadDisciplinesUseCase(
@@ -60,7 +59,7 @@ describe('ReadDisciplinesUseCase', () => {
     const result = resultOrError.right()
 
     expect(result).toMatchObject({
-      disciplines: [DisciplineModel.fromEntity(discipline).toDTO()],
+      results: [discipline],
       total: 1,
     })
   })

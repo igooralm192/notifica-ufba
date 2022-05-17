@@ -2,14 +2,14 @@ import {
   ICreateUserRepository,
   IFindOneUserRepository,
 } from '@/data/contracts/'
-import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
+import { TypeORMUser } from '@/infra/database/typeorm/entities'
 import { TypeORMRepository } from '@/infra/database/typeorm/helpers'
 
 export class TypeORMUserRepository
   extends TypeORMRepository
   implements ICreateUserRepository, IFindOneUserRepository
 {
-  private repository = this.getRepository(TypeORMUserEntity)
+  private repository = this.getRepository(TypeORMUser)
 
   async create(
     input: ICreateUserRepository.Input,

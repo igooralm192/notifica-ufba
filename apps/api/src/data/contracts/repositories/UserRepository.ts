@@ -1,4 +1,4 @@
-import { IUserType, IUserEntity } from '@notifica-ufba/domain/entities'
+import { IUserType, IUser } from '@notifica-ufba/domain/entities'
 
 export namespace ICreateUserRepository {
   export type Input = {
@@ -7,7 +7,7 @@ export namespace ICreateUserRepository {
     password: string
     type: IUserType
   }
-  export type Output = IUserEntity
+  export type Output = IUser
 }
 
 export interface ICreateUserRepository {
@@ -20,7 +20,7 @@ export namespace IFindOneUserRepository {
   export type Input = {
     email?: string
   }
-  export type Output = IUserEntity | null
+  export type Output = IUser | null
 }
 
 export interface IFindOneUserRepository {

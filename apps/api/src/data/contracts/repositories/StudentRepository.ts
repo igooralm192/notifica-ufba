@@ -1,4 +1,4 @@
-import { IStudentEntity } from '@notifica-ufba/domain/entities'
+import { IStudent } from '@notifica-ufba/domain/entities'
 
 export namespace ICreateStudentRepository {
   export type Input = {
@@ -7,7 +7,7 @@ export namespace ICreateStudentRepository {
     userId: string
   }
 
-  export type Output = IStudentEntity
+  export type Output = IStudent
 }
 
 export interface ICreateStudentRepository {
@@ -21,7 +21,7 @@ export namespace IFindOneStudentRepository {
     matriculation?: string
   }
 
-  export type Output = IStudentEntity | null
+  export type Output = IStudent | null
 }
 
 export interface IFindOneStudentRepository {

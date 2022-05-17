@@ -1,4 +1,4 @@
-import { mockStudentEntity, mockUserEntity } from '@notifica-ufba/domain/mocks'
+import { mockStudent, mockUser } from '@notifica-ufba/domain/mocks'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 
 import faker from 'faker'
@@ -6,8 +6,8 @@ import faker from 'faker'
 import { PrismaStudentRepository } from '.'
 
 const makeSUT = () => {
-  const user = mockUserEntity()
-  const student = mockStudentEntity(user)
+  const user = mockUser()
+  const student = mockStudent(user)
   const studentRepository = new PrismaStudentRepository()
 
   return {

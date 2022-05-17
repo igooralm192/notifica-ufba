@@ -1,4 +1,5 @@
 import { IGetUserIdByTokenUseCase } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import { IDecodeTokenCryptography } from '@/data/contracts'
@@ -11,7 +12,7 @@ export class GetUserIdByTokenUseCase implements IGetUserIdByTokenUseCase {
   async run({
     token,
   }: IGetUserIdByTokenUseCase.Input): Promise<
-    Either<IGetUserIdByTokenUseCase.Errors, IGetUserIdByTokenUseCase.Output>
+    Either<BaseError, IGetUserIdByTokenUseCase.Output>
   > {
     const payloadOrError = await this.decodeTokenCryptography.decode<{
       id: string

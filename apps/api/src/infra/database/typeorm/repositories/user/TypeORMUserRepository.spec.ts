@@ -1,11 +1,11 @@
-import { mockUserEntity } from '@notifica-ufba/domain/mocks'
-import { TypeORMUserEntity } from '@/infra/database/typeorm/entities'
+import { mockUser } from '@notifica-ufba/domain/mocks'
+import { TypeORMUser } from '@/infra/database/typeorm/entities'
 import { useTypeORMTestConnection } from '@/infra/database/typeorm/helpers'
 
 import { TypeORMUserRepository } from '.'
 
 const makeSUT = () => {
-  const user = mockUserEntity()
+  const user = mockUser()
   const userRepository = new TypeORMUserRepository()
 
   return {
@@ -23,12 +23,9 @@ describe('TypeORMUserRepository', () => {
 
       const createdUser = await SUT.create({ ...user })
 
-      const findUser = await getConnection().manager.findOneBy(
-        TypeORMUserEntity,
-        {
-          email: user.email,
-        },
-      )
+      const findUser = await getConnection().manager.findOneBy(TypeORMUser, {
+        email: user.email,
+      })
 
       expect(createdUser).toMatchObject(findUser!)
     })
@@ -37,7 +34,7 @@ describe('TypeORMUserRepository', () => {
   describe('findOne', () => {
     it('should return user if email exist', async () => {
       const { SUT, user } = makeSUT()
-      await getConnection().manager.insert(TypeORMUserEntity, user)
+      await getConnection().manager.insert(TypeORMUser, user)
 
       const findUser = await SUT.findOne({ email: user.email })
 

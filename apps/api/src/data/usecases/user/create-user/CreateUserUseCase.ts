@@ -1,5 +1,6 @@
 import { CreateUserError } from '@notifica-ufba/domain/errors'
 import { ICreateUserUseCase } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import {
@@ -7,7 +8,6 @@ import {
   IFindOneUserRepository,
   IGenerateHashCryptography,
 } from '@/data/contracts'
-import { UserModel } from '@/data/models'
 
 export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(
@@ -22,7 +22,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
     password,
     type = 'STUDENT',
   }: ICreateUserUseCase.Input): Promise<
-    Either<ICreateUserUseCase.Errors, ICreateUserUseCase.Output>
+    Either<BaseError, ICreateUserUseCase.Output>
   > {
     const user = await this.findOneUserRepository.findOne({ email })
 
@@ -39,6 +39,6 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       type,
     })
 
-    return right({ user: UserModel.fromEntity(createdUser).toDTO() })
+    return right({ user: createdUser })
   }
 }

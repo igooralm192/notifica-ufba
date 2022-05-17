@@ -3,13 +3,13 @@ import {
   ICreateStudentUseCase,
   ICreateUserUseCase,
 } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import {
   ICreateStudentRepository,
   IFindOneStudentRepository,
 } from '@/data/contracts'
-import { StudentModel } from '@/data/models'
 
 export class CreateStudentUseCase implements ICreateStudentUseCase {
   constructor(
@@ -25,7 +25,7 @@ export class CreateStudentUseCase implements ICreateStudentUseCase {
     matriculation,
     course,
   }: ICreateStudentUseCase.Input): Promise<
-    Either<ICreateStudentUseCase.Errors, ICreateStudentUseCase.Output>
+    Either<BaseError, ICreateStudentUseCase.Output>
   > {
     const student = await this.findOneStudentRepository.findOne({
       matriculation,
@@ -51,8 +51,6 @@ export class CreateStudentUseCase implements ICreateStudentUseCase {
       userId: user.id,
     })
 
-    return right({
-      student: StudentModel.fromEntity(createdStudent).toDTO(),
-    })
+    return right({ student: createdStudent })
   }
 }

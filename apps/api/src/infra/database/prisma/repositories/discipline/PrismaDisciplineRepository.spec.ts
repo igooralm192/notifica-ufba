@@ -28,7 +28,6 @@ describe('PrismaDisciplineRepository', () => {
           name: faker.name.title(),
           code: faker.random.word(),
           course: faker.name.jobTitle(),
-          semester: faker.random.word(),
         },
       })
 
@@ -37,7 +36,6 @@ describe('PrismaDisciplineRepository', () => {
           name: faker.name.title(),
           code: faker.random.word(),
           course: faker.name.jobTitle(),
-          semester: faker.random.word(),
         },
       })
 
@@ -56,7 +54,6 @@ describe('PrismaDisciplineRepository', () => {
           name: faker.name.title(),
           code: faker.random.word(),
           course: faker.name.jobTitle(),
-          semester: faker.random.word(),
         },
       })
 
@@ -65,7 +62,6 @@ describe('PrismaDisciplineRepository', () => {
           name: faker.name.title(),
           code: faker.random.word(),
           course: faker.name.jobTitle(),
-          semester: faker.random.word(),
         },
       })
 

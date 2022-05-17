@@ -1,4 +1,4 @@
-import { IDisciplineEntity } from '@notifica-ufba/domain/entities'
+import { IDiscipline } from '@notifica-ufba/domain/entities'
 import { RepositoryListInput } from './types'
 
 export namespace ICountDisciplineRepository {
@@ -14,7 +14,7 @@ export interface ICountDisciplineRepository {
 
 export namespace IFindAllDisciplineRepository {
   export type Input = RepositoryListInput
-  export type Output = IDisciplineEntity[]
+  export type Output = IDiscipline[]
 }
 
 export interface IFindAllDisciplineRepository {

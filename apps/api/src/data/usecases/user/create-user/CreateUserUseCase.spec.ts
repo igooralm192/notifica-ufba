@@ -1,12 +1,8 @@
 import { CreateUserError } from '@notifica-ufba/domain/errors'
-import {
-  mockUserEntity,
-  mockCreateUserInput,
-} from '@notifica-ufba/domain/mocks'
+import { mockUser, mockCreateUserInput } from '@notifica-ufba/domain/mocks'
 
 import { MockedHashCryptography } from '@/data/mocks/cryptography'
 import { MockedUserRepository } from '@/data/mocks/repositories'
-import { UserModel } from '@/data/models'
 
 import faker from 'faker'
 
@@ -15,7 +11,7 @@ import { CreateUserUseCase } from './CreateUserUseCase'
 const makeSUT = () => {
   const createUserInput = mockCreateUserInput()
   const hashedPassword = faker.internet.password()
-  const user = mockUserEntity()
+  const user = mockUser()
 
   const userRepository = new MockedUserRepository()
   const hashCryptography = new MockedHashCryptography()
@@ -26,7 +22,7 @@ const makeSUT = () => {
   )
 
   const findOneSpy = jest.spyOn(userRepository, 'findOne')
-  findOneSpy.mockResolvedValue(undefined)
+  findOneSpy.mockResolvedValue(null)
 
   const generateHashSpy = jest.spyOn(hashCryptography, 'generate')
   generateHashSpy.mockResolvedValue(hashedPassword)
@@ -52,7 +48,7 @@ describe('CreateUserUseCase', () => {
     const resultOrError = await SUT.run(createUserInput)
     const result = resultOrError.right()
 
-    expect(result).toMatchObject({ user: UserModel.fromEntity(user).toDTO() })
+    expect(result).toMatchObject({ user })
   })
 
   it('should call hash dependency to generate hashed password', async () => {

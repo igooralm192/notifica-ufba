@@ -1,6 +1,6 @@
 import { AuthenticateUserError } from '@notifica-ufba/domain/errors'
 import {
-  mockUserEntity,
+  mockUser,
   mockAuthenticateUserInput,
 } from '@notifica-ufba/domain/mocks'
 
@@ -9,7 +9,6 @@ import {
   MockedTokenCryptography,
 } from '@/data/mocks/cryptography'
 import { MockedUserRepository } from '@/data/mocks/repositories'
-import { UserModel } from '@/data/models'
 
 import faker from 'faker'
 
@@ -18,7 +17,7 @@ import { AuthenticateUserUseCase } from '.'
 const makeSUT = () => {
   const authenticateUserInput = mockAuthenticateUserInput()
   const token = faker.datatype.uuid()
-  const user = mockUserEntity()
+  const user = mockUser()
 
   const userRepository = new MockedUserRepository()
   const hashCryptography = new MockedHashCryptography()
@@ -61,16 +60,13 @@ describe('AuthenticateUserUseCase', () => {
       payload: { id: user.id },
     })
 
-    expect(result).toMatchObject({
-      token,
-      user: UserModel.fromEntity(user).toDTO(),
-    })
+    expect(result).toMatchObject({ token, user })
   })
 
   it('should not be able to authenticate if user does not exist', async () => {
     const { SUT, findOneSpy, authenticateUserInput } = makeSUT()
 
-    findOneSpy.mockResolvedValueOnce(undefined)
+    findOneSpy.mockResolvedValueOnce(null)
 
     const resultOrError = await SUT.run(authenticateUserInput)
     const error = resultOrError.left()

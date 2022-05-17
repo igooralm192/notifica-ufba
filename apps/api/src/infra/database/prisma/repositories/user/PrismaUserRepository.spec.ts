@@ -1,10 +1,10 @@
-import { mockUserEntity } from '@notifica-ufba/domain/mocks'
+import { mockUser } from '@notifica-ufba/domain/mocks'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 
 import { PrismaUserRepository } from '.'
 
 const makeSUT = () => {
-  const user = mockUserEntity()
+  const user = mockUser()
   const userRepository = new PrismaUserRepository()
 
   return {
@@ -30,7 +30,7 @@ describe('PrismaUserRepository', () => {
         where: { email: user.email },
       })
 
-      expect(createdUser).toMatchObject(findUser)
+      expect(createdUser).toMatchObject(findUser!)
     })
   })
 

@@ -1,11 +1,11 @@
 import { IReadDisciplinesUseCase } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, right } from '@notifica-ufba/utils'
 
 import {
   ICountDisciplineRepository,
   IFindAllDisciplineRepository,
 } from '@/data/contracts'
-import { DisciplineModel } from '@/data/models'
 
 export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
   constructor(
@@ -15,9 +15,7 @@ export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
 
   async run(
     input: IReadDisciplinesUseCase.Input = {},
-  ): Promise<
-    Either<IReadDisciplinesUseCase.Errors, IReadDisciplinesUseCase.Output>
-  > {
+  ): Promise<Either<BaseError, IReadDisciplinesUseCase.Output>> {
     const { paginate } = input
 
     const listInput = {
@@ -31,9 +29,7 @@ export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
     ])
 
     return right({
-      disciplines: disciplines.map(discipline =>
-        DisciplineModel.fromEntity(discipline).toDTO(),
-      ),
+      results: disciplines,
       total: totalDisciplines,
     })
   }

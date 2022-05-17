@@ -2,26 +2,24 @@ import { CreateStudentError } from '@notifica-ufba/domain/errors'
 import {
   mockCreateStudentInput,
   mockCreateUserOutput,
-  mockStudentEntity,
-  mockUserEntity,
+  mockStudent,
+  mockUser,
   MockedCreateUserUseCase,
 } from '@notifica-ufba/domain/mocks'
-import { ICreateStudentUseCase } from '@notifica-ufba/domain/usecases'
 import { BaseError } from '@notifica-ufba/errors'
 import { left, right } from '@notifica-ufba/utils'
 
 import { MockedStudentRepository } from '@/data/mocks/repositories'
-import { StudentModel } from '@/data/models'
 
 import faker from 'faker'
 
 import { CreateStudentUseCase } from './CreateStudentUseCase'
 
 const makeSUT = () => {
-  const user = mockUserEntity()
+  const user = mockUser()
   const createStudentInput = mockCreateStudentInput()
   const createUserOutput = mockCreateUserOutput(user)
-  const student = mockStudentEntity(user)
+  const student = mockStudent(user)
 
   const studentRepository = new MockedStudentRepository()
   const createUserUseCase = new MockedCreateUserUseCase()
@@ -59,9 +57,7 @@ describe('CreateStudentUseCase', () => {
     const resultOrError = await SUT.run(createStudentInput)
     const result = resultOrError.right()
 
-    expect(result).toMatchObject<ICreateStudentUseCase.Output>({
-      student: StudentModel.fromEntity(student).toDTO(),
-    })
+    expect(result).toMatchObject({ student })
   })
 
   it('should call find one repository dependency', async () => {

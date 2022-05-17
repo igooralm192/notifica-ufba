@@ -1,4 +1,4 @@
-import { IUserType, IUserEntity } from '@notifica-ufba/domain/entities'
+import { IUserType, IUser } from '@notifica-ufba/domain/entities'
 
 import {
   Entity,
@@ -10,7 +10,7 @@ import {
 } from 'typeorm'
 
 @Entity('users')
-export class TypeORMUserEntity extends BaseEntity implements IUserEntity {
+export class TypeORMUser extends BaseEntity implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id!: string
 

@@ -1,5 +1,6 @@
 import { AuthenticateUserError } from '@notifica-ufba/domain/errors'
 import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, left, right } from '@notifica-ufba/utils'
 
 import {
@@ -7,7 +8,6 @@ import {
   IFindOneUserRepository,
   IGenerateTokenCryptography,
 } from '@/data/contracts'
-import { UserModel } from '@/data/models'
 
 export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
   constructor(
@@ -20,7 +20,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     email,
     password,
   }: IAuthenticateUserUseCase.Input): Promise<
-    Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+    Either<BaseError, IAuthenticateUserUseCase.Output>
   > {
     const user = await this.findOneUserRepository.findOne({ email })
 
@@ -41,9 +41,6 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       payload: { id: user.id },
     })
 
-    return right({
-      token,
-      user: UserModel.fromEntity(user).toDTO(),
-    })
+    return right({ token, user })
   }
 }
