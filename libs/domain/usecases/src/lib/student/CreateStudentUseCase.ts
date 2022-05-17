@@ -1,5 +1,5 @@
-import { IStudentDTO } from '@notifica-ufba/domain/dtos'
-import { CommonError, CreateStudentError } from '@notifica-ufba/domain/errors'
+import { IStudent } from '@notifica-ufba/domain/entities'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, UseCase } from '@notifica-ufba/utils'
 
 export namespace ICreateStudentUseCase {
@@ -11,16 +11,12 @@ export namespace ICreateStudentUseCase {
     course: string
   }
 
-  export type Errors =
-    | CreateStudentError.StudentAlreadyExistsError
-    | CommonError.InternalServerError
-
   export type Output = {
-    student: IStudentDTO
+    student: IStudent
   }
 }
 
 export type ICreateStudentUseCase = UseCase<
   ICreateStudentUseCase.Input,
-  Either<ICreateStudentUseCase.Errors, ICreateStudentUseCase.Output>
+  Either<BaseError, ICreateStudentUseCase.Output>
 >

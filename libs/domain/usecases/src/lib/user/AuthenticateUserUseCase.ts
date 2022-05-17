@@ -1,8 +1,5 @@
-import { IUserDTO } from '@notifica-ufba/domain/dtos'
-import {
-  CommonError,
-  AuthenticateUserError,
-} from '@notifica-ufba/domain/errors'
+import { IUser } from '@notifica-ufba/domain/entities'
+import { BaseError } from '@notifica-ufba/errors'
 import { Either, UseCase } from '@notifica-ufba/utils'
 
 export namespace IAuthenticateUserUseCase {
@@ -11,18 +8,13 @@ export namespace IAuthenticateUserUseCase {
     password: string
   }
 
-  export type Errors =
-    | AuthenticateUserError.UserDoesNotExistError
-    | AuthenticateUserError.WrongPasswordError
-    | CommonError.InternalServerError
-
   export type Output = {
     token: string
-    user: IUserDTO
+    user: IUser
   }
 }
 
 export type IAuthenticateUserUseCase = UseCase<
   IAuthenticateUserUseCase.Input,
-  Either<IAuthenticateUserUseCase.Errors, IAuthenticateUserUseCase.Output>
+  Either<BaseError, IAuthenticateUserUseCase.Output>
 >
