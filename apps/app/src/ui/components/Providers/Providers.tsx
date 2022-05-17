@@ -1,3 +1,4 @@
+import { StatusBarProvider } from '@/ui/contexts/status-bar'
 import { themeOptions } from '@/ui/theme'
 import {
   useFonts,
@@ -56,7 +57,9 @@ export const AllProviders: React.FC = ({ children }) => {
     <LayoutProvider>
       <UIProvider>
         <StyleProvider>
-          <AlertProvider>{children}</AlertProvider>
+          <AlertProvider>
+            <StatusBarProvider>{children}</StatusBarProvider>
+          </AlertProvider>
         </StyleProvider>
       </UIProvider>
     </LayoutProvider>
