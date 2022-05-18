@@ -1,9 +1,17 @@
-import { IDiscipline, IStudent, IUser } from '@notifica-ufba/domain/entities'
+import {
+  IDiscipline,
+  IDisciplineGroup,
+  IStudent,
+  ITeacher,
+  IUser,
+} from '@notifica-ufba/domain/entities'
 
 import faker from 'faker'
 import { ObjectId } from 'mongodb'
 
-export const mockDiscipline = (): IDiscipline => {
+export const mockDiscipline = (
+  discipline?: Partial<IDiscipline>,
+): IDiscipline => {
   return {
     id: new ObjectId().toString(),
     name: faker.name.title(),
@@ -11,6 +19,28 @@ export const mockDiscipline = (): IDiscipline => {
     course: faker.name.jobTitle(),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
+    ...discipline,
+  }
+}
+
+export const mockDisciplineGroup = (
+  disciplineGroup?: Partial<IDisciplineGroup>,
+): IDisciplineGroup => {
+  return {
+    id: new ObjectId().toString(),
+    code: faker.random.word(),
+    semester: faker.random.word(),
+    description: faker.random.words(),
+    place: faker.address.city(),
+    menuUrl: faker.internet.url(),
+    classTime: faker.date.recent(),
+
+    teacherId: new ObjectId().toString(),
+    disciplineId: new ObjectId().toString(),
+
+    createdAt: faker.datatype.datetime(),
+    updatedAt: faker.datatype.datetime(),
+    ...disciplineGroup,
   }
 }
 
@@ -23,6 +53,16 @@ export const mockStudent = (user = mockUser()): IStudent => {
     userId: user?.id || new ObjectId().toString(),
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
+  }
+}
+
+export const mockTeacher = (teacher?: Partial<ITeacher>): ITeacher => {
+  return {
+    id: new ObjectId().toString(),
+    userId: new ObjectId().toString(),
+    createdAt: faker.datatype.datetime(),
+    updatedAt: faker.datatype.datetime(),
+    ...teacher,
   }
 }
 
