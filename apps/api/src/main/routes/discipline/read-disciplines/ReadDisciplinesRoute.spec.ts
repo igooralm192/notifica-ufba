@@ -10,7 +10,10 @@ import { CommonError } from '@notifica-ufba/domain/errors'
 
 let app: express.Express
 
-const disciplinesIds = []
+const userIds = []
+const teacherIds = []
+const disciplineIds = []
+const disciplineGroupIds = []
 
 const makeSUT = () => {
   const readDisciplinesRequest = request(app).get('/api/disciplines')
@@ -38,35 +41,108 @@ describe('GET /disciplines', () => {
   })
 
   afterEach(async () => {
-    await getClient().discipline.deleteMany({
-      where: { id: { in: disciplinesIds } },
+    await getClient().disciplineGroup.deleteMany({
+      where: { id: { in: disciplineGroupIds } },
     })
-    disciplinesIds.splice(0, disciplinesIds.length)
+    await getClient().discipline.deleteMany({
+      where: { id: { in: disciplineIds } },
+    })
+    await getClient().teacher.deleteMany({
+      where: { id: { in: teacherIds } },
+    })
+    await getClient().user.deleteMany({
+      where: { id: { in: userIds } },
+    })
+
+    disciplineGroupIds.splice(0, disciplineGroupIds.length)
+    disciplineIds.splice(0, disciplineIds.length)
+    teacherIds.splice(0, teacherIds.length)
+    userIds.splice(0, userIds.length)
   })
 
   it('should return 200 on success', async () => {
     const { SUT } = makeSUT()
 
-    const discipline = await getClient().discipline.create({
+    const teacherInput = {
+      name: faker.name.findName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    }
+
+    const disciplineGroupInput = {
+      code: faker.random.word(),
+      semester: faker.random.word(),
+      description: faker.random.words(),
+      place: faker.address.city(),
+      classTime: faker.date.recent(),
+      menuUrl: faker.internet.url(),
+    }
+
+    const disciplineInput = {
+      name: faker.name.title(),
+      code: faker.random.word(),
+      course: faker.name.jobTitle(),
+    }
+
+    const teacher = await getClient().teacher.create({
       data: {
-        name: faker.name.title(),
-        code: faker.random.word(),
-        course: faker.name.jobTitle(),
+        user: {
+          create: teacherInput,
+        },
       },
     })
 
-    disciplinesIds.push(discipline.id)
+    const discipline = await getClient().discipline.create({
+      data: {
+        ...disciplineInput,
+        groups: {
+          create: {
+            ...disciplineGroupInput,
+            teacherId: teacher.id,
+          },
+        },
+      },
+      include: { groups: true },
+    })
+
+    userIds.push(teacher.userId)
+    teacherIds.push(teacher.id)
+    disciplineIds.push(discipline.id)
+    disciplineGroupIds.push(discipline.groups[0].id)
 
     const response = await SUT.send()
 
     expect(response.status).toBe(200)
-    expect(response.body).toMatchObject({
+    expect(response.body).toEqual({
       results: [
         {
           id: discipline.id,
           name: discipline.name,
           code: discipline.code,
           course: discipline.course,
+
+          groups: [
+            {
+              id: discipline.groups[0].id,
+              code: discipline.groups[0].code,
+              semester: discipline.groups[0].semester,
+              description: discipline.groups[0].description,
+              place: discipline.groups[0].place,
+              menuUrl: discipline.groups[0].menuUrl,
+              classTime: discipline.groups[0].classTime.toISOString(),
+              teacherId: teacher.id,
+              teacher: {
+                id: teacher.id,
+                userId: teacher.userId,
+                createdAt: teacher.createdAt.toISOString(),
+                updatedAt: teacher.updatedAt.toISOString(),
+              },
+              disciplineId: discipline.id,
+              createdAt: discipline.groups[0].createdAt.toISOString(),
+              updatedAt: discipline.groups[0].updatedAt.toISOString(),
+            },
+          ],
+
           createdAt: discipline.createdAt.toISOString(),
           updatedAt: discipline.updatedAt.toISOString(),
         },
