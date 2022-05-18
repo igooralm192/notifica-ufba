@@ -6,6 +6,7 @@ import {
   ICountDisciplineRepository,
   IFindAllDisciplineRepository,
 } from '@/data/contracts'
+import { RepositoryListInput } from '@/data/contracts/repositories/types'
 
 export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
   constructor(
@@ -18,9 +19,10 @@ export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
   ): Promise<Either<BaseError, IReadDisciplinesUseCase.Output>> {
     const { paginate } = input
 
-    const listInput = {
+    const listInput: RepositoryListInput = {
       skip: paginate?.page,
       take: paginate?.limit,
+      include: { groups: { include: { teacher: true } } },
     }
 
     const [disciplines, totalDisciplines] = await Promise.all([

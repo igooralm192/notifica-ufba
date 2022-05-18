@@ -1,11 +1,24 @@
-import { mockDiscipline } from '@notifica-ufba/domain/mocks'
+import { IDiscipline } from '@notifica-ufba/domain/entities'
+import {
+  mockDiscipline,
+  mockDisciplineGroup,
+  mockTeacher,
+} from '@notifica-ufba/domain/mocks'
 
 import { MockedDisciplineRepository } from '@/data/mocks/repositories'
 
 import { ReadDisciplinesUseCase } from '.'
 
 const makeSUT = () => {
-  const discipline = mockDiscipline()
+  const teacher = mockTeacher()
+  const disciplineGroup = mockDisciplineGroup({
+    teacher,
+    teacherId: teacher.id,
+  })
+
+  const discipline = mockDiscipline({
+    groups: [disciplineGroup],
+  })
 
   const disciplineRepository = new MockedDisciplineRepository()
   const readDisciplinesUseCase = new ReadDisciplinesUseCase(
@@ -23,6 +36,8 @@ const makeSUT = () => {
     SUT: readDisciplinesUseCase,
     findAllSpy,
     countSpy,
+    teacher,
+    disciplineGroup,
     discipline,
   }
 }
@@ -41,6 +56,7 @@ describe('ReadDisciplinesUseCase', () => {
     expect(findAllSpy).toHaveBeenCalledWith({
       take: paginateListInput.limit,
       skip: paginateListInput.page,
+      include: { groups: { include: { teacher: true } } },
     })
   })
 
@@ -53,13 +69,45 @@ describe('ReadDisciplinesUseCase', () => {
   })
 
   it('should be able to read all disciplines', async () => {
-    const { SUT, discipline } = makeSUT()
+    const { SUT, discipline, disciplineGroup, teacher } = makeSUT()
 
     const resultOrError = await SUT.run()
     const result = resultOrError.right()
 
-    expect(result).toMatchObject({
-      results: [discipline],
+    expect(result).toEqual({
+      results: <IDiscipline[]>[
+        {
+          id: discipline.id,
+          name: discipline.name,
+          code: discipline.code,
+          course: discipline.course,
+          groups: [
+            {
+              id: disciplineGroup.id,
+              code: disciplineGroup.code,
+              semester: disciplineGroup.semester,
+              description: disciplineGroup.description,
+              place: disciplineGroup.place,
+              menuUrl: disciplineGroup.menuUrl,
+              classTime: disciplineGroup.classTime,
+
+              teacher: {
+                id: teacher.id,
+                userId: teacher.userId,
+                createdAt: teacher.createdAt,
+                updatedAt: teacher.updatedAt,
+              },
+              teacherId: teacher.id,
+              disciplineId: disciplineGroup.disciplineId,
+
+              createdAt: disciplineGroup.createdAt,
+              updatedAt: disciplineGroup.updatedAt,
+            },
+          ],
+          createdAt: discipline.createdAt,
+          updatedAt: discipline.updatedAt,
+        },
+      ],
       total: 1,
     })
   })
