@@ -4,9 +4,9 @@ import { Either, right } from '@notifica-ufba/utils'
 
 import {
   ICountDisciplineRepository,
+  IDisciplineRepositoryListInput,
   IFindAllDisciplineRepository,
 } from '@/data/contracts'
-import { RepositoryListInput } from '@/data/contracts/repositories/types'
 
 export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
   constructor(
@@ -19,10 +19,16 @@ export class ReadDisciplinesUseCase implements IReadDisciplinesUseCase {
   ): Promise<Either<BaseError, IReadDisciplinesUseCase.Output>> {
     const { paginate } = input
 
-    const listInput: RepositoryListInput = {
+    const listInput: IDisciplineRepositoryListInput = {
       skip: paginate?.page,
       take: paginate?.limit,
-      include: { groups: { include: { teacher: true } } },
+      include: {
+        groups: {
+          include: {
+            teacher: { include: { user: true } },
+          },
+        },
+      },
     }
 
     const [disciplines, totalDisciplines] = await Promise.all([

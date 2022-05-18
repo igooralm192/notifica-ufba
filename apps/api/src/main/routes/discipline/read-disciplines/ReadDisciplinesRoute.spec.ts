@@ -90,6 +90,7 @@ describe('GET /disciplines', () => {
           create: teacherInput,
         },
       },
+      include: { user: true },
     })
 
     const discipline = await getClient().discipline.create({
@@ -134,6 +135,14 @@ describe('GET /disciplines', () => {
               teacher: {
                 id: teacher.id,
                 userId: teacher.userId,
+                user: {
+                  id: teacher.user.id,
+                  name: teacher.user.name,
+                  email: teacher.user.email,
+                  type: teacher.user.type,
+                  createdAt: teacher.user.createdAt.toISOString(),
+                  updatedAt: teacher.user.updatedAt.toISOString(),
+                },
                 createdAt: teacher.createdAt.toISOString(),
                 updatedAt: teacher.updatedAt.toISOString(),
               },

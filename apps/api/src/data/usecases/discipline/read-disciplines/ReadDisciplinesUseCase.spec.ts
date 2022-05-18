@@ -56,7 +56,13 @@ describe('ReadDisciplinesUseCase', () => {
     expect(findAllSpy).toHaveBeenCalledWith({
       take: paginateListInput.limit,
       skip: paginateListInput.page,
-      include: { groups: { include: { teacher: true } } },
+      include: {
+        groups: {
+          include: {
+            teacher: { include: { user: true } },
+          },
+        },
+      },
     })
   })
 
