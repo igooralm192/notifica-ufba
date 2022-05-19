@@ -1,3 +1,4 @@
+import { useNavigation } from '@/ui/helpers'
 import { IDisciplineViewModel } from '@/ui/models'
 import { ListItem } from '@rneui/themed'
 import React, { useState } from 'react'
@@ -13,7 +14,10 @@ export interface DisciplinesListItemProps {
   discipline: IDisciplineViewModel
 }
 
-const DisciplinesListItem: React.FC<DisciplinesListItemProps> = props => {
+const DisciplinesListItem: React.FC<DisciplinesListItemProps> = ({
+  discipline,
+}) => {
+  const navigation = useNavigation()
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -22,18 +26,31 @@ const DisciplinesListItem: React.FC<DisciplinesListItemProps> = props => {
       containerStyle={{ paddingHorizontal: 16 }}
       content={
         <ListItem.Content>
-          <DisciplineCode>MATA02</DisciplineCode>
-          <DisciplineName>Cálculo A</DisciplineName>
+          <DisciplineCode>{discipline.code}</DisciplineCode>
+          <DisciplineName>{discipline.name}</DisciplineName>
         </ListItem.Content>
       }
       onPress={() => setExpanded(!expanded)}
     >
-      <ListItem containerStyle={{ paddingHorizontal: 16 }}>
-        <ListItem.Content>
-          <DisciplineGroupCode>T01000</DisciplineGroupCode>
-          <DisciplineGroupTeacher>Professor</DisciplineGroupTeacher>
-        </ListItem.Content>
-      </ListItem>
+      {discipline.groups?.map(group => (
+        <ListItem
+          key={group.id}
+          containerStyle={{ paddingHorizontal: 16 }}
+          onPress={() =>
+            navigation.navigate('DisciplineGroupScreen', {
+              discipline,
+              disciplineGroup: group,
+            })
+          }
+        >
+          <ListItem.Content>
+            <DisciplineGroupCode>{group.code}</DisciplineGroupCode>
+            <DisciplineGroupTeacher>
+              {group.teacher?.user?.name}
+            </DisciplineGroupTeacher>
+          </ListItem.Content>
+        </ListItem>
+      ))}
     </ListItem.Accordion>
   )
 }
