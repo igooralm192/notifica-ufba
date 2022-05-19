@@ -1,3 +1,5 @@
 export * from './DisciplineViewModel'
+export * from './DisciplineGroupViewModel'
 export * from './StudentViewModel'
+export * from './TeacherViewModel'
 export * from './UserViewModel'
