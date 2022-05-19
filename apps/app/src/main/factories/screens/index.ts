@@ -1,3 +1,4 @@
+export * from './DisciplineGroupScreenFactory'
 export * from './DisciplinesScreenFactory'
 export * from './LoginScreenFactory'
 export * from './RegisterScreenFactory'

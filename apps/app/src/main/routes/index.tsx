@@ -2,6 +2,7 @@ import { AuthState } from '@/application/stores'
 import { Header } from '@/ui/components/Header'
 import { AppNavigation } from '@/ui/types/navigation'
 import {
+  DisciplineGroupScreenFactory,
   DisciplinesScreenFactory,
   LoginScreenFactory,
   RegisterScreenFactory,
@@ -41,6 +42,11 @@ const getAuthScreens = (state: AuthState) => {
             name="DisciplinesScreen"
             component={DisciplinesScreenFactory}
             options={{ title: 'Disciplinas' }}
+          />
+          <Stack.Screen
+            name="DisciplineGroupScreen"
+            component={DisciplineGroupScreenFactory}
+            options={{ title: 'Turma' }}
           />
         </Stack.Group>
       )
