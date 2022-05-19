@@ -4,6 +4,7 @@ import {
   useFonts,
   Quicksand_400Regular,
   Quicksand_500Medium,
+  Quicksand_600SemiBold,
   Quicksand_700Bold,
 } from '@expo-google-fonts/quicksand'
 import { NavigationContainer } from '@react-navigation/native'
@@ -23,6 +24,7 @@ export const UIProvider: React.FC = ({ children }) => {
   const [fontsLoaded] = useFonts({
     Quicksand_400Regular,
     Quicksand_500Medium,
+    Quicksand_600SemiBold,
     Quicksand_700Bold,
   })
 
