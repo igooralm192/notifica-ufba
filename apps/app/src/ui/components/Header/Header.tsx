@@ -32,11 +32,25 @@ const Header: React.FC<HeaderProps> = ({ navigation, options, back }) => {
             icon={{
               name: 'arrow-back-ios',
               size: 20,
+              containerStyle: {
+                padding: 0,
+                margin: 0,
+              },
+              iconStyle: {
+                padding: 0,
+                margin: 0,
+                marginRight: 4,
+              },
               color:
                 statusBar.theme === 'light'
                   ? theme.colors.black
                   : theme.colors.white,
             }}
+            iconContainerStyle={{
+              padding: 0,
+              margin: 0,
+            }}
+            buttonStyle={{ padding: 0, margin: 0 }}
             onPress={() => navigation.goBack()}
           />
         )}

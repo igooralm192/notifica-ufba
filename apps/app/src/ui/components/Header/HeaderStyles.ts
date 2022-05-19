@@ -11,9 +11,7 @@ export const Title = styled(Text)`
   flex: 1;
   font-family: 'Quicksand_700Bold';
   font-size: 20px;
-  /* text-align: center; */
+  line-height: 24px;
 `
 
-export const Action = styled.View`
-  /* width: 32px; */
-`
+export const Action = styled.View``
