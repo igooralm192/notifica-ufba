@@ -1,3 +1,5 @@
 export * from './discipline/DisciplineMapper'
+export * from './discipline/DisciplineGroupMapper'
+export * from './teacher/TeacherMapper'
 export * from './student/StudentMapper'
 export * from './user/UserMapper'
