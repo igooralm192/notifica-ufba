@@ -12,6 +12,10 @@ export class ExpressRouteAdapter {
         context: request.context,
       })
 
+      if (controllerResponse.statusCode >= 400) {
+        console.error(controllerResponse.body)
+      }
+
       return response
         .status(controllerResponse.statusCode)
         .json(controllerResponse.body)
