@@ -11,8 +11,8 @@ export interface IDisciplineGroup {
   menuUrl: string
   classTime: Date
 
-  teacherId: string
-  disciplineId: string
+  teacherId?: string
+  disciplineId?: string
 
   teacher?: ITeacher
   discipline?: IDiscipline
