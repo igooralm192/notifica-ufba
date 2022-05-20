@@ -75,10 +75,10 @@ model DisciplineGroup {
   menuUrl     String
   classTime   DateTime
 
-  teacherId String   @unique @db.ObjectId
+  teacherId String?   @unique @db.ObjectId
   teacher   Teacher? @relation(fields: [teacherId], references: [id])
 
-  disciplineId String      @unique @db.ObjectId
+  disciplineId String?      @unique @db.ObjectId
   discipline   Discipline? @relation(fields: [disciplineId], references: [id])
 
   studentIds String[]  @db.ObjectId

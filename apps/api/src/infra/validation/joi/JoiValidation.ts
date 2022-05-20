@@ -17,7 +17,7 @@ export class JoiValidation implements IValidation {
 
     return new CommonError.ValidationError(
       errorMessage,
-      fieldKey && fieldValue
+      fieldKey
         ? {
             key: fieldKey,
             value: fieldValue,

@@ -3,9 +3,25 @@ import {
   ICreateStudentRepository,
   ICreateUserRepository,
   IFindAllDisciplineRepository,
+  IFindOneDisciplineGroupRepository,
   IFindOneStudentRepository,
   IFindOneUserRepository,
+  IPushStudentDisciplineGroupRepository,
 } from '@/data/contracts'
+import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
+
+export class MockedDisciplineGroupRepository
+  implements
+    IFindOneDisciplineGroupRepository,
+    IPushStudentDisciplineGroupRepository
+{
+  findOne(): Promise<IFindOneDisciplineGroupRepository.Output> {
+    throw new Error('Method not implemented.')
+  }
+  pushStudent(): Promise<IDisciplineGroup> {
+    throw new Error('Method not implemented.')
+  }
+}
 
 export class MockedDisciplineRepository
   implements ICountDisciplineRepository, IFindAllDisciplineRepository

@@ -18,6 +18,7 @@ export interface ICreateStudentRepository {
 
 export namespace IFindOneStudentRepository {
   export type Input = {
+    id?: string
     matriculation?: string
   }
 
