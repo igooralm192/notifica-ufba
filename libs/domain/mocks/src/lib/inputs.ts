@@ -2,6 +2,7 @@ import {
   IAuthenticateUserUseCase,
   ICreateStudentUseCase,
   ICreateUserUseCase,
+  ISubscribeStudentToDisciplineGroupUseCase,
 } from '@notifica-ufba/domain/usecases'
 
 import faker from 'faker'
@@ -31,3 +32,11 @@ export const mockCreateUserInput = (): ICreateUserUseCase.Input => {
     type: 'STUDENT',
   }
 }
+
+export const mockSubscribeStudentToDisciplineGroupInput =
+  (): ISubscribeStudentToDisciplineGroupUseCase.Input => {
+    return {
+      disciplineGroupId: faker.datatype.uuid(),
+      studentId: faker.datatype.uuid(),
+    }
+  }

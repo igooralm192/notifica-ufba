@@ -4,6 +4,7 @@ import {
   ICreateUserUseCase,
   IGetUserIdByTokenUseCase,
   IReadDisciplinesUseCase,
+  ISubscribeStudentToDisciplineGroupUseCase,
 } from '@notifica-ufba/domain/usecases'
 import { BaseError } from '@notifica-ufba/errors'
 import { Either } from '@notifica-ufba/utils'
@@ -34,6 +35,16 @@ export class MockedGetUserIdByTokenUseCase implements IGetUserIdByTokenUseCase {
 
 export class MockedReadDisciplinesUseCase implements IReadDisciplinesUseCase {
   run(): Promise<Either<BaseError, IReadDisciplinesUseCase.Output>> {
+    throw new Error('Method not implemented.')
+  }
+}
+
+export class MockedSubscribeStudentToDisciplineGroupUseCase
+  implements ISubscribeStudentToDisciplineGroupUseCase
+{
+  run(): Promise<
+    Either<BaseError, ISubscribeStudentToDisciplineGroupUseCase.Output>
+  > {
     throw new Error('Method not implemented.')
   }
 }
