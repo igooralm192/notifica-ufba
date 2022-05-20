@@ -2,11 +2,11 @@ import { CommonError } from '@notifica-ufba/domain/errors'
 import { BaseError } from '@notifica-ufba/errors'
 
 export namespace BaseController {
-  export type Request = {
-    body?: any
-    query?: any
-    params?: any
-    context?: any
+  export type Request<Body = any, Query = any, Params = any, Context = any> = {
+    body?: Body
+    query?: Query
+    params?: Params
+    context?: Context
   }
 
   export type Response = {
@@ -32,7 +32,7 @@ export abstract class BaseController {
     }
   }
 
-  private response(statusCode: number, body: any): BaseController.Response {
+  private response(statusCode: number, body?: any): BaseController.Response {
     return { statusCode, body }
   }
 
@@ -50,6 +50,10 @@ export abstract class BaseController {
 
   public ok(data: any) {
     return this.response(200, data)
+  }
+
+  public noContent() {
+    return this.response(204)
   }
 
   public badRequest(error: BaseError) {
