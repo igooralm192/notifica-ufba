@@ -131,6 +131,7 @@ describe('GET /disciplines', () => {
               place: discipline.groups[0].place,
               menuUrl: discipline.groups[0].menuUrl,
               classTime: discipline.groups[0].classTime.toISOString(),
+              studentIds: [],
               teacherId: teacher.id,
               teacher: {
                 id: teacher.id,

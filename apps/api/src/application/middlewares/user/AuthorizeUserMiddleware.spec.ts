@@ -29,7 +29,7 @@ describe('AuthorizeUserMiddleware', () => {
 
     await SUT.handle({
       headers: {
-        Authorization: 'Bearer any-token',
+        authorization: 'Bearer any-token',
       },
     })
 
@@ -43,7 +43,7 @@ describe('AuthorizeUserMiddleware', () => {
 
     const response = await SUT.handle({
       headers: {
-        Authorization: 'Bearer any-token',
+        authorization: 'Bearer any-token',
       },
     })
 

@@ -2,13 +2,14 @@ import {
   CommonError,
   AuthenticateUserError,
 } from '@notifica-ufba/domain/errors'
-import { mockAuthenticateUserInput } from '@notifica-ufba/domain/mocks'
+import { mockCreateUserInput } from '@notifica-ufba/domain/mocks'
 
 import { AuthenticateUserUseCase } from '@/data/usecases/user'
 import { AuthenticateUserController } from '@/application/controllers/user'
 import { usePrismaTestClient } from '@/infra/database/prisma/helpers'
 import { makeApp } from '@/main/config/app'
 
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 import express from 'express'
 import faker from 'faker'
@@ -16,26 +17,36 @@ import request from 'supertest'
 
 let app: express.Express
 
-const makeSUT = () => {
-  const authenticateUserInput = mockAuthenticateUserInput()
+const userIds = []
 
-  const authenticateUserRequest = request(app).post('/api/auth/user')
+const makeSUT = async (client: PrismaClient) => {
+  const input = mockCreateUserInput()
 
-  const authenticateUserUseCaseSpy = jest.spyOn(
-    AuthenticateUserUseCase.prototype,
-    'run',
-  )
+  const requestTest = request(app)
 
-  const authenticateUserControllerSpy = jest.spyOn(
+  const usecaseSpy = jest.spyOn(AuthenticateUserUseCase.prototype, 'run')
+  const controllerSpy = jest.spyOn(
     AuthenticateUserController.prototype,
     'handle',
   )
 
+  const user = await client.user.create({
+    data: {
+      name: input.name,
+      email: input.email,
+      // TODO: Use bcrypt salt from .env
+      password: await bcrypt.hash(input.password, 10),
+    },
+  })
+
+  userIds.push(user.id)
+
   return {
-    SUT: authenticateUserRequest,
-    authenticateUserUseCaseSpy,
-    authenticateUserControllerSpy,
-    authenticateUserInput,
+    SUT: requestTest,
+    usecaseSpy,
+    controllerSpy,
+    input,
+    user,
   }
 }
 
@@ -45,44 +56,40 @@ describe('POST /auth/user', () => {
   })
 
   afterEach(async () => {
-    await getClient().user.deleteMany()
+    await getClient().user.deleteMany({
+      where: { id: { in: userIds } },
+    })
+
+    userIds.splice(0, userIds.length)
   })
 
   it('should return 200 on success', async () => {
-    const { SUT, authenticateUserInput } = makeSUT()
+    const { SUT, input, user } = await makeSUT(getClient())
 
-    const name = faker.name.firstName()
-    const { email, password } = authenticateUserInput
-
-    await getClient().user.create({
-      data: {
-        name,
-        email,
-        // TODO: Use bcrypt salt from .env
-        password: await bcrypt.hash(password, 10),
-      },
+    const response = await SUT.post('/api/auth/user').send({
+      email: input.email,
+      password: input.password,
     })
 
-    const response = await SUT.send(authenticateUserInput)
-
     expect(response.status).toBe(200)
-    expect(response.body).toMatchObject({
+    expect(response.body).toEqual({
       token: expect.any(String),
       user: {
-        id: expect.any(String),
-        name,
-        email,
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
+        id: user.id,
+        name: input.name,
+        email: input.email,
+        type: user.type,
+        createdAt: user.createdAt.toISOString(),
+        updatedAt: user.updatedAt.toISOString(),
       },
     })
   })
 
   it('should return 400 on validation error', async () => {
-    const { SUT, authenticateUserInput } = makeSUT()
+    const { SUT, input } = await makeSUT(getClient())
 
-    const response = await SUT.send({
-      ...authenticateUserInput,
+    const response = await SUT.post('/api/auth/user').send({
+      ...input,
       email: faker.random.word(),
     })
 
@@ -93,9 +100,12 @@ describe('POST /auth/user', () => {
   })
 
   it('should return 404 on user not found', async () => {
-    const { SUT, authenticateUserInput } = makeSUT()
+    const { SUT } = await makeSUT(getClient())
 
-    const response = await SUT.send(authenticateUserInput)
+    const response = await SUT.post('/api/auth/user').send({
+      email: faker.internet.email(),
+      password: faker.internet.email(),
+    })
 
     expect(response.status).toBe(404)
     expect(response.body).toMatchObject({
@@ -104,20 +114,12 @@ describe('POST /auth/user', () => {
   })
 
   it('should return 401 on wrong password', async () => {
-    const { SUT, authenticateUserInput } = makeSUT()
+    const { SUT, input } = await makeSUT(getClient())
 
-    const name = faker.name.firstName()
-    const { email, password } = authenticateUserInput
-
-    await getClient().user.create({
-      data: {
-        name,
-        email,
-        password,
-      },
+    const response = await SUT.post('/api/auth/user').send({
+      email: input.email,
+      password: faker.internet.password(6),
     })
-
-    const response = await SUT.send(authenticateUserInput)
 
     expect(response.status).toBe(401)
     expect(response.body).toMatchObject({
@@ -126,13 +128,16 @@ describe('POST /auth/user', () => {
   })
 
   it('should return 500 on usecase unexpected error', async () => {
-    const { SUT, authenticateUserUseCaseSpy, authenticateUserInput } = makeSUT()
+    const { SUT, usecaseSpy, input } = await makeSUT(getClient())
 
-    authenticateUserUseCaseSpy.mockImplementationOnce(async () => {
+    usecaseSpy.mockImplementationOnce(async () => {
       throw new Error()
     })
 
-    const response = await SUT.send(authenticateUserInput)
+    const response = await SUT.post('/api/auth/user').send({
+      email: input.email,
+      password: input.password,
+    })
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
@@ -141,16 +146,18 @@ describe('POST /auth/user', () => {
   })
 
   it('should return 500 on controller unexpected error', async () => {
-    const { SUT, authenticateUserControllerSpy, authenticateUserInput } =
-      makeSUT()
+    const { SUT, controllerSpy, input } = await makeSUT(getClient())
 
-    authenticateUserControllerSpy.mockImplementationOnce(async () => {
+    controllerSpy.mockImplementationOnce(async () => {
       const error = new Error('any_error_message')
       error.stack = 'any_stack'
       throw error
     })
 
-    const response = await SUT.send(authenticateUserInput)
+    const response = await SUT.post('/api/auth/user').send({
+      email: input.email,
+      password: input.password,
+    })
 
     expect(response.status).toBe(500)
     expect(response.body).toMatchObject({
