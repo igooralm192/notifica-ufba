@@ -2,7 +2,12 @@ import { CommonError } from '@notifica-ufba/domain/errors'
 import { BaseError } from '@notifica-ufba/errors'
 
 export namespace BaseController {
-  export type Request<Body = any, Query = any, Params = any, Context = any> = {
+  export type Request<
+    Body = any,
+    Query = any,
+    Params = any,
+    Context = { userId?: string },
+  > = {
     body?: Body
     query?: Query
     params?: Params
