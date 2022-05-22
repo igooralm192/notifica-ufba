@@ -18,6 +18,7 @@ export interface ICreateUserRepository {
 
 export namespace IFindOneUserRepository {
   export type Input = {
+    id?: string
     email?: string
   }
   export type Output = IUser | null
