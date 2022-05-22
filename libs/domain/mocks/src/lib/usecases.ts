@@ -2,6 +2,7 @@ import {
   IAuthenticateUserUseCase,
   ICreateStudentUseCase,
   ICreateUserUseCase,
+  IGetUserByIdUseCase,
   IGetUserIdByTokenUseCase,
   IReadDisciplinesUseCase,
   ISubscribeStudentToDisciplineGroupUseCase,
@@ -23,6 +24,12 @@ export class MockedCreateStudentUseCase implements ICreateStudentUseCase {
 
 export class MockedCreateUserUseCase implements ICreateUserUseCase {
   run(): Promise<Either<BaseError, ICreateUserUseCase.Output>> {
+    throw new Error('Method not implemented.')
+  }
+}
+
+export class MockedGetUserByIdUseCase implements IGetUserByIdUseCase {
+  run(): Promise<Either<BaseError, IGetUserByIdUseCase.Output>> {
     throw new Error('Method not implemented.')
   }
 }
