@@ -19,3 +19,7 @@ makeDBClient()
     )
   })
   .catch(console.error)
+
+process.on('SIGTERM', () => {
+  process.exit()
+})

@@ -1,5 +1,6 @@
 export * from './AuthenticateUserControllerFactory'
 export * from './CreateStudentControllerFactory'
 export * from './CreateUserControllerFactory'
+export * from './GetMyUserControllerFactory'
 export * from './ReadDisciplinesControllerFactory'
 export * from './SubscribeStudentToDisciplineGroupControllerFactory'
