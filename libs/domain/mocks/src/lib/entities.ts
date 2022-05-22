@@ -66,7 +66,7 @@ export const mockTeacher = (teacher?: Partial<ITeacher>): ITeacher => {
   }
 }
 
-export const mockUser = (): IUser => {
+export const mockUser = (user?: Partial<IUser>): IUser => {
   return {
     id: new ObjectId().toString(),
     name: faker.internet.userName(),
@@ -75,5 +75,6 @@ export const mockUser = (): IUser => {
     type: 'STUDENT',
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
+    ...user,
   }
 }
