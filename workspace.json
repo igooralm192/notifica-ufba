@@ -10,6 +10,8 @@
     "domain-mocks": "libs/domain/mocks",
     "domain-usecases": "libs/domain/usecases",
     "errors": "libs/errors",
+    "myapp": "apps/myapp",
+    "myapp-e2e": "apps/myapp-e2e",
     "utils": "libs/utils"
   }
 }

@@ -15,6 +15,7 @@ export class DisciplineGroupMapper {
 
       disciplineId: group.disciplineId,
       teacherId: group.teacherId,
+      studentIds: group.studentIds,
 
       teacher: group.teacher ? TeacherMapper.toDTO(group.teacher) : undefined,
 

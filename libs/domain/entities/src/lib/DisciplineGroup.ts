@@ -13,6 +13,7 @@ export interface IDisciplineGroup {
 
   teacherId?: string
   disciplineId?: string
+  studentIds?: string[]
 
   teacher?: ITeacher
   discipline?: IDiscipline

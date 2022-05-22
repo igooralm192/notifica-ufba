@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": ["node", "styled-components-react-native"]
+  },
+  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "./src/config/jest-setup.ts"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+}
