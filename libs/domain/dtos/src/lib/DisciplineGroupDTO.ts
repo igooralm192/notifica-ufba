@@ -13,6 +13,7 @@ export interface IDisciplineGroupDTO {
 
   teacherId?: string
   disciplineId?: string
+  studentIds?: string[]
 
   teacher?: ITeacherDTO
   discipline?: IDisciplineDTO
