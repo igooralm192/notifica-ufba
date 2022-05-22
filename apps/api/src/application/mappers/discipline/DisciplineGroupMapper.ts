@@ -1,6 +1,6 @@
-import { TeacherMapper } from '@/application/mappers/teacher/TeacherMapper'
 import { IDisciplineGroupDTO } from '@notifica-ufba/domain/dtos'
 import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
+import { TeacherMapper } from '@/application/mappers/teacher/TeacherMapper'
 
 export class DisciplineGroupMapper {
   static toDTO(group: IDisciplineGroup): IDisciplineGroupDTO {
@@ -15,6 +15,7 @@ export class DisciplineGroupMapper {
 
       disciplineId: group.disciplineId,
       teacherId: group.teacherId,
+      studentIds: group.studentIds,
 
       teacher: group.teacher ? TeacherMapper.toDTO(group.teacher) : undefined,
 

@@ -25,13 +25,15 @@ export class PrismaUserRepository
   async findOne(
     input: IFindOneUserRepository.Input,
   ): Promise<IFindOneUserRepository.Output> {
-    const user = await this.client.user.findFirst({
-      where: input,
-      include: {
-        student: true,
-        teacher: true,
-      },
-    })
+    const user = await this.client.user
+      .findFirst({
+        where: input,
+        include: {
+          student: true,
+          teacher: true,
+        },
+      })
+      .catch(() => null)
 
     if (!user) return null
 

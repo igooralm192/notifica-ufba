@@ -41,9 +41,9 @@ export class AuthorizeUserMiddleware extends BaseMiddleware {
   }
 
   private parseAuthorizationToken(headers: Record<string, string | undefined>) {
-    if (!headers.Authorization) return
+    if (!headers.authorization) return
 
-    const [, token] = headers.Authorization.split(' ')
+    const [, token] = headers.authorization.split(' ')
 
     return token
   }
