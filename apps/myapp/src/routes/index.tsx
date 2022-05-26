@@ -59,6 +59,8 @@ const getAuthScreens = (state: AuthState) => {
 const Routes: React.FC = () => {
   const auth = useAuth()
 
+  if (auth.loading || auth.state === AuthState.UNKNOWN) return <SplashScreen />
+
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={{ header: Header }}>

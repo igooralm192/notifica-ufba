@@ -2,7 +2,7 @@ import { IDiscipline } from '@notifica-ufba/domain/entities'
 import { IReadDisciplinesUseCase } from '@notifica-ufba/domain/usecases'
 import { BaseError } from '@notifica-ufba/errors'
 
-import * as api from '@/api'
+import api from '@/api'
 import { useDispatch, useSelector } from '@/store'
 import { disciplinesAdded, selectAllDisciplines } from '@/store/disciplines'
 import { IPaginatedList } from '@/types/list'
@@ -23,10 +23,10 @@ const DisciplinePresenterContext = React.createContext(
 export const DisciplinePresenter: React.FC = ({ children }) => {
   const dispatch = useDispatch()
 
-  const [loading, setLoading] = useState(true)
-  const [disciplinesTotal, setDisciplinesTotal] = useState(0)
-
   const disciplines = useSelector(selectAllDisciplines)
+  const disciplinesTotal = useSelector(state => state.disciplines.total)
+
+  const [loading, setLoading] = useState(true)
 
   const getDisciplines = async ({
     paginate,
@@ -38,9 +38,7 @@ export const DisciplinePresenter: React.FC = ({ children }) => {
         paginate,
       })
 
-      dispatch(disciplinesAdded(disciplines.results))
-
-      setDisciplinesTotal(disciplines.total)
+      dispatch(disciplinesAdded(disciplines))
     } catch (err) {
       const error = err as BaseError
 

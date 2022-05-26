@@ -13,6 +13,7 @@ export class DisciplineGroupMapper {
       classTime: data.classTime,
       teacherId: data.teacherId,
       disciplineId: data.disciplineId,
+      studentIds: data.studentIds,
       teacher: data.teacher ? TeacherMapper.toEntity(data.teacher) : undefined,
       createdAt: new Date(data.createdAt),
       updatedAt: new Date(data.updatedAt),

@@ -4,7 +4,7 @@ import {
 } from '@notifica-ufba/domain/usecases'
 import { BaseError } from '@notifica-ufba/errors'
 
-import * as api from '@/api'
+import api from '@/api'
 import { useAuth } from '@/contexts/auth'
 
 import React, { useContext, useState } from 'react'
@@ -42,10 +42,9 @@ export const RegisterPresenter: React.FC = ({ children }) => {
         course,
       })
 
-      const { token, user } = await api.user.login({ email, password })
+      const { token } = await api.user.login({ email, password })
 
       auth.setToken(token)
-      auth.setUser(user)
     } catch (err) {
       const error = err as BaseError
 

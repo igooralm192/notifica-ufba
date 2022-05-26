@@ -1,8 +1,16 @@
 import { IUser } from '@notifica-ufba/domain/entities'
 
-import { api } from '@/services/api'
+import api from '@/api'
+import { useDispatch, useSelector, listenerMiddleware } from '@/store'
+import {
+  cleanAuth,
+  stateChanged,
+  tokenFetched,
+  userFetched,
+} from '@/store/auth'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useContext, useEffect, useState } from 'react'
 
 export enum AuthState {
@@ -18,25 +26,18 @@ export interface AuthContextData {
   user: IUser | null
 
   setToken(token: string | null): void
-  setUser(user: IUser | null): void
 }
 
 const AuthContext = React.createContext({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [loading, setLoading] = useState(true)
-  const [state, setState] = useState(AuthState.UNKNOWN)
-  const [token, setToken] = useState<string | null>(null)
-  const [user, setUser] = useState<IUser | null>(null)
+  const dispatch = useDispatch()
+  const { state, token, user } = useSelector(state => state.auth)
+
+  const [loading, setLoading] = useState(false)
 
   const changeToken = (token: string | null) => {
-    if (token) {
-      setToken(token)
-      setState(AuthState.AUTHENTICATED)
-    } else {
-      setToken(null)
-      setState(AuthState.UNAUTHENTICATED)
-    }
+    dispatch(tokenFetched(token))
   }
 
   useEffect(() => {
@@ -46,27 +47,62 @@ export const AuthProvider: React.FC = ({ children }) => {
       changeToken(token)
     }
 
-    getToken().finally(() => setLoading(false))
+    getToken()
   }, [])
 
   useEffect(() => {
-    if (loading) return
+    const unsubscribe = listenerMiddleware.startListening({
+      predicate: (_, currentState, prevState) => {
+        return (
+          prevState.auth.state !== currentState.auth.state &&
+          currentState.auth.state === AuthState.AUTHENTICATED
+        )
+      },
+      effect: async (_, { dispatch }) => {
+        setLoading(true)
 
+        await api.user
+          .getMyUser()
+          .then(({ user }) => dispatch(userFetched(user)))
+          .finally(() => setLoading(false))
+      },
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = listenerMiddleware.startListening({
+      matcher: isAnyOf(tokenFetched, cleanAuth),
+      effect: action => {
+        const token = action.payload
+
+        if (token) dispatch(stateChanged(AuthState.AUTHENTICATED))
+        else dispatch(stateChanged(AuthState.UNAUTHENTICATED))
+      },
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
     if (token) AsyncStorage.setItem('TOKEN', token)
     else AsyncStorage.removeItem('TOKEN')
   }, [token])
 
   useEffect(() => {
-    const interceptorId = api.interceptors.request.use(async config => {
-      const token = await AsyncStorage.getItem('TOKEN')
+    const interceptorId = api.instance.interceptors.request.use(
+      async config => {
+        const token = await AsyncStorage.getItem('TOKEN')
 
-      if (config.headers)
-        config.headers.Authorization = token ? 'Bearer ' + token : ''
+        if (config.headers)
+          config.headers.Authorization = token ? 'Bearer ' + token : ''
 
-      return config
-    })
+        return config
+      },
+    )
 
-    return () => api.interceptors.request.eject(interceptorId)
+    return () => api.instance.interceptors.request.eject(interceptorId)
   }, [])
 
   // useEffect(() => {
@@ -91,7 +127,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ loading, state, token, user, setToken: changeToken, setUser }}
+      value={{ loading, state, token, user, setToken: changeToken }}
     >
       {children}
     </AuthContext.Provider>

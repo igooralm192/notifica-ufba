@@ -1,5 +1,5 @@
 // import AsyncStorage from '@react-native-async-storage/async-storage'
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, createListenerMiddleware } from '@reduxjs/toolkit'
 import {
   useDispatch as useReduxDispatch,
   useSelector as useReduxSelector,
@@ -8,26 +8,31 @@ import {
 import { combineReducers } from 'redux'
 // import { persistStore, persistReducer } from 'redux-persist'
 
+import { authReducer } from './auth'
 import { disciplinesReducer } from './disciplines'
+import { IAppStore } from './types'
 
 // const persistConfig = {
 //   key: 'root',
 //   storage: AsyncStorage,
 // }
 
+export const listenerMiddleware = createListenerMiddleware<IAppStore>()
+
 const store = configureStore({
   reducer: combineReducers({
+    auth: authReducer,
     disciplines: disciplinesReducer,
   }),
-  middleware: [],
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 })
 
 // export const persistor = persistStore(store)
 
-export type AppState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 export const useDispatch = () => useReduxDispatch<AppDispatch>()
-export const useSelector: TypedUseSelectorHook<AppState> = useReduxSelector
+export const useSelector: TypedUseSelectorHook<IAppStore> = useReduxSelector
 
 export default store
