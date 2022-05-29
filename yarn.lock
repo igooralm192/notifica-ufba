@@ -16000,6 +16000,13 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   dependencies:
     wrappy "1"
 
+onesignal-expo-plugin@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/onesignal-expo-plugin/-/onesignal-expo-plugin-1.0.2.tgz#aca816c8f1be3a760bb9b007b2fde9f8ddb0065e"
+  integrity sha512-BFfM9oxAGAxeMd2POh3vo+jjSGX02ZgWszO8m0goIOkwtFecSPRGEXePL/ZxglYm5SntPYVpqKd5/rrtKlrSsw==
+  dependencies:
+    xcode "^3.0.1"
+
 onetime@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/onetime/-/onetime-2.0.1.tgz#067428230fd67443b2794b22bba528b6867962d4"
@@ -17939,6 +17946,13 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
   dependencies:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
+
+react-native-onesignal@^4.3.10:
+  version "4.3.10"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.3.10.tgz#3db2dbcd0862f885717e65726e90d4c6bbbc6145"
+  integrity sha512-rAwRO3kyADAJ3rZo6cSG3dyF8FMLP8rxDJTquaMMo5SBJ1D9O0O/UMou86BH1+bqoLsPTVr2fnAqFv+NiMXILA==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-ratings@^8.1.0:
   version "8.1.0"

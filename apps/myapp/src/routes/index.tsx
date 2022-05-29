@@ -5,6 +5,7 @@ import {
   DisciplineGroupScreen,
   DisciplinesScreen,
   LoginScreen,
+  MessagesScreen,
   RegisterScreen,
   SplashScreen,
   WelcomeScreen,
@@ -33,6 +34,11 @@ const getAuthScreens = (state: AuthState) => {
     case AuthState.AUTHENTICATED:
       return (
         <Stack.Group>
+          <Stack.Screen
+            name="MessagesScreen"
+            component={MessagesScreen}
+            options={{ title: 'Mensagens' }}
+          />
           <Stack.Screen
             name="DisciplinesScreen"
             component={DisciplinesScreen}
