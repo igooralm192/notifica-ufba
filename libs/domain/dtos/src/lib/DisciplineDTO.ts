@@ -8,6 +8,6 @@ export interface IDisciplineDTO {
   course: string
   teachers?: ITeacherDTO[]
   groups?: IDisciplineGroupDTO[]
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }

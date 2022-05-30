@@ -19,6 +19,6 @@ export interface IDisciplineGroupDTO {
   discipline?: IDisciplineDTO
   students?: IStudentDTO[]
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }

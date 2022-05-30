@@ -1,4 +1,4 @@
-import { IUser } from '@notifica-ufba/domain/entities'
+import { IUserDTO } from '@notifica-ufba/domain/dtos'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { AuthState, IAuthStore } from './types'
@@ -19,7 +19,7 @@ const authSlice = createSlice({
     tokenFetched(state, action: PayloadAction<string | null>) {
       state.token = action.payload
     },
-    userFetched(state, action: PayloadAction<IUser | null>) {
+    userFetched(state, action: PayloadAction<IUserDTO | null>) {
       state.user = action.payload
     },
     cleanAuth(state) {

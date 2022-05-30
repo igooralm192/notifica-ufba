@@ -1,6 +1,8 @@
-import { IUser } from '@notifica-ufba/domain/entities'
+import { IUserDTO } from '@notifica-ufba/domain/dtos'
 
 import api from '@/api'
+import firebase from '@/firebase'
+import { UserMapper } from '@/mappers'
 import { useDispatch, useSelector, listenerMiddleware } from '@/store'
 import {
   cleanAuth,
@@ -9,7 +11,8 @@ import {
   userFetched,
 } from '@/store/auth'
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -22,17 +25,17 @@ export enum AuthState {
 export interface AuthContextData {
   loading: boolean
   state: AuthState
-  token: string | null
-  user: IUser | null
+  user: IUserDTO | null
 
-  setToken(token: string | null): void
+  login(email: string, password: string): Promise<void>
+  register(email: string, password: string): Promise<void>
 }
 
 const AuthContext = React.createContext({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
   const dispatch = useDispatch()
-  const { state, token, user } = useSelector(state => state.auth)
+  const { state, user } = useSelector(state => state.auth)
 
   const [loading, setLoading] = useState(false)
 
@@ -40,14 +43,49 @@ export const AuthProvider: React.FC = ({ children }) => {
     dispatch(tokenFetched(token))
   }
 
-  useEffect(() => {
-    const getToken = async () => {
-      const token = await AsyncStorage.getItem('TOKEN')
+  const login = async (email: string, password: string) => {
+    setLoading(true)
+
+    const { user } = await auth().signInWithEmailAndPassword(email, password)
+
+    if (user) {
+      const token = await user.getIdToken()
 
       changeToken(token)
     }
 
-    getToken()
+    setLoading(false)
+  }
+
+  const register = async (email: string, password: string) => {
+    setLoading(true)
+
+    const { user } = await auth().createUserWithEmailAndPassword(
+      email,
+      password,
+    )
+
+    if (user) {
+      const token = await user.getIdToken()
+
+      changeToken(token)
+    }
+
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    const unsubscribe = auth().onAuthStateChanged(async user => {
+      if (user) {
+        const token = await user.getIdToken()
+
+        changeToken(token)
+      } else {
+        changeToken(null)
+      }
+    })
+
+    return () => unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -59,11 +97,14 @@ export const AuthProvider: React.FC = ({ children }) => {
         )
       },
       effect: async (_, { dispatch }) => {
-        setLoading(true)
+        const email = auth().currentUser?.email
 
-        await api.user
-          .getMyUser()
-          .then(({ user }) => dispatch(userFetched(user)))
+        if (!email) return
+
+        setLoading(true)
+        await firebase.users
+          .getUserByEmail(email)
+          .then(user => dispatch(userFetched(user)))
           .finally(() => setLoading(false))
       },
     })
@@ -86,14 +127,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (token) AsyncStorage.setItem('TOKEN', token)
-    else AsyncStorage.removeItem('TOKEN')
-  }, [token])
-
-  useEffect(() => {
     const interceptorId = api.instance.interceptors.request.use(
       async config => {
-        const token = await AsyncStorage.getItem('TOKEN')
+        const token = await auth().currentUser?.getIdToken()
 
         if (config.headers)
           config.headers.Authorization = token ? 'Bearer ' + token : ''
@@ -127,7 +163,13 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ loading, state, token, user, setToken: changeToken }}
+      value={{
+        loading,
+        state,
+        user,
+        login,
+        register,
+      }}
     >
       {children}
     </AuthContext.Provider>

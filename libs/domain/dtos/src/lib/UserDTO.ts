@@ -10,6 +10,6 @@ export interface IUserDTO {
   teacher?: ITeacherDTO
   student?: IStudentDTO
 
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }

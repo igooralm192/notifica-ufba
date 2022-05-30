@@ -1,3 +1,4 @@
+import { ITeacherDTO } from '@notifica-ufba/domain/dtos'
 import { ITeacher } from '@notifica-ufba/domain/entities'
 import { UserMapper } from '../user/UserMapper'
 
@@ -9,6 +10,16 @@ export class TeacherMapper {
       user: data.user ? UserMapper.toEntity(data.user) : undefined,
       createdAt: new Date(data.createdAt),
       updatedAt: new Date(data.updatedAt),
+    }
+  }
+
+  static toDTO(data: Record<string, any>): ITeacherDTO {
+    return {
+      id: data.id,
+      userId: data.userId,
+      user: data.user ? UserMapper.toDTO(data.user) : undefined,
+      createdAt: data.createdAt.toDate().toISOString(),
+      updatedAt: data.updatedAt.toDate().toISOString(),
     }
   }
 }

@@ -1,4 +1,4 @@
-import { IUser } from '@notifica-ufba/domain/entities'
+import { IUserDTO } from '@notifica-ufba/domain/dtos'
 
 export enum AuthState {
   UNKNOWN = 'unknown',
@@ -9,5 +9,5 @@ export enum AuthState {
 export interface IAuthStore {
   state: AuthState
   token: string | null
-  user: IUser | null
+  user: IUserDTO | null
 }
