@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "myapp",
-    "slug": "myapp",
+    "name": "notifica_ufba",
+    "slug": "notifica_ufba",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

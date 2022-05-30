@@ -46,6 +46,16 @@
         ]
       }
     },
+    "sync-groups": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "yarn ts-node-dev ./apps/api/src/main/scripts/sync-groups.ts"
+          }
+        ]
+      }
+    },
     "run-test": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {

@@ -9,6 +9,10 @@ import { makeApp } from '@/main/config/app'
 import env from '@/main/config/env'
 import { makeDBClient } from '@/main/factories/helpers'
 
+import { db } from '@/main/config/firebase'
+
+console.log(db.collection('users'))
+
 makeDBClient()
   .connect()
   .then(() => {

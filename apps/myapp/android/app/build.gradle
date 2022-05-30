@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "com.google.gms.google-services"
 
 import com.android.build.OutputFile
 
@@ -132,7 +133,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.myapp"
+        applicationId "com.notifica_ufba"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -212,7 +213,7 @@ dependencies {
             implementation 'com.facebook.fresco:animated-webp:2.0.0'
         }
     }
-    
+
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

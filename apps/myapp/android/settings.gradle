@@ -1,4 +1,4 @@
-rootProject.name = 'myapp'
+rootProject.name = 'notifica_ufba'
 
 apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
 useExpoModules()
@@ -7,3 +7,7 @@ apply from: new File(["node", "--print", "require.resolve('@react-native-communi
 applyNativeModulesSettingsGradle(settings)
 
 include ':app'
+
+include ':@react-native-firebase_app'
+project(':@react-native-firebase_app').projectDir = new File(rootProject.projectDir, '../../../node_modules/@react-native-firebase/app/android')
+

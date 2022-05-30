@@ -47,7 +47,8 @@
     "react-native-onesignal": "*",
     "react-redux": "*",
     "@reduxjs/toolkit": "*",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "@react-native-firebase/firestore": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && cp yarn.lock ./apps/myapp/ && mv ./apps/myapp/eas.js ./index.js",
