@@ -26,7 +26,9 @@ export const LoginPresenter: React.FC = ({ children }) => {
     setLoading(true)
 
     try {
-      await auth.login(email, password)
+      const { token } = await api.user.login({ email, password })
+
+      auth.setToken(token)
     } catch (err) {
       const error = err as BaseError
 

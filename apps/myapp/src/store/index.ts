@@ -24,8 +24,7 @@ const store = configureStore({
     auth: authReducer,
     disciplines: disciplinesReducer,
   }),
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+  middleware: [listenerMiddleware.middleware],
 })
 
 // export const persistor = persistStore(store)
