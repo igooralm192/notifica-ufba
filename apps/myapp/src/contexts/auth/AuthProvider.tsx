@@ -34,7 +34,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   const dispatch = useDispatch()
   const { state, token, user } = useSelector(state => state.auth)
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const changeToken = (token: string | null) => {
     dispatch(tokenFetched(token))
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       changeToken(token)
     }
 
-    getToken()
+    getToken().finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
