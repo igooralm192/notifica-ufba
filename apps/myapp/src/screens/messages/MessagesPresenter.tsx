@@ -1,10 +1,9 @@
-import { IDiscipline } from '@notifica-ufba/domain/entities'
-import { IReadDisciplinesUseCase } from '@notifica-ufba/domain/usecases'
+import { ILastMessageDTO } from '@notifica-ufba/domain/usecases'
 import { BaseError } from '@notifica-ufba/errors'
 
 import api from '@/api'
 import { useDispatch, useSelector } from '@/store'
-import { disciplinesAdded, selectAllDisciplines } from '@/store/disciplines'
+import { lastMessagesAdded, selectAllLastMessages } from '@/store/lastMessages'
 import { IPaginatedList } from '@/types/list'
 
 import React, { useContext, useState } from 'react'
@@ -12,9 +11,8 @@ import Toast from 'react-native-toast-message'
 
 export interface MessagesPresenterContextData {
   loading: boolean
-  // disciplines: IPaginatedList<IDiscipline>
-  messages: any[]
-  getMessages(): Promise<void>
+  lastMessages: IPaginatedList<ILastMessageDTO>
+  getLastMessages(): Promise<void>
 }
 
 const MessagesPresenterContext = React.createContext(
@@ -24,36 +22,39 @@ const MessagesPresenterContext = React.createContext(
 export const MessagesPresenter: React.FC = ({ children }) => {
   const dispatch = useDispatch()
 
-  // const disciplines = useSelector(selectAllDisciplines)
-  // const disciplinesTotal = useSelector(state => state.disciplines.total)
+  const lastMessages = useSelector(selectAllLastMessages)
+  const lastMessagesTotal = useSelector(state => state.lastMessages.total)
 
   const [loading, setLoading] = useState(true)
 
-  const getMessages = async () => {
-    // setLoading(true)
-    // try {
-    //   const disciplines = await api.discipline.getDisciplines({
-    //     paginate,
-    //   })
-    //   dispatch(disciplinesAdded(disciplines))
-    // } catch (err) {
-    //   const error = err as BaseError
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Erro ao retornar disciplinas.',
-    //     text2: error.message,
-    //   })
-    // } finally {
-    //   setLoading(false)
-    // }
+  const getLastMessages = async (page = 0, limit = 10) => {
+    setLoading(true)
+
+    try {
+      const lastMessages = await api.disciplineGroup.getMyLastMessages({
+        page,
+        limit,
+      })
+
+      dispatch(lastMessagesAdded(lastMessages))
+    } catch (err) {
+      const error = err as BaseError
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao retornar as últimas mensagens.',
+        text2: error.message,
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <MessagesPresenterContext.Provider
       value={{
         loading,
-        messages: [],
-        getMessages,
+        lastMessages: { results: lastMessages, total: lastMessagesTotal },
+        getLastMessages,
       }}
     >
       {children}

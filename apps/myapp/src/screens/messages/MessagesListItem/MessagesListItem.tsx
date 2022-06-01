@@ -1,9 +1,11 @@
-import { IDiscipline } from '@notifica-ufba/domain/entities'
+import { ILastMessageDTO } from '@notifica-ufba/domain/usecases'
 
 import { useNavigation } from '@/helpers'
 
 import { ListItem } from '@rneui/themed'
-import React, { useState } from 'react'
+import { formatDistanceToNow } from 'date-fns'
+import LocalePTBR from 'date-fns/locale/pt-BR'
+import React from 'react'
 
 import {
   Container,
@@ -12,12 +14,13 @@ import {
   DisciplineName,
   DisciplineMessage,
   DisciplineMessageTime,
-  DisciplineMessageBadge,
 } from './MessagesListItemStyles'
 
-export interface MessagesListItemProps {}
+export interface MessagesListItemProps {
+  message: ILastMessageDTO
+}
 
-const MessagesListItem: React.FC<MessagesListItemProps> = () => {
+const MessagesListItem: React.FC<MessagesListItemProps> = ({ message }) => {
   const navigation = useNavigation()
 
   return (
@@ -33,18 +36,18 @@ const MessagesListItem: React.FC<MessagesListItemProps> = () => {
       <ListItem.Content>
         <Container>
           <DisciplineDetailsContainer>
-            <DisciplineName>Inteligência Artificial</DisciplineName>
+            <DisciplineName>{message.disciplineName}</DisciplineName>
             <DisciplineMessage numberOfLines={2}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              indu Lorem Ipsum is simply dummy text of the printing and
-              typesetting indu Lorem Ipsum is simply dummy text of the printing
-              and typesetting
+              {message.message}
             </DisciplineMessage>
           </DisciplineDetailsContainer>
 
           <DisciplineTimestampContainer>
-            <DisciplineMessageTime>2 min</DisciplineMessageTime>
-            <DisciplineMessageBadge></DisciplineMessageBadge>
+            <DisciplineMessageTime>
+              {formatDistanceToNow(message.sentAt, {
+                locale: LocalePTBR,
+              })}
+            </DisciplineMessageTime>
           </DisciplineTimestampContainer>
         </Container>
       </ListItem.Content>

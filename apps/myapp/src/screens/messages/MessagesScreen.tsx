@@ -1,7 +1,8 @@
-import { Button } from '@/components'
-import { useAuth } from '@/contexts/auth'
+import { ILastMessageDTO } from '@notifica-ufba/domain/usecases'
+
 import { useStatusBar } from '@/contexts/status-bar'
 
+import { Divider } from '@rneui/themed'
 import React, { useEffect, useLayoutEffect } from 'react'
 import { FlatList } from 'react-native'
 
@@ -11,18 +12,16 @@ import {
 } from './MessagesPresenter'
 import { MessagesListItem } from './MessagesListItem'
 import { Container } from './MessagesStyles'
-import { Divider } from '@rneui/themed'
 
 export interface MessagesScreenProps {}
 
 const MessagesScreen: React.FC<MessagesScreenProps> = props => {
   const presenter = useMessagesPresenter()
 
-  const auth = useAuth()
   const statusBar = useStatusBar()
 
-  const renderMessagesListItem = () => {
-    return <MessagesListItem />
+  const renderMessagesListItem = ({ item }: { item: ILastMessageDTO }) => {
+    return <MessagesListItem key={item.disciplineGroupCode} message={item} />
   }
 
   useLayoutEffect(() => {
@@ -30,13 +29,13 @@ const MessagesScreen: React.FC<MessagesScreenProps> = props => {
   }, [])
 
   useEffect(() => {
-    presenter.getMessages()
+    presenter.getLastMessages()
   }, [])
 
   return (
     <Container>
       <FlatList
-        data={[{}, {}]}
+        data={presenter.lastMessages.results}
         renderItem={renderMessagesListItem}
         ItemSeparatorComponent={Divider}
       />
