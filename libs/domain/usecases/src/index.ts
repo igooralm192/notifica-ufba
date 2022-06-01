@@ -1,6 +1,8 @@
 export * from './lib/discipline/ReadDisciplinesUseCase'
 export * from './lib/discipline/SubscribeStudentToDisciplineGroupUseCase'
 
+export * from './lib/discipline-group/ReadLastMessagesUseCase'
+
 export * from './lib/student/CreateStudentUseCase'
 
 export * from './lib/user/AuthenticateUserUseCase'
