@@ -1,5 +1,5 @@
 import { IDiscipline } from '@notifica-ufba/domain/entities'
-import { DisciplineGroupMapper } from './DisciplineGroupMapper'
+import { DisciplineGroupMapper } from '../discipline-group/DisciplineGroupMapper'
 
 export class DisciplineMapper {
   static toEntity(data: Record<string, any>): IDiscipline {
