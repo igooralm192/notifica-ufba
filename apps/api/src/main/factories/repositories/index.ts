@@ -1,3 +1,4 @@
+export * from './DisciplineGroupMessageRepositoryFactory'
 export * from './DisciplineGroupRepositoryFactory'
 export * from './DisciplineRepositoryFactory'
 export * from './StudentRepositoryFactory'

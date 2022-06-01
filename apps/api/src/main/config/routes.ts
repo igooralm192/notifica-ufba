@@ -1,5 +1,8 @@
 import { makeReadDisciplinesRoute } from '@/main/routes/discipline'
-import { makeSubscribeStudentToDisciplineGroupRoute } from '@/main/routes/discipline-group'
+import {
+  makeReadLastMessagesRoute,
+  makeSubscribeStudentToDisciplineGroupRoute,
+} from '@/main/routes/discipline-group'
 import { makeCreateStudentRoute } from '@/main/routes/student'
 import {
   makeAuthenticateUserRoute,
@@ -17,5 +20,6 @@ export const makeRoutes = (app: Express) => {
   makeCreateStudentRoute(router)
   makeGetMyUserRoute(router)
   makeReadDisciplinesRoute(router)
+  makeReadLastMessagesRoute(router)
   makeSubscribeStudentToDisciplineGroupRoute(router)
 }
