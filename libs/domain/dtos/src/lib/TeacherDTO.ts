@@ -4,6 +4,6 @@ export interface ITeacherDTO {
   id: string
   userId: string
   user?: IUserDTO
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }

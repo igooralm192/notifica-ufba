@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { db } from '@/main/config/firebase'
+import { getFirestore } from 'firebase-admin/firestore'
+
+const db = getFirestore()
 
 const syncGroupsWithFirestore = async () => {
   const client = new PrismaClient()

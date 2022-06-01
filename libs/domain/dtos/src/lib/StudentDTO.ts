@@ -6,6 +6,6 @@ export interface IStudentDTO {
   course: string
   userId: string
   user?: IUserDTO
-  createdAt: string
-  updatedAt: string
+  createdAt: Date
+  updatedAt: Date
 }
