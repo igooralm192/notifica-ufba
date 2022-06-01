@@ -1,4 +1,41 @@
 import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
+import { ITeacherRepositoryListInput } from './DisciplineRepository'
+
+export type IDisciplineGroupRepositoryListInput = {
+  where?: {
+    studentIds?: {
+      has?: string
+    }
+  }
+  take?: number
+  skip?: number
+  select?: {
+    [key in keyof IDisciplineGroup]?: boolean
+  }
+  include?: {
+    discipline?: boolean
+    teacher?: boolean | ITeacherRepositoryListInput
+  }
+  orderBy?: {
+    discipline?: {
+      code?: 'asc' | 'desc'
+    }
+  }
+}
+
+export namespace IFindAllDisciplineGroupRepository {
+  export type Input = IDisciplineGroupRepositoryListInput
+  export type Output = {
+    results: IDisciplineGroup[]
+    total: number
+  }
+}
+
+export interface IFindAllDisciplineGroupRepository {
+  findAll(
+    input: IFindAllDisciplineGroupRepository.Input,
+  ): Promise<IFindAllDisciplineGroupRepository.Output>
+}
 
 export namespace IFindOneDisciplineGroupRepository {
   export type Input = {

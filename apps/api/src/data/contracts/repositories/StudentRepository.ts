@@ -20,6 +20,7 @@ export namespace IFindOneStudentRepository {
   export type Input = {
     id?: string
     matriculation?: string
+    userId?: string
   }
 
   export type Output = IStudent | null

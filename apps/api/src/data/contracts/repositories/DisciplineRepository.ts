@@ -1,9 +1,5 @@
-import {
-  IDiscipline,
-  IDisciplineGroup,
-  ITeacher,
-  IUser,
-} from '@notifica-ufba/domain/entities'
+import { IDiscipline, ITeacher, IUser } from '@notifica-ufba/domain/entities'
+import { IDisciplineGroupRepositoryListInput } from './DisciplineGroupRepository'
 
 export type IUserRepositoryListInput = {
   where?: any
@@ -23,18 +19,6 @@ export type ITeacherRepositoryListInput = {
   }
   include?: {
     user: boolean | IUserRepositoryListInput
-  }
-}
-
-export type IDisciplineGroupRepositoryListInput = {
-  where?: any
-  take?: number
-  skip?: number
-  select?: {
-    [key in keyof IDisciplineGroup]?: boolean
-  }
-  include?: {
-    teacher: boolean | ITeacherRepositoryListInput
   }
 }
 

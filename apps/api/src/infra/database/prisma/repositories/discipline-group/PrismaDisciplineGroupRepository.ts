@@ -1,5 +1,7 @@
 import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
 import {
+  IDisciplineGroupRepositoryListInput,
+  IFindAllDisciplineGroupRepository,
   IFindOneDisciplineGroupRepository,
   IPushStudentDisciplineGroupRepository,
 } from '@/data/contracts'
@@ -10,9 +12,31 @@ import { DisciplineGroup } from '@prisma/client'
 export class PrismaDisciplineGroupRepository
   extends PrismaRepository
   implements
+    IFindAllDisciplineGroupRepository,
     IFindOneDisciplineGroupRepository,
     IPushStudentDisciplineGroupRepository
 {
+  async findAll({
+    take,
+    skip,
+    where,
+    include,
+    orderBy,
+  }: IDisciplineGroupRepositoryListInput): Promise<IFindAllDisciplineGroupRepository.Output> {
+    const disciplineGroups = await this.client.disciplineGroup.findMany({
+      take,
+      skip,
+      where,
+      include,
+      orderBy,
+    })
+
+    return {
+      results: disciplineGroups.map(this.parseDisciplineGroup),
+      total: disciplineGroups.length,
+    }
+  }
+
   async findOne(
     input: IFindOneDisciplineGroupRepository.Input,
   ): Promise<IFindOneDisciplineGroupRepository.Output> {
