@@ -45,9 +45,8 @@ export class ReadLastMessagesUseCase implements IReadLastMessagesUseCase {
     const promises = disciplineGroups.results.map(async disciplineGroup => {
       return this.findAllDisciplineGroupMessageRepository
         .findAll({
-          where: { disciplineGroupId: disciplineGroup.id },
-          orderBy: { sentAt: 'desc' },
-          take: 1,
+          disciplineGroupId: disciplineGroup.id,
+          listInput: { orderBy: { sentAt: 'desc' }, take: 1 },
         })
         .then(({ results: messages }) => {
           return <ILastMessageDTO>{

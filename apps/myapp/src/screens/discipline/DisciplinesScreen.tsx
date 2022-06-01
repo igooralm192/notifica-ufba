@@ -41,7 +41,7 @@ const DisciplinesScreen: React.FC<DisciplinesScreenProps> = props => {
         renderItem={renderDisciplinesListItem}
       />
 
-      <Button title={'Logout'} onPress={() => auth.setToken(null)} />
+      {/* <Button title={'Logout'} onPress={() => auth.setToken(null)} /> */}
     </Container>
   )
 }

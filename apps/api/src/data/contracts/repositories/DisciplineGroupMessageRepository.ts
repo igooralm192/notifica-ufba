@@ -10,7 +10,10 @@ export type IDisciplineGroupMessageRepositoryListInput = {
 }
 
 export namespace IFindAllDisciplineGroupMessageRepository {
-  export type Input = IDisciplineGroupMessageRepositoryListInput
+  export type Input = {
+    disciplineGroupId: string
+    listInput: IDisciplineGroupMessageRepositoryListInput
+  }
   export type Output = {
     results: IDisciplineGroupMessage[]
     total: number

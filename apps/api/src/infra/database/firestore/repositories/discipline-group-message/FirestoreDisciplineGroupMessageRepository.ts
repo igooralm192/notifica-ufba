@@ -12,11 +12,15 @@ export class FirestoreDisciplineGroupMessageRepository
   implements IFindAllDisciplineGroupMessageRepository
 {
   async findAll({
-    take,
-    skip,
-  }: IDisciplineGroupMessageRepositoryListInput): Promise<IFindAllDisciplineGroupMessageRepository.Output> {
+    disciplineGroupId,
+    listInput,
+  }: IFindAllDisciplineGroupMessageRepository.Input): Promise<IFindAllDisciplineGroupMessageRepository.Output> {
+    const { take, skip } = listInput
+
     let query = this.client
       .collection('disciplineGroupMessages')
+      .doc(disciplineGroupId)
+      .collection('messages')
       .orderBy('sentAt', 'desc')
 
     if (take) query = query.limit(take)
