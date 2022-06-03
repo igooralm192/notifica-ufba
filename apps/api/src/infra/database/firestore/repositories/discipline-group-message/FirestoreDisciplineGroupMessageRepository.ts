@@ -44,8 +44,9 @@ export class FirestoreDisciplineGroupMessageRepository
     return {
       id: data.id,
       body: data.body,
-      disciplineGroupId: data.disciplineGroupId,
       sentBy: data.sentBy,
+      sentById: data.sentById,
+      disciplineGroupId: data.disciplineGroupId,
       sentAt: data.sentAt.toDate(),
     }
   }

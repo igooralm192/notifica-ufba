@@ -2,6 +2,7 @@ import { Header } from '@/components/Header'
 import { AuthState, useAuth } from '@/contexts/auth'
 import { AppNavigation } from '@/types/navigation'
 import {
+  DisciplineGroupMessagesScreen,
   DisciplineGroupScreen,
   DisciplinesScreen,
   LoginScreen,
@@ -37,6 +38,11 @@ const getAuthScreens = (state: AuthState) => {
           <Stack.Screen
             name="MessagesScreen"
             component={MessagesScreen}
+            options={{ title: 'Mensagens' }}
+          />
+          <Stack.Screen
+            name="DisciplineGroupMessagesScreen"
+            component={DisciplineGroupMessagesScreen}
             options={{ title: 'Mensagens' }}
           />
           <Stack.Screen

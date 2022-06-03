@@ -6,6 +6,9 @@ export type AppNavigation = {
     discipline: IDiscipline
     disciplineGroup: IDisciplineGroup
   }
+  DisciplineGroupMessagesScreen: {
+    disciplineGroupId: string
+  }
   LoginScreen: undefined
   MessagesScreen: undefined
   RegisterScreen: undefined
