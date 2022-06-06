@@ -1,16 +1,44 @@
 import { IDisciplineGroupMessage } from '@notifica-ufba/domain/entities'
 import {
-  IDisciplineGroupMessageRepositoryListInput,
+  ICreateDisciplineGroupMessageRepository,
   IFindAllDisciplineGroupMessageRepository,
 } from '@/data/contracts'
 import { FirestoreRepository } from '@/infra/database/firestore/helpers'
 
 import { DocumentData } from 'firebase-admin/firestore'
+import { ObjectId } from 'mongodb'
 
 export class FirestoreDisciplineGroupMessageRepository
   extends FirestoreRepository
-  implements IFindAllDisciplineGroupMessageRepository
+  implements
+    ICreateDisciplineGroupMessageRepository,
+    IFindAllDisciplineGroupMessageRepository
 {
+  async create({
+    body,
+    sentBy,
+    sentById,
+    disciplineGroupId,
+  }: ICreateDisciplineGroupMessageRepository.Input): Promise<ICreateDisciplineGroupMessageRepository.Output> {
+    const disciplineGroupMessage: IDisciplineGroupMessage = {
+      id: new ObjectId().toString(),
+      body: body,
+      sentBy: sentBy,
+      sentById: sentById,
+      disciplineGroupId: disciplineGroupId,
+      sentAt: new Date(),
+    }
+
+    await this.client
+      .collection('disciplineGroupMessages')
+      .doc(disciplineGroupId)
+      .collection('messages')
+      .doc()
+      .set(disciplineGroupMessage)
+
+    return disciplineGroupMessage
+  }
+
   async findAll({
     disciplineGroupId,
     listInput,
@@ -44,8 +72,9 @@ export class FirestoreDisciplineGroupMessageRepository
     return {
       id: data.id,
       body: data.body,
-      disciplineGroupId: data.disciplineGroupId,
       sentBy: data.sentBy,
+      sentById: data.sentById,
+      disciplineGroupId: data.disciplineGroupId,
       sentAt: data.sentAt.toDate(),
     }
   }

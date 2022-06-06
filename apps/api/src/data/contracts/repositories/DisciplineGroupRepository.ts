@@ -39,8 +39,13 @@ export interface IFindAllDisciplineGroupRepository {
 
 export namespace IFindOneDisciplineGroupRepository {
   export type Input = {
-    id?: string
-    code?: string
+    where: {
+      id?: string
+      code?: string
+    }
+    include?: {
+      discipline?: boolean
+    }
   }
   export type Output = IDisciplineGroup | null
 }

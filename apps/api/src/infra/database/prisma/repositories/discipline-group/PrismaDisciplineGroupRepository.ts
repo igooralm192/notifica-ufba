@@ -37,13 +37,12 @@ export class PrismaDisciplineGroupRepository
     }
   }
 
-  async findOne(
-    input: IFindOneDisciplineGroupRepository.Input,
-  ): Promise<IFindOneDisciplineGroupRepository.Output> {
+  async findOne({
+    where,
+    include,
+  }: IFindOneDisciplineGroupRepository.Input): Promise<IFindOneDisciplineGroupRepository.Output> {
     const disciplineGroup = await this.client.disciplineGroup
-      .findFirst({
-        where: input,
-      })
+      .findFirst({ where, include })
       .catch(() => null)
 
     if (!disciplineGroup) return null

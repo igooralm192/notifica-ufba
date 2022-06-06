@@ -20,6 +20,7 @@
     "@expo-google-fonts/quicksand": "^0.2.2",
     "@expo/metro-config": "0.3.10",
     "@hookform/resolvers": "^2.8.10",
+    "@onesignal/node-onesignal": "^1.0.0-beta4",
     "@prisma/client": "^3.12.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-firebase/app": "^14.11.0",

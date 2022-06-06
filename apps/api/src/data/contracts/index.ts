@@ -6,3 +6,5 @@ export * from './repositories/DisciplineGroupRepository'
 export * from './repositories/DisciplineRepository'
 export * from './repositories/StudentRepository'
 export * from './repositories/UserRepository'
+
+export * from './services/MessagingService'

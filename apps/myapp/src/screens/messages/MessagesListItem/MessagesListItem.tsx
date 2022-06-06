@@ -26,12 +26,11 @@ const MessagesListItem: React.FC<MessagesListItemProps> = ({ message }) => {
   return (
     <ListItem
       containerStyle={{ paddingHorizontal: 16 }}
-      // onPress={() =>
-      //   navigation.navigate('MessageDetailsScreen', {
-      //     discipline,
-      //     disciplineGroup: group,
-      //   })
-      // }
+      onPress={() =>
+        navigation.navigate('DisciplineGroupMessagesScreen', {
+          disciplineGroupId: message.disciplineGroupId,
+        })
+      }
     >
       <ListItem.Content>
         <Container>

@@ -1,5 +1,6 @@
 export * from './discipline'
 export * from './discipline-group'
+export * from './discipline-group-messages'
 export * from './login'
 export * from './messages'
 export * from './register'
