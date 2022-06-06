@@ -1,4 +1,4 @@
-export * from './discipline'
+export * from './disciplines'
 export * from './discipline-group'
 export * from './discipline-group-messages'
 export * from './login'
