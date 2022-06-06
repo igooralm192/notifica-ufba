@@ -14,4 +14,5 @@ export type AppNavigation = {
   RegisterScreen: undefined
   SplashScreen: undefined
   WelcomeScreen: undefined
+  BottomTabsNavigator: undefined
 }

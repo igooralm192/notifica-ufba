@@ -1,28 +1,28 @@
-import { Header } from '@/components/Header'
 import { AuthState, useAuth } from '@/contexts/auth'
+import { BottomTabsNavigator } from '@/routes/bottom-tabs'
 import { AppNavigation } from '@/types/navigation'
 import {
   DisciplineGroupMessagesScreen,
   DisciplineGroupScreen,
-  DisciplinesScreen,
   LoginScreen,
-  MessagesScreen,
   RegisterScreen,
   SplashScreen,
   WelcomeScreen,
 } from '@/screens'
+import { ITheme } from '@/styles/theme'
 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
+import { useTheme } from '@rneui/themed'
 
 const Stack = createStackNavigator<AppNavigation>()
 
-const getAuthScreens = (state: AuthState) => {
+const getAuthScreens = (state: AuthState, theme: ITheme) => {
   switch (state) {
     case AuthState.UNAUTHENTICATED:
       return (
-        <Stack.Group>
+        <Stack.Group screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name="WelcomeScreen"
             component={WelcomeScreen}
@@ -36,24 +36,17 @@ const getAuthScreens = (state: AuthState) => {
       return (
         <Stack.Group>
           <Stack.Screen
-            name="MessagesScreen"
-            component={MessagesScreen}
-            options={{ title: 'Mensagens' }}
+            name="BottomTabsNavigator"
+            component={BottomTabsNavigator}
           />
+
           <Stack.Screen
             name="DisciplineGroupMessagesScreen"
             component={DisciplineGroupMessagesScreen}
-            options={{ title: 'Mensagens' }}
-          />
-          <Stack.Screen
-            name="DisciplinesScreen"
-            component={DisciplinesScreen}
-            options={{ title: 'Disciplinas' }}
           />
           <Stack.Screen
             name="DisciplineGroupScreen"
             component={DisciplineGroupScreen}
-            options={{ title: 'Turma' }}
           />
         </Stack.Group>
       )
@@ -70,13 +63,14 @@ const getAuthScreens = (state: AuthState) => {
 
 const Routes: React.FC = () => {
   const auth = useAuth()
+  const { theme: rneTheme } = useTheme()
 
   if (auth.loading || auth.state === AuthState.UNKNOWN) return <SplashScreen />
 
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator screenOptions={{ header: Header }}>
-        {getAuthScreens(auth.state)}
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {getAuthScreens(auth.state, rneTheme)}
       </Stack.Navigator>
     </NavigationContainer>
   )

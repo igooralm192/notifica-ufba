@@ -35,7 +35,7 @@ const MessagesScreen: React.FC<MessagesScreenProps> = props => {
   }, [])
 
   return (
-    <Container>
+    <Container headerProps={{ title: 'Mensagens' }}>
       <FlatList
         data={presenter.lastMessages.results}
         renderItem={renderMessagesListItem}

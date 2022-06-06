@@ -52,7 +52,9 @@
     "react-redux": "*",
     "styled-components": "*",
     "text-encoding-polyfill": "*",
-    "tsconfig-paths-webpack-plugin": "*"
+    "tsconfig-paths-webpack-plugin": "*",
+    "@react-navigation/bottom-tabs": "*",
+    "react-native-vector-icons": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && cp yarn.lock ./apps/myapp/ && mv ./apps/myapp/eas.js ./index.js",

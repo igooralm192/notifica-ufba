@@ -1,15 +1,20 @@
 import { useStatusBar } from '@/contexts/status-bar'
-
+import { useNavigation } from '@/helpers'
 import { StackHeaderProps } from '@react-navigation/stack'
+
 import { Button, useTheme } from '@rneui/themed'
 import React from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Container, Title, Action } from './HeaderStyles'
 
-export interface HeaderProps extends StackHeaderProps {}
+export interface HeaderProps {
+  title?: string
+  onBack?: () => void
+}
 
-const Header: React.FC<HeaderProps> = ({ navigation, options, back }) => {
+const Header: React.FC<HeaderProps> = ({ title, onBack }) => {
+  const navigation = useNavigation()
   const insets = useSafeAreaInsets()
   const { theme } = useTheme()
   const statusBar = useStatusBar()
@@ -26,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ navigation, options, back }) => {
       }}
     >
       <Action>
-        {back && (
+        {onBack && (
           <Button
             type="clear"
             icon={{
@@ -64,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({ navigation, options, back }) => {
               : theme.colors.white,
         }}
       >
-        {options?.title}
+        {title}
       </Title>
 
       <Action></Action>

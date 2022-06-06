@@ -35,7 +35,7 @@ const DisciplinesScreen: React.FC<DisciplinesScreenProps> = props => {
   }, [])
 
   return (
-    <Container>
+    <Container headerProps={{ title: 'Disciplinas' }}>
       <FlatList
         data={presenter.disciplines.results}
         renderItem={renderDisciplinesListItem}
