@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useContext, useEffect, useState } from 'react'
+import OneSignal from 'react-native-onesignal'
 
 export enum AuthState {
   UNKNOWN = 'unknown',
@@ -61,9 +62,13 @@ export const AuthProvider: React.FC = ({ children }) => {
       effect: async (_, { dispatch }) => {
         setLoading(true)
 
-        await api.user
+        const user = await api.user
           .getMyUser()
-          .then(({ user }) => dispatch(userFetched(user)))
+          .then(({ user }) => {
+            dispatch(userFetched(user))
+
+            return user
+          })
           .finally(() => setLoading(false))
       },
     })
@@ -84,6 +89,14 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     return () => unsubscribe()
   }, [])
+
+  useEffect(() => {
+    if (state === AuthState.AUTHENTICATED && user) {
+      OneSignal.setExternalUserId(user.id)
+    } else {
+      OneSignal.removeExternalUserId()
+    }
+  }, [state, user])
 
   useEffect(() => {
     if (token) AsyncStorage.setItem('TOKEN', token)

@@ -1,12 +1,17 @@
 import {
   ICreateStudentRepository,
+  IFindAllStudentRepository,
   IFindOneStudentRepository,
+  IStudentRepositoryListInput,
 } from '@/data/contracts'
 import { PrismaRepository } from '@/infra/database/prisma/helpers'
 
 export class PrismaStudentRepository
   extends PrismaRepository
-  implements ICreateStudentRepository, IFindOneStudentRepository
+  implements
+    ICreateStudentRepository,
+    IFindAllStudentRepository,
+    IFindOneStudentRepository
 {
   async create({
     matriculation,
@@ -25,6 +30,28 @@ export class PrismaStudentRepository
     return {
       ...student,
       user: student.user || undefined,
+    }
+  }
+
+  async findAll({
+    take,
+    skip,
+    where,
+    include,
+  }: IFindAllStudentRepository.Input): Promise<IFindAllStudentRepository.Output> {
+    const students = await this.client.student.findMany({
+      take,
+      skip,
+      where,
+      include,
+    })
+
+    return {
+      results: students.map(student => ({
+        ...student,
+        user: student.user || undefined,
+      })),
+      total: students.length,
     }
   }
 

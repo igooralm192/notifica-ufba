@@ -13,13 +13,15 @@ export class OneSignalMessagingService implements ICreateMessagingService {
     body,
     data,
     topics,
+    userIds,
   }: ICreateMessagingService.Input): Promise<ICreateMessagingService.Output> {
     await this.client.createNotification({
       app_id: this.appId,
       headings: { en: title },
       contents: { en: body },
       data,
-      included_segments: topics || ['Subscribed Users'],
+      channel_for_external_user_ids: 'push',
+      include_external_user_ids: userIds,
     })
   }
 }

@@ -9,6 +9,7 @@ import { Either, left, right } from '@notifica-ufba/utils'
 import {
   ICreateDisciplineGroupMessageRepository,
   ICreateMessagingService,
+  IFindAllStudentRepository,
   IFindOneDisciplineGroupRepository,
   IFindOneUserRepository,
 } from '@/data/contracts'
@@ -17,6 +18,7 @@ export class PostMessageUseCase implements IPostMessageUseCase {
   constructor(
     private readonly findOneUserRepository: IFindOneUserRepository,
     private readonly findOneDisciplineGroupRepository: IFindOneDisciplineGroupRepository,
+    private readonly findAllStudentRepository: IFindAllStudentRepository,
     private readonly createDisciplineGroupMessageRepository: ICreateDisciplineGroupMessageRepository,
     private readonly createMessagingService: ICreateMessagingService,
   ) {}
@@ -45,6 +47,13 @@ export class PostMessageUseCase implements IPostMessageUseCase {
       return left(new DisciplineGroupDoesNotExistError())
     }
 
+    const allStudents = await this.findAllStudentRepository.findAll({
+      where: { id: { in: disciplineGroup.studentIds } },
+      include: { user: true },
+    })
+
+    const allUserIds = allStudents.results.map(({ userId }) => userId)
+
     const disciplineGroupMessage =
       await this.createDisciplineGroupMessageRepository.create({
         body: message,
@@ -53,10 +62,10 @@ export class PostMessageUseCase implements IPostMessageUseCase {
         disciplineGroupId,
       })
 
-    await this.createMessagingService.create({
+    this.createMessagingService.create({
       title: `${disciplineGroup.discipline?.code} - ${disciplineGroup.code}`,
-      body: message,
-      topics: [`${disciplineGroup.discipline?.code} - ${disciplineGroup.code}`],
+      body: 'Há uma nova mensagem para esta disciplina!',
+      userIds: allUserIds,
     })
 
     return right(disciplineGroupMessage)
