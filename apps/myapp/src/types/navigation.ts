@@ -1,18 +1,21 @@
-import { IDiscipline, IDisciplineGroup } from '@notifica-ufba/domain/entities'
-
 export type AppNavigation = {
-  DisciplinesScreen: undefined
-  DisciplineGroupScreen: {
-    discipline: IDiscipline
-    disciplineGroup: IDisciplineGroup
-  }
-  DisciplineGroupMessagesScreen: {
-    disciplineGroupId: string
-  }
-  LoginScreen: undefined
-  MessagesScreen: undefined
-  RegisterScreen: undefined
+  // Unknown
   SplashScreen: undefined
+
+  // Unauthenticated
   WelcomeScreen: undefined
+  LoginScreen: undefined
+  RegisterScreen: undefined
+
+  // Authenticated
   BottomTabsNavigator: undefined
+  LastMessagesScreen: undefined
+  DisciplinesScreen: undefined
+  DisciplineGroupsScreen: undefined
+
+  DisciplineGroupTabsNavigator: undefined
+  DisciplineGroupPostsScreen: { disciplineGroupId: string }
+  DisciplineGroupMessagesScreen: { disciplineGroupId: string }
+
+  DisciplineGroupInfoScreen: { disciplineGroupId: string }
 }

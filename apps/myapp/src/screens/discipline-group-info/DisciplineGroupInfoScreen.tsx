@@ -1,15 +1,13 @@
 import { useAuth } from '@/contexts/auth'
 import { useStatusBar } from '@/contexts/status-bar'
 import { useNavigation } from '@/helpers'
-import { AppNavigation } from '@/types/navigation'
 
-import { StackScreenProps } from '@react-navigation/stack'
 import React, { useLayoutEffect, useMemo } from 'react'
 
 import {
-  useDisciplineGroupPresenter,
-  withDisciplineGroupPresenter,
-} from './DisciplineGroupPresenter'
+  useDisciplineGroupInfoPresenter,
+  withDisciplineGroupInfoPresenter,
+} from './DisciplineGroupInfoPresenter'
 import {
   Container,
   ScrollContainer,
@@ -33,34 +31,30 @@ import {
   ClassSchedule,
   ButtonContainer,
   SubscribeButton,
-} from './DisciplineGroupStyles'
+} from './DisciplineGroupInfoStyles'
 
-export interface DisciplineGroupScreenProps
-  extends StackScreenProps<AppNavigation, 'DisciplineGroupScreen'> {}
+const DisciplineGroupInfoScreen: React.FC = () => {
+  const presenter = useDisciplineGroupInfoPresenter()
 
-const DisciplineGroupScreen: React.FC<DisciplineGroupScreenProps> = ({
-  route,
-}) => {
-  const { discipline, disciplineGroup } = route.params
-
-  const presenter = useDisciplineGroupPresenter()
+  const disciplineGroup = presenter.disciplineGroup
+  const discipline = presenter.disciplineGroup?.discipline
 
   const auth = useAuth()
   const navigation = useNavigation()
   const statusBar = useStatusBar()
 
-  const disciplineCodeFirstLetter = discipline.code.charAt(0).toUpperCase()
+  const disciplineCodeFirstLetter = discipline?.code.charAt(0).toUpperCase()
 
   const isSubscribed = useMemo(() => {
-    if (!disciplineGroup.studentIds || !auth.user || !auth.user.student?.id)
+    if (!disciplineGroup?.studentIds || !auth.user || !auth.user.student?.id)
       return false
 
     return disciplineGroup.studentIds.includes(auth.user.student.id)
-  }, [disciplineGroup.studentIds, auth.user?.student?.id])
+  }, [disciplineGroup?.studentIds, auth.user?.student?.id])
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `${discipline.code} - ${disciplineGroup.code}`,
+      title: `${discipline?.code} - ${disciplineGroup?.code}`,
     })
     statusBar.setTheme('primary')
   }, [])
@@ -73,33 +67,33 @@ const DisciplineGroupScreen: React.FC<DisciplineGroupScreenProps> = ({
         </InitialLetterContainer>
 
         <TitleContainer>
-          <DisciplineCode>{discipline.code}</DisciplineCode>
-          <Name>{discipline.name}</Name>
-          <GroupCode>{disciplineGroup.code}</GroupCode>
+          <DisciplineCode>{discipline?.code}</DisciplineCode>
+          <Name>{discipline?.name}</Name>
+          <GroupCode>{disciplineGroup?.code}</GroupCode>
         </TitleContainer>
 
         <DescriptionContainer>
           <DescriptionLabel>Descrição</DescriptionLabel>
-          <Description>{disciplineGroup.description}</Description>
+          <Description>{disciplineGroup?.description}</Description>
         </DescriptionContainer>
 
         <TeacherContainer>
           <TeacherLabel>Professor</TeacherLabel>
-          <TeacherName>{disciplineGroup.teacher?.user?.name}</TeacherName>
+          <TeacherName>{disciplineGroup?.teacher?.user?.name}</TeacherName>
         </TeacherContainer>
 
         <MenuContainer>
           <MenuLabel>Link da ementa</MenuLabel>
-          <MenuUrl>{disciplineGroup.menuUrl}</MenuUrl>
+          <MenuUrl>{disciplineGroup?.menuUrl}</MenuUrl>
         </MenuContainer>
 
         <ClassSchedulesContainer>
           <ClassSchedulesLabel>Horários</ClassSchedulesLabel>
-          <ClassSchedule>{disciplineGroup.classTime}</ClassSchedule>
+          <ClassSchedule>{disciplineGroup?.classTime.toString()}</ClassSchedule>
         </ClassSchedulesContainer>
       </ScrollContainer>
 
-      {!isSubscribed && (
+      {!isSubscribed && disciplineGroup && (
         <ButtonContainer>
           <SubscribeButton
             title="Inscrever-se"
@@ -114,4 +108,4 @@ const DisciplineGroupScreen: React.FC<DisciplineGroupScreenProps> = ({
   )
 }
 
-export default withDisciplineGroupPresenter(DisciplineGroupScreen)
+export default withDisciplineGroupInfoPresenter(DisciplineGroupInfoScreen)

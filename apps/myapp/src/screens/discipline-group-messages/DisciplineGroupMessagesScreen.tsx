@@ -43,6 +43,7 @@ const DisciplineGroupMessagesScreen: React.FC<
   return (
     <Container>
       <FlatList
+        inverted
         data={presenter.disciplineGroupMessages.results}
         renderItem={renderDisciplineGroupMessagesListItem}
         ItemSeparatorComponent={() => <View style={{ marginVertical: 8 }} />}

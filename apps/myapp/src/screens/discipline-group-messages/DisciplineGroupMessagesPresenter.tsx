@@ -48,7 +48,7 @@ export const DisciplineGroupMessagesPresenter: React.FC<{
       .collection('disciplineGroupMessages')
       .doc(disciplineGroupId)
       .collection('messages')
-      .orderBy('sentAt')
+      .orderBy('sentAt', 'desc')
       .onSnapshot(
         snapshot => {
           handleNewMessages(

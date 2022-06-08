@@ -54,7 +54,8 @@
     "text-encoding-polyfill": "*",
     "tsconfig-paths-webpack-plugin": "*",
     "@react-navigation/bottom-tabs": "*",
-    "react-native-vector-icons": "*"
+    "react-native-vector-icons": "*",
+    "@react-navigation/material-top-tabs": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && cp yarn.lock ./apps/myapp/ && mv ./apps/myapp/eas.js ./index.js",

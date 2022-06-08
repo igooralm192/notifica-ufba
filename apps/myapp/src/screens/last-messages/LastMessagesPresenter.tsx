@@ -9,17 +9,17 @@ import { IPaginatedList } from '@/types/list'
 import React, { useContext, useState } from 'react'
 import Toast from 'react-native-toast-message'
 
-export interface MessagesPresenterContextData {
+export interface LastMessagesPresenterContextData {
   loading: boolean
   lastMessages: IPaginatedList<ILastMessageDTO>
   getLastMessages(): Promise<void>
 }
 
-const MessagesPresenterContext = React.createContext(
-  {} as MessagesPresenterContextData,
+const LastMessagesPresenterContext = React.createContext(
+  {} as LastMessagesPresenterContextData,
 )
 
-export const MessagesPresenter: React.FC = ({ children }) => {
+export const LastMessagesPresenter: React.FC = ({ children }) => {
   const dispatch = useDispatch()
 
   const lastMessages = useSelector(selectAllLastMessages)
@@ -50,7 +50,7 @@ export const MessagesPresenter: React.FC = ({ children }) => {
   }
 
   return (
-    <MessagesPresenterContext.Provider
+    <LastMessagesPresenterContext.Provider
       value={{
         loading,
         lastMessages: { results: lastMessages, total: lastMessagesTotal },
@@ -58,16 +58,17 @@ export const MessagesPresenter: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </MessagesPresenterContext.Provider>
+    </LastMessagesPresenterContext.Provider>
   )
 }
 
-export const withMessagesPresenter = (Component: React.FC) => {
+export const withLastMessagesPresenter = (Component: React.FC) => {
   return (props: any) => (
-    <MessagesPresenter>
+    <LastMessagesPresenter>
       <Component {...props} />
-    </MessagesPresenter>
+    </LastMessagesPresenter>
   )
 }
 
-export const useMessagesPresenter = () => useContext(MessagesPresenterContext)
+export const useLastMessagesPresenter = () =>
+  useContext(LastMessagesPresenterContext)

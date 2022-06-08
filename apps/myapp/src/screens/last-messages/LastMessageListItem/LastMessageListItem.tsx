@@ -14,13 +14,15 @@ import {
   DisciplineName,
   DisciplineMessage,
   DisciplineMessageTime,
-} from './MessagesListItemStyles'
+} from './LastMessageListItemStyles'
 
-export interface MessagesListItemProps {
+export interface LastMessageListItemProps {
   message: ILastMessageDTO
 }
 
-const MessagesListItem: React.FC<MessagesListItemProps> = ({ message }) => {
+const LastMessageListItem: React.FC<LastMessageListItemProps> = ({
+  message,
+}) => {
   const navigation = useNavigation()
 
   return (
@@ -54,4 +56,4 @@ const MessagesListItem: React.FC<MessagesListItemProps> = ({ message }) => {
   )
 }
 
-export default MessagesListItem
+export default LastMessageListItem

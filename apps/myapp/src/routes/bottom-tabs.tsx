@@ -1,4 +1,8 @@
-import { DisciplinesScreen, MessagesScreen } from '@/screens'
+import {
+  DisciplineGroupsScreen,
+  DisciplinesScreen,
+  LastMessagesScreen,
+} from '@/screens'
 import { AppNavigation } from '@/types/navigation'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -21,14 +25,24 @@ export const BottomTabsNavigator = () => {
       }}
     >
       <BottomTab.Screen
-        name="MessagesScreen"
+        name="DisciplineGroupsScreen"
+        options={{
+          title: 'Turmas',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="book" color={color} size={size} />
+          ),
+        }}
+        component={DisciplineGroupsScreen}
+      />
+      <BottomTab.Screen
+        name="LastMessagesScreen"
         options={{
           title: 'Mensagens',
           tabBarIcon: ({ color, size }) => (
             <Icon name="message" color={color} size={size} />
           ),
         }}
-        component={MessagesScreen}
+        component={LastMessagesScreen}
       />
       <BottomTab.Screen
         name="DisciplinesScreen"
