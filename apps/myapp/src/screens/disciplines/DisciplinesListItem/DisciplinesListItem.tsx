@@ -39,9 +39,8 @@ const DisciplinesListItem: React.FC<DisciplinesListItemProps> = ({
           key={group.id}
           containerStyle={{ paddingHorizontal: 16 }}
           onPress={() =>
-            navigation.navigate('DisciplineGroupScreen', {
-              discipline,
-              disciplineGroup: group,
+            navigation.navigate('DisciplineGroupInfoScreen', {
+              disciplineGroupId: group.id,
             })
           }
         >

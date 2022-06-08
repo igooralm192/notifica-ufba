@@ -7,23 +7,23 @@ import React, { useEffect, useLayoutEffect } from 'react'
 import { FlatList } from 'react-native'
 
 import {
-  useMessagesPresenter,
-  withMessagesPresenter,
-} from './MessagesPresenter'
-import { MessagesListItem } from './MessagesListItem'
-import { Container } from './MessagesStyles'
+  useLastMessagesPresenter,
+  withLastMessagesPresenter,
+} from './LastMessagesPresenter'
+import { LastMessageListItem } from './LastMessageListItem'
+import { Container } from './LastMessagesStyles'
 import { useAuth } from '@/contexts/auth'
 
-export interface MessagesScreenProps {}
+export interface LastMessagesScreenProps {}
 
-const MessagesScreen: React.FC<MessagesScreenProps> = props => {
-  const presenter = useMessagesPresenter()
+const LastMessagesScreen: React.FC<LastMessagesScreenProps> = () => {
+  const presenter = useLastMessagesPresenter()
 
   const auth = useAuth()
   const statusBar = useStatusBar()
 
-  const renderMessagesListItem = ({ item }: { item: ILastMessageDTO }) => {
-    return <MessagesListItem key={item.disciplineGroupCode} message={item} />
+  const renderLastMessageListItem = ({ item }: { item: ILastMessageDTO }) => {
+    return <LastMessageListItem key={item.disciplineGroupCode} message={item} />
   }
 
   useLayoutEffect(() => {
@@ -38,7 +38,7 @@ const MessagesScreen: React.FC<MessagesScreenProps> = props => {
     <Container headerProps={{ title: 'Mensagens' }}>
       <FlatList
         data={presenter.lastMessages.results}
-        renderItem={renderMessagesListItem}
+        renderItem={renderLastMessageListItem}
         ItemSeparatorComponent={Divider}
       />
 
@@ -47,4 +47,4 @@ const MessagesScreen: React.FC<MessagesScreenProps> = props => {
   )
 }
 
-export default withMessagesPresenter(MessagesScreen)
+export default withLastMessagesPresenter(LastMessagesScreen)
