@@ -1,0 +1,20 @@
+{
+  "discipline-groups": [
+    {
+      "id": "62858445d017cc316d8a63aa",
+      "code": "T010000",
+      "semester": "2022.1",
+      "description": "Matéria de cálculo com Isaac",
+      "place": "Lugar",
+      "menuUrl": "https://google.com",
+      "classTime": "2022-06-10T23:25:02.096Z",
+      "teacherId": "62858445d017cc316d8a63a8",
+      "disciplineId": "62858445d017cc316d8a63a9",
+      "createdAt": "2020-06-10T23:25:02.096Z",
+      "updatedAt": "2020-06-10T23:25:02.096Z",
+      "studentIds": [
+        "62858445d017cc316d8a63a7"
+      ]
+    }
+  ]
+}

@@ -1,19 +1,39 @@
 import { useStatusBar } from '@/contexts/status-bar'
 import { useNavigation } from '@/helpers'
-import { StackHeaderProps } from '@react-navigation/stack'
 
-import { Button, useTheme } from '@rneui/themed'
+import { Button, useTheme, TextProps } from '@rneui/themed'
 import React from 'react'
+import { FlexAlignType } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { Container, Title, Action } from './HeaderStyles'
+import {
+  Container,
+  TitleContainer,
+  Title,
+  Subtitle,
+  Action,
+} from './HeaderStyles'
 
 export interface HeaderProps {
   title?: string
+  subtitle?: string
+  back?: boolean
   onBack?: () => void
+  titleAlign?: FlexAlignType
+  rightAction?: {
+    icon: string
+    onPress?: () => void
+  }
 }
 
-const Header: React.FC<HeaderProps> = ({ title, onBack }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  subtitle,
+  back = true,
+  onBack,
+  titleAlign = 'flex-start',
+  rightAction,
+}) => {
   const navigation = useNavigation()
   const insets = useSafeAreaInsets()
   const { theme } = useTheme()
@@ -23,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ title, onBack }) => {
     <Container
       style={{
         paddingTop: insets.top,
-        height: insets.top + 48,
+        minHeight: insets.top + 48,
         backgroundColor:
           statusBar.theme === 'light'
             ? theme.colors.white
@@ -31,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ title, onBack }) => {
       }}
     >
       <Action>
-        {onBack && (
+        {back && (
           <Button
             type="clear"
             icon={{
@@ -56,23 +76,73 @@ const Header: React.FC<HeaderProps> = ({ title, onBack }) => {
               margin: 0,
             }}
             buttonStyle={{ padding: 0, margin: 0 }}
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              if (onBack) onBack()
+              else navigation.goBack()
+            }}
           />
         )}
       </Action>
 
-      <Title
-        style={{
-          color:
-            statusBar.theme === 'light'
-              ? theme.colors.black
-              : theme.colors.white,
-        }}
-      >
-        {title}
-      </Title>
+      <TitleContainer style={{ alignItems: titleAlign }}>
+        {!!title && (
+          <Title
+            style={{
+              color:
+                statusBar.theme === 'light'
+                  ? theme.colors.black
+                  : theme.colors.white,
+            }}
+          >
+            {title}
+          </Title>
+        )}
 
-      <Action></Action>
+        {!!subtitle && (
+          <Subtitle
+            style={{
+              color:
+                statusBar.theme === 'light'
+                  ? theme.colors.black
+                  : theme.colors.white,
+            }}
+          >
+            {subtitle}
+          </Subtitle>
+        )}
+      </TitleContainer>
+
+      <Action>
+        {!!rightAction && (
+          <Button
+            type="clear"
+            icon={{
+              name: rightAction.icon,
+              type: 'material-community',
+              size: 24,
+              containerStyle: {
+                padding: 0,
+                margin: 0,
+              },
+              iconStyle: {
+                padding: 0,
+                margin: 0,
+                marginLeft: 4,
+              },
+              color:
+                statusBar.theme === 'light'
+                  ? theme.colors.black
+                  : theme.colors.white,
+            }}
+            iconContainerStyle={{
+              padding: 0,
+              margin: 0,
+            }}
+            buttonStyle={{ padding: 0, margin: 0 }}
+            onPress={() => rightAction.onPress?.()}
+          />
+        )}
+      </Action>
     </Container>
   )
 }

@@ -17,5 +17,6 @@ module.exports = (async () => {
     debug: false,
     // all the file extensions used for imports other than 'ts', 'tsx', 'js', 'jsx'
     extensions: [],
+    watchFolders: ['../../node_modules']
   })
 })()

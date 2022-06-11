@@ -1,3 +1,4 @@
+import { DisciplineMapper } from '@/mappers/discipline/DisciplineMapper'
 import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
 import { TeacherMapper } from '../teacher/TeacherMapper'
 
@@ -15,6 +16,9 @@ export class DisciplineGroupMapper {
       disciplineId: data.disciplineId,
       studentIds: data.studentIds,
       teacher: data.teacher ? TeacherMapper.toEntity(data.teacher) : undefined,
+      discipline: data.discipline
+        ? DisciplineMapper.toEntity(data.discipline)
+        : undefined,
       createdAt: new Date(data.createdAt),
       updatedAt: new Date(data.updatedAt),
     }

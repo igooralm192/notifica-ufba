@@ -4,6 +4,7 @@ import { ITeacherRepositoryListInput } from './DisciplineRepository'
 export type IDisciplineGroupRepositoryListInput = {
   where?: {
     studentIds?: {
+      equals?: string[]
       has?: string
     }
   }

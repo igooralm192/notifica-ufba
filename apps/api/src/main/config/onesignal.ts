@@ -1,6 +1,6 @@
 import env from '@/main/config/env'
 
-import * as OneSignal from '@onesignal/node-onesignal'
+// import * as OneSignal from '@onesignal/node-onesignal'
 
 const appKeyProvider = {
   getToken() {
@@ -14,13 +14,13 @@ const userKeyProvider = {
   },
 }
 
-const configuration = OneSignal.createConfiguration({
-  authMethods: {
-    app_key: { tokenProvider: appKeyProvider },
-    user_key: { tokenProvider: userKeyProvider },
-  },
-})
+// const configuration = OneSignal.createConfiguration({
+//   authMethods: {
+//     app_key: { tokenProvider: appKeyProvider },
+//     user_key: { tokenProvider: userKeyProvider },
+//   },
+// })
 
-const onesignalApi = new OneSignal.DefaultApi(configuration)
+// const onesignalApi = new OneSignal.DefaultApi(configuration)
 
-export { onesignalApi }
+// export { onesignalApi }

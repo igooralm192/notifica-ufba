@@ -1,26 +1,21 @@
-import { useAuth } from '@/contexts/auth'
-import { useStatusBar } from '@/contexts/status-bar'
-import { DisciplineGroupListItem } from '@/screens/discipline-groups/DisciplineGroupListItem'
 import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
-import { useTheme } from '@rneui/themed'
+import { FullLoading, Spacer } from '@/components'
+import { useStatusBar } from '@/contexts/status-bar'
 
-import React, { useEffect, useLayoutEffect } from 'react'
-import { FlatList, View } from 'react-native'
+import React from 'react'
+import { FlatList } from 'react-native'
 
+import { DisciplineGroupListItem } from './DisciplineGroupListItem'
 import {
   useDisciplineGroupsPresenter,
   withDisciplineGroupsPresenter,
 } from './DisciplineGroupsPresenter'
-import { Container } from './DisciplineGroupsStyles'
+import { Container, ListContainer } from './DisciplineGroupsStyles'
 
 export interface DisciplineGroupsScreenProps {}
 
 const DisciplineGroupsScreen: React.FC<DisciplineGroupsScreenProps> = () => {
-  const presenter = useDisciplineGroupsPresenter()
-
-  const auth = useAuth()
-  const statusBar = useStatusBar()
-  const { theme } = useTheme()
+  const { loading, disciplineGroups } = useDisciplineGroupsPresenter()
 
   const renderDisciplineGroupListItem = ({
     item,
@@ -30,23 +25,20 @@ const DisciplineGroupsScreen: React.FC<DisciplineGroupsScreenProps> = () => {
     return <DisciplineGroupListItem disciplineGroup={item} />
   }
 
-  useLayoutEffect(() => {
-    statusBar.setTheme('primary')
-  }, [])
-
-  useEffect(() => {
-    presenter.getDisciplineGroups()
-  }, [])
+  useStatusBar('primary')
 
   return (
-    <Container headerProps={{ title: 'Turmas' }}>
-      <FlatList
-        style={{ backgroundColor: theme.colors.grey1 }}
-        data={presenter.disciplineGroups.results}
-        renderItem={renderDisciplineGroupListItem}
-        ItemSeparatorComponent={() => <View style={{ marginVertical: 8 }} />}
-        contentContainerStyle={{ padding: 16 }}
-      />
+    <Container headerProps={{ title: 'Turmas', back: false }}>
+      <ListContainer>
+        <FullLoading loading={loading}>
+          <FlatList
+            data={disciplineGroups.results}
+            renderItem={renderDisciplineGroupListItem}
+            ItemSeparatorComponent={Spacer}
+            contentContainerStyle={{ padding: 16 }}
+          />
+        </FullLoading>
+      </ListContainer>
     </Container>
   )
 }

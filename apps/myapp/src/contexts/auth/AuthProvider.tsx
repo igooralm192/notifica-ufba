@@ -12,7 +12,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useContext, useEffect, useState } from 'react'
-import OneSignal from 'react-native-onesignal'
 
 export enum AuthState {
   UNKNOWN = 'unknown',
@@ -23,10 +22,9 @@ export enum AuthState {
 export interface AuthContextData {
   loading: boolean
   state: AuthState
-  token: string | null
   user: IUser | null
 
-  setToken(token: string | null): void
+  login(email: string, password: string): Promise<void>
 }
 
 const AuthContext = React.createContext({} as AuthContextData)
@@ -39,6 +37,12 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const changeToken = (token: string | null) => {
     dispatch(tokenFetched(token))
+  }
+
+  const login = async (email: string, password: string) => {
+    const { token } = await api.user.login({ email, password })
+
+    changeToken(token)
   }
 
   useEffect(() => {
@@ -62,7 +66,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       effect: async (_, { dispatch }) => {
         setLoading(true)
 
-        const user = await api.user
+        await api.user
           .getMyUser()
           .then(({ user }) => {
             dispatch(userFetched(user))
@@ -90,13 +94,13 @@ export const AuthProvider: React.FC = ({ children }) => {
     return () => unsubscribe()
   }, [])
 
-  useEffect(() => {
-    if (state === AuthState.AUTHENTICATED && user) {
-      OneSignal.setExternalUserId(user.id)
-    } else {
-      OneSignal.removeExternalUserId()
-    }
-  }, [state, user])
+  // useEffect(() => {
+  //   if (state === AuthState.AUTHENTICATED && user) {
+  //     OneSignal.setExternalUserId(user.id)
+  //   } else {
+  //     OneSignal.removeExternalUserId()
+  //   }
+  // }, [state, user])
 
   useEffect(() => {
     if (token) AsyncStorage.setItem('TOKEN', token)
@@ -139,9 +143,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   // }, [])
 
   return (
-    <AuthContext.Provider
-      value={{ loading, state, token, user, setToken: changeToken }}
-    >
+    <AuthContext.Provider value={{ loading, state, user, login }}>
       {children}
     </AuthContext.Provider>
   )

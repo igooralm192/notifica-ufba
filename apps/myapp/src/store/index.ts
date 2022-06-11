@@ -9,6 +9,7 @@ import { combineReducers } from 'redux'
 // import { persistStore, persistReducer } from 'redux-persist'
 
 import { authReducer } from './auth'
+import { disciplineGroupsReducer } from './disciplineGroups'
 import { disciplinesReducer } from './disciplines'
 import { lastMessagesReducer } from './lastMessages'
 import { IAppStore } from './types'
@@ -23,6 +24,7 @@ export const listenerMiddleware = createListenerMiddleware<IAppStore>()
 const store = configureStore({
   reducer: combineReducers({
     auth: authReducer,
+    disciplineGroups: disciplineGroupsReducer,
     disciplines: disciplinesReducer,
     lastMessages: lastMessagesReducer,
   }),

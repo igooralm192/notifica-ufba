@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/native'
 import { useTheme } from '@rneui/themed'
-import React, { useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { StatusBar } from 'react-native'
 
 export type StatusBarTheme = 'light' | 'primary'
@@ -31,4 +32,14 @@ export const StatusBarProvider: React.FC = ({ children }) => {
   )
 }
 
-export const useStatusBar = () => useContext(StatusBarContext)
+export const useStatusBar = (theme: StatusBarTheme = 'primary') => {
+  const statusBar = useContext(StatusBarContext)
+
+  useFocusEffect(
+    useCallback(() => {
+      statusBar.setTheme(theme)
+    }, [theme]),
+  )
+
+  return statusBar
+}

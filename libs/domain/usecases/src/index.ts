@@ -2,6 +2,7 @@ export * from './lib/discipline/ReadDisciplinesUseCase'
 export * from './lib/discipline/SubscribeStudentToDisciplineGroupUseCase'
 
 export * from './lib/discipline-group/PostMessageUseCase'
+export * from './lib/discipline-group/ReadDisciplineGroupsUseCase'
 export * from './lib/discipline-group/ReadLastMessagesUseCase'
 
 export * from './lib/student/CreateStudentUseCase'

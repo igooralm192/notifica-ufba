@@ -1,16 +1,21 @@
 import { IDisciplineGroupMessage } from '@notifica-ufba/domain/entities'
-import { BaseError } from '@notifica-ufba/errors'
 
+import { DisciplineGroupMessageMapper } from '@/mappers'
 import { IPaginatedList } from '@/types/list'
 import { AppNavigation } from '@/types/navigation'
 
-import firestore from '@react-native-firebase/firestore'
 import { StackScreenProps } from '@react-navigation/stack'
+import {
+  collection,
+  doc,
+  getFirestore,
+  onSnapshot,
+  orderBy,
+  query,
+} from 'firebase/firestore'
 import React, { useContext, useEffect, useState } from 'react'
 import Toast from 'react-native-toast-message'
-import { DisciplineGroupMessageMapper } from '@/mappers'
-
-import OneSignal from 'react-native-onesignal'
+import { db } from '@/config/firebase'
 
 export interface DisciplineGroupMessagesPresenterContextData {
   disciplineGroupId: string
@@ -44,29 +49,29 @@ export const DisciplineGroupMessagesPresenter: React.FC<{
   }
 
   useEffect(() => {
-    const unsubscribe = firestore()
-      .collection('disciplineGroupMessages')
-      .doc(disciplineGroupId)
-      .collection('messages')
-      .orderBy('sentAt', 'desc')
-      .onSnapshot(
-        snapshot => {
-          handleNewMessages(
-            DisciplineGroupMessageMapper.toEntityList(
-              snapshot.docs.map(doc => doc.data()),
-            ),
-          )
+    const docRef = doc(db, 'disciplineGroupMessages', disciplineGroupId)
+    const collectionRef = collection(docRef, 'messages')
+    const queryRef = query(collectionRef, orderBy('sentAt', 'desc'))
 
-          setLoading(false)
-        },
-        error => {
-          Toast.show({
-            type: 'error',
-            text1: 'Erro ao retornar as mensagens desta disciplina.',
-            text2: error.message,
-          })
-        },
-      )
+    const unsubscribe = onSnapshot(
+      queryRef,
+      snapshot => {
+        handleNewMessages(
+          DisciplineGroupMessageMapper.toEntityList(
+            snapshot.docs.map(doc => doc.data()),
+          ),
+        )
+
+        setLoading(false)
+      },
+      error => {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao retornar as mensagens desta disciplina.',
+          text2: error.message,
+        })
+      },
+    )
 
     return () => unsubscribe()
   }, [])

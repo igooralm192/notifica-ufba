@@ -13,7 +13,7 @@ export type AppNavigation = {
   DisciplinesScreen: undefined
   DisciplineGroupsScreen: undefined
 
-  DisciplineGroupTabsNavigator: undefined
+  DisciplineGroupTabsScreen: { disciplineGroupId: string }
   DisciplineGroupPostsScreen: { disciplineGroupId: string }
   DisciplineGroupMessagesScreen: { disciplineGroupId: string }
 

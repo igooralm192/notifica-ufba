@@ -42,9 +42,7 @@ export const RegisterPresenter: React.FC = ({ children }) => {
         course,
       })
 
-      const { token } = await api.user.login({ email, password })
-
-      auth.setToken(token)
+      await auth.login(email, password)
     } catch (err) {
       const error = err as BaseError
 

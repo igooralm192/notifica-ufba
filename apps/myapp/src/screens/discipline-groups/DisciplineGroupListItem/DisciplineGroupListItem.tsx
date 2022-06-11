@@ -30,24 +30,25 @@ const DisciplineGroupListItem: React.FC<DisciplineGroupListItemProps> = ({
   return (
     <Container
       onPress={() =>
-        navigation.navigate('DisciplineGroupTabsNavigator', {
-          screen: 'DisciplineGroupPostsScreen',
-          params: {
-            disciplineGroupId: disciplineGroup.id,
-          },
+        navigation.navigate('DisciplineGroupTabsScreen', {
+          disciplineGroupId: disciplineGroup.id,
         })
       }
     >
       <LeftContainer>
         <LeftTopContainer>
-          <DisciplineCode>MATA02 - T010000</DisciplineCode>
-          <DisciplineName>Cálculo A</DisciplineName>
+          <DisciplineCode>
+            {disciplineGroup.discipline?.code} - {disciplineGroup.code}
+          </DisciplineCode>
+          <DisciplineName>{disciplineGroup.discipline?.name}</DisciplineName>
         </LeftTopContainer>
 
         <Spacer />
 
         <LeftBottomContainer>
-          <DisciplineGroupTeacher>Professor</DisciplineGroupTeacher>
+          <DisciplineGroupTeacher>
+            {disciplineGroup.teacher?.user?.name}
+          </DisciplineGroupTeacher>
         </LeftBottomContainer>
       </LeftContainer>
 

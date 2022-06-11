@@ -1,10 +1,8 @@
 import { IAuthenticateUserUseCase } from '@notifica-ufba/domain/usecases'
 import { BaseError } from '@notifica-ufba/errors'
 
-import api from '@/api'
 import { useAuth } from '@/contexts/auth'
 
-import firestore from '@react-native-firebase/firestore'
 import React, { useContext, useState } from 'react'
 import Toast from 'react-native-toast-message'
 
@@ -26,9 +24,7 @@ export const LoginPresenter: React.FC = ({ children }) => {
     setLoading(true)
 
     try {
-      const { token } = await api.user.login({ email, password })
-
-      auth.setToken(token)
+      await auth.login(email, password)
     } catch (err) {
       const error = err as BaseError
 
