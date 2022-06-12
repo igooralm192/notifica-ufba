@@ -68,9 +68,7 @@ export const DisciplineGroupPostsPresenter: React.FC<{
   )
 }
 
-export const withDisciplineGroupPostsPresenter = (
-  Component: React.FC<any>,
-) => {
+export const withDisciplineGroupPostsPresenter = (Component: React.FC<any>) => {
   return ({
     route,
     ...props

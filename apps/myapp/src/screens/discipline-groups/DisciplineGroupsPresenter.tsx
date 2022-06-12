@@ -9,13 +9,17 @@ import { useDispatch, useSelector } from '@/store'
 // } from '@/store/disciplines'
 import { IPaginatedList } from '@/types/list'
 
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Toast from 'react-native-toast-message'
+import {
+  disciplineGroupsAdded,
+  selectAllDisciplineGroups,
+} from '@/store/disciplineGroups'
+import { useAuth } from '@/contexts/auth'
 
 export interface DisciplineGroupsPresenterContextData {
   loading: boolean
   disciplineGroups: IPaginatedList<IDisciplineGroup>
-  getDisciplineGroups(): Promise<void>
 }
 
 const DisciplineGroupsPresenterContext = React.createContext(
@@ -23,44 +27,52 @@ const DisciplineGroupsPresenterContext = React.createContext(
 )
 
 export const DisciplineGroupsPresenter: React.FC = ({ children }) => {
+  const auth = useAuth()
   const dispatch = useDispatch()
 
-  // const disciplines = useSelector(selectAllDisciplineGroups)
-  // const disciplinesTotal = useSelector(state => state.disciplines.total)
+  const disciplineGroups = useSelector(selectAllDisciplineGroups)
+  const disciplineGroupsTotal = useSelector(
+    state => state.disciplineGroups.total,
+  )
 
   const [loading, setLoading] = useState(true)
 
-  const getDisciplineGroups = async () => {
+  const getMyDisciplineGroups = async (page = 0, limit = 10) => {
     setLoading(true)
 
-    // try {
-    //   const disciplines = await api.discipline.getDisciplineGroups({
-    //     paginate,
-    //   })
+    try {
+      const disciplineGroups = await api.disciplineGroup.getDisciplineGroups({
+        query: { studentId: auth.user?.student?.id },
+        page,
+        limit,
+      })
 
-    //   dispatch(disciplinesAdded(disciplines))
-    // } catch (err) {
-    //   const error = err as BaseError
+      dispatch(disciplineGroupsAdded(disciplineGroups))
+    } catch (err) {
+      const error = err as BaseError
 
-    //   Toast.show({
-    //     type: 'error',
-    //     text1: 'Erro ao retornar disciplinas.',
-    //     text2: error.message,
-    //   })
-    // } finally {
-    //   setLoading(false)
-    // }
+      Toast.show({
+        type: 'error',
+        text1: 'Erro ao retornar turmas.',
+        text2: error.message,
+      })
+    } finally {
+      setLoading(false)
+    }
   }
+
+  useEffect(() => {
+    getMyDisciplineGroups()
+  }, [])
 
   return (
     <DisciplineGroupsPresenterContext.Provider
       value={{
         loading,
         disciplineGroups: {
-          results: [{}],
-          total: 0,
+          results: disciplineGroups,
+          total: disciplineGroupsTotal,
         },
-        getDisciplineGroups,
       }}
     >
       {children}

@@ -1,3 +1,4 @@
+import { useTabBarHeight } from '@/hooks'
 import {
   DisciplineGroupsScreen,
   DisciplinesScreen,
@@ -14,13 +15,14 @@ const BottomTab = createBottomTabNavigator<AppNavigation>()
 
 export const BottomTabsNavigator = () => {
   const { theme } = useTheme()
+  const tabBarHeight = useTabBarHeight()
 
   return (
     <BottomTab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: theme.colors.primary,
-        tabBarStyle: { height: 64 },
+        tabBarStyle: { height: tabBarHeight },
         tabBarItemStyle: { padding: 12 },
       }}
     >

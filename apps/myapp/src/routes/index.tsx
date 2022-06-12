@@ -8,14 +8,14 @@ import {
   RegisterScreen,
   SplashScreen,
   WelcomeScreen,
+  DisciplineGroupTabsScreen,
 } from '@/screens'
 import { ITheme } from '@/styles/theme'
 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import React from 'react'
 import { useTheme } from '@rneui/themed'
-import { DisciplineGroupTabsNavigator } from '@/routes/discipline-group-tabs'
+import React from 'react'
 
 const Stack = createStackNavigator<AppNavigation>()
 
@@ -42,8 +42,8 @@ const getAuthScreens = (state: AuthState, theme: ITheme) => {
           />
 
           <Stack.Screen
-            name="DisciplineGroupTabsNavigator"
-            component={DisciplineGroupTabsNavigator}
+            name="DisciplineGroupTabsScreen"
+            component={DisciplineGroupTabsScreen}
           />
 
           <Stack.Screen
