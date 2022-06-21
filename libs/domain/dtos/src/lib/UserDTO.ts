@@ -6,6 +6,7 @@ export interface IUserDTO {
   name: string
   email: string
   type: 'STUDENT' | 'TEACHER'
+  pushToken?: string
 
   teacher?: ITeacherDTO
   student?: IStudentDTO

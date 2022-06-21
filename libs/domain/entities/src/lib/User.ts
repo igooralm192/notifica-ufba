@@ -9,6 +9,7 @@ export interface IUser {
   email: string
   password: string
   type: IUserType
+  pushToken?: string
 
   teacher?: ITeacher
   student?: IStudent
