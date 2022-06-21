@@ -13,7 +13,10 @@ export type AppNavigation = {
   DisciplinesScreen: undefined
   DisciplineGroupsScreen: undefined
 
-  DisciplineGroupTabsScreen: { disciplineGroupId: string }
+  DisciplineGroupTabsScreen: {
+    disciplineGroupId: string
+    initialTab?: 'mural' | 'chat'
+  }
   DisciplineGroupPostsScreen: { disciplineGroupId: string }
   DisciplineGroupMessagesScreen: { disciplineGroupId: string }
 
