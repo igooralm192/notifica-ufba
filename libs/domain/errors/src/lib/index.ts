@@ -5,6 +5,7 @@ import * as CreateUserError from './create-user'
 
 export { StudentDoesNotExistError } from './student/StudentDoesNotExistError'
 export { DisciplineGroupDoesNotExistError } from './discipline-group/DisciplineGroupDoesNotExistError'
+export { StudentAlreadySubscribedError } from './discipline-group/StudentAlreadySubscribedError'
 
 export {
   AuthenticateUserError,
