@@ -1,3 +1,5 @@
 export * from './discipline'
+export * from './discipline-group'
+export * from './discipline-group-post'
 export * from './student'
 export * from './user'

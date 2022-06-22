@@ -1,12 +1,19 @@
-import { ICreateUserRepository, IFindOneUserRepository } from '@/data/contracts'
+import { IUser } from '@notifica-ufba/domain/entities'
+import { IUserRepository } from '@/data/contracts'
 import { PrismaRepository } from '@/infra/database/prisma/helpers'
+
+import { User } from '@prisma/client'
+
 export class PrismaUserRepository
   extends PrismaRepository
-  implements ICreateUserRepository, IFindOneUserRepository
+  implements
+    IUserRepository.Create,
+    IUserRepository.FindOne,
+    IUserRepository.Update
 {
   async create(
-    input: ICreateUserRepository.Input,
-  ): Promise<ICreateUserRepository.Output> {
+    input: IUserRepository.Create.Input,
+  ): Promise<IUserRepository.Create.Output> {
     const user = await this.client.user.create({
       data: input,
       include: {
@@ -15,16 +22,12 @@ export class PrismaUserRepository
       },
     })
 
-    return {
-      ...user,
-      teacher: user.teacher || undefined,
-      student: user.student || undefined,
-    }
+    return this.parseUser(user)
   }
 
   async findOne(
-    input: IFindOneUserRepository.Input,
-  ): Promise<IFindOneUserRepository.Output> {
+    input: IUserRepository.FindOne.Input,
+  ): Promise<IUserRepository.FindOne.Output> {
     const user = await this.client.user
       .findFirst({
         where: input,
@@ -37,10 +40,26 @@ export class PrismaUserRepository
 
     if (!user) return null
 
+    return this.parseUser(user)
+  }
+
+  async update({
+    where,
+    data,
+  }: IUserRepository.Update.Input): Promise<IUserRepository.Update.Output> {
+    const user = await this.client.user.update({
+      where,
+      data,
+      include: { teacher: true, student: true },
+    })
+
+    return this.parseUser(user)
+  }
+
+  private parseUser(user: User): IUser {
     return {
       ...user,
-      teacher: user.teacher || undefined,
-      student: user.student || undefined,
+      pushToken: user.pushToken || undefined,
     }
   }
 }

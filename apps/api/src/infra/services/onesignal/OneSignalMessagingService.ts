@@ -1,10 +1,10 @@
 import { ICreateMessagingService } from '@/data/contracts'
 
-import * as OneSignal from '@onesignal/node-onesignal'
+// import * as OneSignal from '@onesignal/node-onesignal'
 
 export class OneSignalMessagingService implements ICreateMessagingService {
   constructor(
-    private readonly client: OneSignal.DefaultApi,
+    // private readonly client: OneSignal.DefaultApi,
     private readonly appId: string,
   ) {}
 
@@ -13,15 +13,15 @@ export class OneSignalMessagingService implements ICreateMessagingService {
     body,
     data,
     topics,
-    userIds,
+    tokens,
   }: ICreateMessagingService.Input): Promise<ICreateMessagingService.Output> {
-    await this.client.createNotification({
-      app_id: this.appId,
-      headings: { en: title },
-      contents: { en: body },
-      data,
-      channel_for_external_user_ids: 'push',
-      include_external_user_ids: userIds,
-    })
+    // await this.client.createNotification({
+    //   app_id: this.appId,
+    //   headings: { en: title },
+    //   contents: { en: body },
+    //   data,
+    //   channel_for_external_user_ids: 'push',
+    //   include_external_user_ids: userIds,
+    // })
   }
 }

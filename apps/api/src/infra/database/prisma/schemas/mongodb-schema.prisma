@@ -11,13 +11,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String   @unique
-  password  String
-  type      UserType @default(STUDENT)
-  teacher   Teacher?
-  student   Student?
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name     String
+  email    String                @unique
+  password String
+  type     UserType              @default(STUDENT)
+  teacher  Teacher?
+  student  Student?
+  posts    DisciplineGroupPost[]
+  pushToken String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -75,14 +79,30 @@ model DisciplineGroup {
   menuUrl     String
   classTime   DateTime
 
-  teacherId String?   @unique @db.ObjectId
+  teacherId String?  @unique @db.ObjectId
   teacher   Teacher? @relation(fields: [teacherId], references: [id])
 
-  disciplineId String?      @unique @db.ObjectId
+  disciplineId String?     @unique @db.ObjectId
   discipline   Discipline? @relation(fields: [disciplineId], references: [id])
 
   studentIds String[]  @db.ObjectId
   students   Student[] @relation(fields: [studentIds], references: [id])
+
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  DisciplineGroupPost DisciplineGroupPost[]
+}
+
+model DisciplineGroupPost {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  title   String?
+  content String
+
+  authorId String? @db.ObjectId
+  author   User?   @relation(fields: [authorId], references: [id])
+
+  disciplineGroupId String?          @db.ObjectId
+  disciplineGroup   DisciplineGroup? @relation(fields: [disciplineGroupId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
