@@ -16,6 +16,10 @@ export class ExpressMiddlewareAdapter {
         return next()
       }
 
+      if (middlewareResponse.statusCode >= 400) {
+        console.error(middlewareResponse.body)
+      }
+
       return response
         .status(middlewareResponse.statusCode)
         .json(middlewareResponse.body)
