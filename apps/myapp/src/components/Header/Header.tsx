@@ -1,7 +1,8 @@
+import { Spacer } from '@/components/Spacer'
 import { useStatusBar } from '@/contexts/status-bar'
 import { useNavigation } from '@/helpers'
 
-import { Button, useTheme, TextProps } from '@rneui/themed'
+import { Button, useTheme } from '@rneui/themed'
 import React from 'react'
 import { FlexAlignType } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -113,7 +114,7 @@ const Header: React.FC<HeaderProps> = ({
       </TitleContainer>
 
       <Action>
-        {!!rightAction && (
+        {rightAction ? (
           <Button
             type="clear"
             icon={{
@@ -141,6 +142,8 @@ const Header: React.FC<HeaderProps> = ({
             buttonStyle={{ padding: 0, margin: 0 }}
             onPress={() => rightAction.onPress?.()}
           />
+        ) : (
+          <Spacer d="horizontal" s={24} />
         )}
       </Action>
     </Container>

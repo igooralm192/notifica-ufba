@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/contexts/auth'
+import { MessagingProvider } from '@/contexts/messaging'
 import { StatusBarProvider } from '@/contexts/status-bar'
 import store from '@/store'
 import { themeOptions } from '@/styles/theme'
@@ -9,7 +10,7 @@ import {
   Quicksand_600SemiBold,
   Quicksand_700Bold,
 } from '@expo-google-fonts/quicksand'
-import { NavigationContainer } from '@react-navigation/native'
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { ThemeProvider, useTheme } from '@rneui/themed'
 
 import AppLoading from 'expo-app-loading'
@@ -54,23 +55,35 @@ export const AlertProvider: React.FC = ({ children }) => {
 }
 
 export const NavigationProvider: React.FC = ({ children }) => {
-  return <NavigationContainer>{children}</NavigationContainer>
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: '#FFF',
+    },
+  }
+
+  return <NavigationContainer theme={theme}>{children}</NavigationContainer>
 }
 
 export const AllProviders: React.FC = ({ children }) => {
   return (
-    <ReduxProvider store={store}>
-      <LayoutProvider>
-        <UIProvider>
-          <StyleProvider>
-            <AlertProvider>
-              <AuthProvider>
-                <StatusBarProvider>{children}</StatusBarProvider>
-              </AuthProvider>
-            </AlertProvider>
-          </StyleProvider>
-        </UIProvider>
-      </LayoutProvider>
-    </ReduxProvider>
+    <NavigationProvider>
+      <ReduxProvider store={store}>
+        <LayoutProvider>
+          <UIProvider>
+            <StyleProvider>
+              <AlertProvider>
+                <AuthProvider>
+                  <MessagingProvider>
+                    <StatusBarProvider>{children}</StatusBarProvider>
+                  </MessagingProvider>
+                </AuthProvider>
+              </AlertProvider>
+            </StyleProvider>
+          </UIProvider>
+        </LayoutProvider>
+      </ReduxProvider>
+    </NavigationProvider>
   )
 }
