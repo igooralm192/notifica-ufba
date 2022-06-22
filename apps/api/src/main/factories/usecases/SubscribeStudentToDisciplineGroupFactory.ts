@@ -1,16 +1,16 @@
-import { SubscribeStudentToDisciplineGroupUseCase } from '@/data/usecases/discipline'
+import { SubscribeStudentToDisciplineGroupUseCase } from '@/data/usecases/discipline-group'
 import {
   makeDisciplineGroupRepository,
   makeStudentRepository,
 } from '@/main/factories/repositories'
 
 export const makeSubscribeStudentToDisciplineGroupUseCase = () => {
-  const disciplineGroupRepository = makeDisciplineGroupRepository()
   const studentRepository = makeStudentRepository()
+  const disciplineGroupRepository = makeDisciplineGroupRepository()
 
   return new SubscribeStudentToDisciplineGroupUseCase(
-    disciplineGroupRepository,
     studentRepository,
+    disciplineGroupRepository,
     disciplineGroupRepository,
   )
 }

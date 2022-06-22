@@ -1,18 +1,15 @@
 import {
   DisciplineGroupDoesNotExistError,
+  StudentAlreadySubscribedError,
   StudentDoesNotExistError,
 } from '@notifica-ufba/domain/errors'
 import { ISubscribeStudentToDisciplineGroupUseCase } from '@notifica-ufba/domain/usecases'
 
 import { MissingParamsError } from '@/application/errors'
 import { BaseController } from '@/application/helpers'
-import { IValidation } from '@/validation/protocols'
+import { DisciplineGroupMapper } from '@/application/mappers'
 
 export namespace ISubscribeStudentToDisciplineGroupController {
-  export type Body = {
-    studentId?: string
-  }
-
   export type Params = {
     disciplineGroupId?: string
   }
@@ -22,7 +19,6 @@ export namespace ISubscribeStudentToDisciplineGroupController {
 
 export class SubscribeStudentToDisciplineGroupController extends BaseController {
   constructor(
-    private readonly validation: IValidation,
     private readonly subscribeStudentToDisciplineGroupUseCase: ISubscribeStudentToDisciplineGroupUseCase,
   ) {
     super()
@@ -31,33 +27,37 @@ export class SubscribeStudentToDisciplineGroupController extends BaseController 
   async handle(
     request: ISubscribeStudentToDisciplineGroupController.Request,
   ): Promise<BaseController.Response> {
+    const userId = request.context?.userId
     const disciplineGroupId = request.params?.disciplineGroupId
+
+    if (!userId) {
+      return this.forbidden(new MissingParamsError())
+    }
 
     if (!disciplineGroupId) {
       return this.badRequest(new MissingParamsError())
     }
 
-    const validationError = this.validation.validate(request.body)
-
-    if (validationError) {
-      return this.badRequest(validationError)
-    }
-
-    const studentId = request.body?.studentId
-
     const result = await this.subscribeStudentToDisciplineGroupUseCase.run({
+      userId,
       disciplineGroupId,
-      studentId: studentId!,
     })
 
     if (result.isRight()) {
-      return this.noContent()
+      return this.ok({
+        disciplineGroup: DisciplineGroupMapper.toDTO(
+          result.value.disciplineGroup,
+        ),
+      })
     }
 
     switch (result.value.constructor) {
       case DisciplineGroupDoesNotExistError:
       case StudentDoesNotExistError:
         return this.notFound(result.value)
+
+      case StudentAlreadySubscribedError:
+        return this.unprocessable(result.value)
 
       default:
         return this.fail(result.value)

@@ -60,7 +60,6 @@ export interface IFindOneDisciplineGroupRepository {
 
 export namespace IPushStudentDisciplineGroupRepository {
   export type Input = {
-    disciplineGroupId: string
     studentId: string
   }
   export type Output = IDisciplineGroup
@@ -68,6 +67,7 @@ export namespace IPushStudentDisciplineGroupRepository {
 
 export interface IPushStudentDisciplineGroupRepository {
   pushStudent(
+    disciplineGroupId: string,
     input: IPushStudentDisciplineGroupRepository.Input,
   ): Promise<IPushStudentDisciplineGroupRepository.Output>
 }

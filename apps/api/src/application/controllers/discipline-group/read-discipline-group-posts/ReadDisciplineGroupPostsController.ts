@@ -7,10 +7,6 @@ import { DisciplineGroupPostMapper } from '@/application/mappers'
 import { IListParamsParser } from '@/application/protocols'
 
 export namespace IReadDisciplineGroupPostsController {
-  export type Body = {
-    studentId?: string
-  }
-
   export type Params = {
     disciplineGroupId?: string
   }

@@ -77,6 +77,10 @@ export abstract class BaseController {
     return this.errorResponse(404, error)
   }
 
+  public unprocessable(error: BaseError) {
+    return this.errorResponse(422, error)
+  }
+
   public fail(error: Error) {
     return this.errorResponse(500, new CommonError.InternalServerError(error))
   }

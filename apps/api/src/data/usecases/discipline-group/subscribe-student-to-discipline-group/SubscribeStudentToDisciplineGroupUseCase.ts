@@ -1,5 +1,6 @@
 import {
   DisciplineGroupDoesNotExistError,
+  StudentAlreadySubscribedError,
   StudentDoesNotExistError,
 } from '@notifica-ufba/domain/errors'
 import { ISubscribeStudentToDisciplineGroupUseCase } from '@notifica-ufba/domain/usecases'
@@ -16,38 +17,44 @@ export class SubscribeStudentToDisciplineGroupUseCase
   implements ISubscribeStudentToDisciplineGroupUseCase
 {
   constructor(
-    private readonly findOneDisciplineGroupRepository: IFindOneDisciplineGroupRepository,
     private readonly findOneStudentRepository: IFindOneStudentRepository,
+    private readonly findOneDisciplineGroupRepository: IFindOneDisciplineGroupRepository,
     private readonly pushStudentDisciplineGroupRepository: IPushStudentDisciplineGroupRepository,
   ) {}
 
   async run({
+    userId,
     disciplineGroupId,
-    studentId,
   }: ISubscribeStudentToDisciplineGroupUseCase.Input): Promise<
     Either<BaseError, ISubscribeStudentToDisciplineGroupUseCase.Output>
   > {
+    const student = await this.findOneStudentRepository.findOne({ userId })
+
+    if (!student) {
+      return left(new StudentDoesNotExistError())
+    }
+
     const disciplineGroup = await this.findOneDisciplineGroupRepository.findOne(
-      { id: disciplineGroupId },
+      {
+        where: { id: disciplineGroupId },
+        include: { teacher: { include: { user: true } }, discipline: true },
+      },
     )
 
     if (!disciplineGroup) {
       return left(new DisciplineGroupDoesNotExistError())
     }
 
-    const student = await this.findOneStudentRepository.findOne({
-      id: studentId,
-    })
-
-    if (!student) {
-      return left(new StudentDoesNotExistError())
+    if (disciplineGroup.studentIds?.includes(student.id)) {
+      return left(new StudentAlreadySubscribedError(student.id))
     }
 
-    await this.pushStudentDisciplineGroupRepository.pushStudent({
-      disciplineGroupId,
-      studentId,
-    })
+    const updatedDisciplineGroup =
+      await this.pushStudentDisciplineGroupRepository.pushStudent(
+        disciplineGroupId,
+        { studentId: student.id },
+      )
 
-    return right(undefined)
+    return right({ disciplineGroup: updatedDisciplineGroup })
   }
 }

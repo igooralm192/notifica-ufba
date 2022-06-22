@@ -1,13 +1,15 @@
-import { ExpressRouteAdapter } from '@/main/adapters'
+import { ExpressMiddlewareAdapter, ExpressRouteAdapter } from '@/main/adapters'
 import { makeSubscribeStudentToDisciplineGroupController } from '@/main/factories/controllers'
+import { makeAuthorizeUserMiddleware } from '@/main/factories/middlewares'
 
 import { Router } from 'express'
-
-const { adapt } = ExpressRouteAdapter
 
 export const makeSubscribeStudentToDisciplineGroupRoute = (router: Router) => {
   router.post(
     '/discipline-groups/:disciplineGroupId/subscribe',
-    adapt(makeSubscribeStudentToDisciplineGroupController()),
+    ExpressMiddlewareAdapter.adapt(makeAuthorizeUserMiddleware()),
+    ExpressRouteAdapter.adapt(
+      makeSubscribeStudentToDisciplineGroupController(),
+    ),
   )
 }

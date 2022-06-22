@@ -50,10 +50,10 @@ export class PrismaDisciplineGroupRepository
     return this.parseDisciplineGroup(disciplineGroup)
   }
 
-  async pushStudent({
-    disciplineGroupId,
-    studentId,
-  }: IPushStudentDisciplineGroupRepository.Input): Promise<IPushStudentDisciplineGroupRepository.Output> {
+  async pushStudent(
+    disciplineGroupId: string,
+    { studentId }: IPushStudentDisciplineGroupRepository.Input,
+  ): Promise<IPushStudentDisciplineGroupRepository.Output> {
     const disciplineGroup = await this.client.disciplineGroup.update({
       data: {
         studentIds: { push: studentId },
