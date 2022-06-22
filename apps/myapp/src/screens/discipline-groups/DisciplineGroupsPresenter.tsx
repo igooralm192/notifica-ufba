@@ -2,20 +2,17 @@ import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
 import { BaseError } from '@notifica-ufba/errors'
 
 import api from '@/api'
+import { useMe } from '@/contexts/me'
 import { useDispatch, useSelector } from '@/store'
-// import {
-//   disciplinesAdded,
-//   selectAllDisciplineGroups,
-// } from '@/store/disciplines'
-import { IPaginatedList } from '@/types/list'
-
-import React, { useContext, useEffect, useState } from 'react'
-import Toast from 'react-native-toast-message'
 import {
   disciplineGroupsAdded,
   selectAllDisciplineGroups,
 } from '@/store/disciplineGroups'
-import { useAuth } from '@/contexts/auth'
+import { IPaginatedList } from '@/types/list'
+
+import { useFocusEffect } from '@react-navigation/native'
+import React, { useCallback, useContext, useState } from 'react'
+import Toast from 'react-native-toast-message'
 
 export interface DisciplineGroupsPresenterContextData {
   loading: boolean
@@ -27,7 +24,7 @@ const DisciplineGroupsPresenterContext = React.createContext(
 )
 
 export const DisciplineGroupsPresenter: React.FC = ({ children }) => {
-  const auth = useAuth()
+  const { user } = useMe()
   const dispatch = useDispatch()
 
   const disciplineGroups = useSelector(selectAllDisciplineGroups)
@@ -37,12 +34,16 @@ export const DisciplineGroupsPresenter: React.FC = ({ children }) => {
 
   const [loading, setLoading] = useState(true)
 
-  const getMyDisciplineGroups = async (page = 0, limit = 10) => {
+  const getMyDisciplineGroups = async (
+    studentId: string,
+    page = 0,
+    limit = 10,
+  ) => {
     setLoading(true)
 
     try {
       const disciplineGroups = await api.disciplineGroup.getDisciplineGroups({
-        query: { studentId: auth.user?.student?.id },
+        query: { studentId },
         page,
         limit,
       })
@@ -61,9 +62,13 @@ export const DisciplineGroupsPresenter: React.FC = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    getMyDisciplineGroups()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      if (!user?.student?.id) return
+
+      getMyDisciplineGroups(user?.student?.id)
+    }, [user?.student?.id]),
+  )
 
   return (
     <DisciplineGroupsPresenterContext.Provider
