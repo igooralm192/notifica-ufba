@@ -18,6 +18,8 @@
     "date-fns": "*",
     "expo": "*",
     "expo-app-loading": "*",
+    "expo-device": "~4.1.0",
+    "expo-notifications": "~0.14.0",
     "firebase": "*",
     "joi": "*",
     "react": "*",
@@ -38,7 +40,7 @@
   "scripts": {
     "eas-build-pre-install": "cd ../../ && cp yarn.lock ./apps/myapp/ && mv ./apps/myapp/eas.js ./index.js",
     "postinstall": "rm -r node_modules && cd ../../ && yarn install && npx nx sync-deps myapp && npx nx ensure-symlink myapp",
-    "start": "expo start --dev-client",
+    "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
