@@ -1,5 +1,7 @@
 export * from './AuthenticateUserValidationFactory'
+export * from './CreateDisciplineGroupPostValidationFactory'
 export * from './CreateStudentValidationFactory'
 export * from './CreateUserValidationFactory'
+export * from './PatchMyUserValidationFactory'
 export * from './PostMessageValidationFactory'
 export * from './SubscribeStudentToDisciplineGroupValidationFactory'
