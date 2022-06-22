@@ -1,31 +1,43 @@
 import { IUserType, IUser } from '@notifica-ufba/domain/entities'
 
-export namespace ICreateUserRepository {
-  export type Input = {
-    name: string
-    email: string
-    password: string
-    type: IUserType
+export namespace IUserRepository {
+  export namespace Create {
+    export type Input = {
+      name: string
+      email: string
+      password: string
+      type: IUserType
+    }
+    export type Output = IUser
   }
-  export type Output = IUser
-}
 
-export interface ICreateUserRepository {
-  create(
-    input: ICreateUserRepository.Input,
-  ): Promise<ICreateUserRepository.Output>
-}
-
-export namespace IFindOneUserRepository {
-  export type Input = {
-    id?: string
-    email?: string
+  export interface Create {
+    create(input: Create.Input): Promise<Create.Output>
   }
-  export type Output = IUser | null
-}
 
-export interface IFindOneUserRepository {
-  findOne(
-    input: IFindOneUserRepository.Input,
-  ): Promise<IFindOneUserRepository.Output>
+  export namespace Update {
+    export type Input = {
+      where: { id?: string }
+      data: {
+        pushToken?: string
+      }
+    }
+    export type Output = IUser
+  }
+
+  export interface Update {
+    update(input: Update.Input): Promise<Update.Output>
+  }
+
+  export namespace FindOne {
+    export type Input = {
+      id?: string
+      email?: string
+    }
+    export type Output = IUser | null
+  }
+
+  export interface FindOne {
+    findOne(input: FindOne.Input): Promise<FindOne.Output>
+  }
 }

@@ -46,6 +46,7 @@ export namespace IFindOneDisciplineGroupRepository {
     }
     include?: {
       discipline?: boolean
+      teacher?: boolean | ITeacherRepositoryListInput
     }
   }
   export type Output = IDisciplineGroup | null

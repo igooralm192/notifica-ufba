@@ -4,7 +4,7 @@ export namespace ICreateMessagingService {
     body: string
     data?: Record<string, any>
     topics?: string[]
-    userIds?: string[]
+    tokens?: string[]
   }
 
   export type Output = void
