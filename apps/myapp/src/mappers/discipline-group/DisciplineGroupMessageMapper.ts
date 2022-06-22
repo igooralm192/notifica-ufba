@@ -1,11 +1,9 @@
 import { IDisciplineGroupMessage } from '@notifica-ufba/domain/entities'
 
-import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
+import { DocumentData } from 'firebase/firestore'
 
 export class DisciplineGroupMessageMapper {
-  static toEntity(
-    data: FirebaseFirestoreTypes.DocumentData,
-  ): IDisciplineGroupMessage {
+  static toEntity(data: DocumentData): IDisciplineGroupMessage {
     return {
       id: data.id,
       body: data.body,
@@ -16,10 +14,8 @@ export class DisciplineGroupMessageMapper {
     }
   }
 
-  static toEntityList(
-    data: FirebaseFirestoreTypes.DocumentData[],
-  ): IDisciplineGroupMessage[] {
-    return data.map((item: FirebaseFirestoreTypes.DocumentData) =>
+  static toEntityList(data: DocumentData[]): IDisciplineGroupMessage[] {
+    return data.map((item: DocumentData) =>
       DisciplineGroupMessageMapper.toEntity(item),
     )
   }
