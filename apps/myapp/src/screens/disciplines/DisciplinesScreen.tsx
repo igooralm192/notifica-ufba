@@ -1,7 +1,5 @@
 import { IDiscipline } from '@notifica-ufba/domain/entities'
 
-import { Button } from '@/components'
-import { useAuth } from '@/contexts/auth'
 import { useStatusBar } from '@/contexts/status-bar'
 
 import React, { useEffect, useLayoutEffect } from 'react'
@@ -19,7 +17,6 @@ export interface DisciplinesScreenProps {}
 const DisciplinesScreen: React.FC<DisciplinesScreenProps> = props => {
   const presenter = useDisciplinePresenter()
 
-  const auth = useAuth()
   const statusBar = useStatusBar()
 
   const renderDisciplinesListItem = ({ item }: { item: IDiscipline }) => {
@@ -35,7 +32,7 @@ const DisciplinesScreen: React.FC<DisciplinesScreenProps> = props => {
   }, [])
 
   return (
-    <Container headerProps={{ title: 'Disciplinas' }}>
+    <Container headerProps={{ title: 'Disciplinas', back: false }}>
       <FlatList
         data={presenter.disciplines.results}
         renderItem={renderDisciplinesListItem}
