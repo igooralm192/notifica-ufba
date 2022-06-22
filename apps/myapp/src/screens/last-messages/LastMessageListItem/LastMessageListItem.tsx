@@ -29,8 +29,9 @@ const LastMessageListItem: React.FC<LastMessageListItemProps> = ({
     <ListItem
       containerStyle={{ paddingHorizontal: 16 }}
       onPress={() =>
-        navigation.navigate('DisciplineGroupMessagesScreen', {
+        navigation.navigate('DisciplineGroupTabsScreen', {
           disciplineGroupId: message.disciplineGroupId,
+          initialTab: 'chat',
         })
       }
     >

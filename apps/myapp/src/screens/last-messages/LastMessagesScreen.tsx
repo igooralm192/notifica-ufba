@@ -2,7 +2,7 @@ import { ILastMessageDTO } from '@notifica-ufba/domain/usecases'
 
 import { useStatusBar } from '@/contexts/status-bar'
 
-import { Button, Divider } from '@rneui/themed'
+import { Divider } from '@rneui/themed'
 import React, { useEffect, useLayoutEffect } from 'react'
 import { FlatList } from 'react-native'
 
@@ -12,14 +12,12 @@ import {
 } from './LastMessagesPresenter'
 import { LastMessageListItem } from './LastMessageListItem'
 import { Container } from './LastMessagesStyles'
-import { useAuth } from '@/contexts/auth'
 
 export interface LastMessagesScreenProps {}
 
 const LastMessagesScreen: React.FC<LastMessagesScreenProps> = () => {
   const presenter = useLastMessagesPresenter()
 
-  const auth = useAuth()
   const statusBar = useStatusBar()
 
   const renderLastMessageListItem = ({ item }: { item: ILastMessageDTO }) => {
@@ -35,14 +33,14 @@ const LastMessagesScreen: React.FC<LastMessagesScreenProps> = () => {
   }, [])
 
   return (
-    <Container headerProps={{ title: 'Mensagens' }}>
+    <Container headerProps={{ title: 'Mensagens', back: false }}>
       <FlatList
         data={presenter.lastMessages.results}
         renderItem={renderLastMessageListItem}
         ItemSeparatorComponent={Divider}
       />
 
-      <Button title={'Logout'} onPress={() => auth.setToken(null)} />
+      {/* <Button title={'Logout'} onPress={() => auth.logout()} /> */}
     </Container>
   )
 }
