@@ -1,5 +1,3 @@
-import { IUser } from '@notifica-ufba/domain/entities'
-
 export enum AuthState {
   UNKNOWN = 'unknown',
   AUTHENTICATED = 'authenticated',
@@ -9,5 +7,4 @@ export enum AuthState {
 export interface IAuthStore {
   state: AuthState
   token: string | null
-  user: IUser | null
 }
