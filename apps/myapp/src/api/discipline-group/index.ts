@@ -87,7 +87,7 @@ export const subscribeStudent = async ({
 }
 
 export const useGetDisciplineGroup = (disciplineGroupId: string) => {
-  const { data, loading, error } =
+  const { data, loading, error, get } =
     useFetch<IGetDisciplineGroupEndpoint.Response>(
       `/discipline-groups/${disciplineGroupId}`,
       {},
@@ -100,6 +100,7 @@ export const useGetDisciplineGroup = (disciplineGroupId: string) => {
       : undefined,
     loading,
     error,
+    refresh: get,
   }
 }
 
@@ -185,5 +186,19 @@ export const useGetDisciplineGroupMessages = (disciplineGroupId: string) => {
   return {
     data,
     loading,
+  }
+}
+
+export const useSubscribeStudent = (disciplineGroupId: string) => {
+  const { post, loading, error, response } =
+    useFetch<IGetDisciplineGroupEndpoint.Response>(
+      `/discipline-groups/${disciplineGroupId}/subscribe`,
+    )
+
+  return {
+    subscribe: post,
+    loading,
+    error,
+    response,
   }
 }
