@@ -1,32 +1,39 @@
+import { IDisciplineGroupPost } from '@notifica-ufba/domain/entities'
+import { FullLoading, Spacer } from '@/components'
+
+import { useTheme } from '@rneui/themed'
 import React from 'react'
 import { FlatList } from 'react-native'
 
+import { useDisciplineGroupTabsPresenter } from '../DisciplineGroupTabsPresenter'
 import { DisciplineGroupPostListItem } from './DisciplineGroupPostListItem'
-import { Container, Title } from './DisciplineGroupMuralStyles'
-import { Spacer } from '@/components'
-import { useDisciplineGroupTabsPresenter } from '@/screens/discipline-group-tabs/DisciplineGroupTabsPresenter'
-import { useTheme } from '@rneui/themed'
 
 export interface DisciplineGroupMuralTabProps {}
 
 const DisciplineGroupMuralTab: React.FC<DisciplineGroupMuralTabProps> = () => {
   const { theme } = useTheme()
-  const presenter = useDisciplineGroupTabsPresenter()
 
-  const renderDisciplineGroupPostListItem = ({ item }) => {
-    return <DisciplineGroupPostListItem disciplineGroup={item} />
+  const { loadingPosts, disciplineGroupPosts } =
+    useDisciplineGroupTabsPresenter()
+
+  const renderDisciplineGroupPostListItem = ({
+    item,
+  }: {
+    item: IDisciplineGroupPost
+  }) => {
+    return <DisciplineGroupPostListItem disciplineGroupPost={item} />
   }
 
   return (
-    <Container>
+    <FullLoading loading={loadingPosts}>
       <FlatList
         style={{ backgroundColor: theme.colors.grey1 }}
-        data={[{}]}
+        data={disciplineGroupPosts.results}
         renderItem={renderDisciplineGroupPostListItem}
-        ItemSeparatorComponent={() => <Spacer />}
+        ItemSeparatorComponent={Spacer}
         contentContainerStyle={{ padding: 16 }}
       />
-    </Container>
+    </FullLoading>
   )
 }
 

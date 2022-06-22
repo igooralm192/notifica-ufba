@@ -1,66 +1,61 @@
-import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
-import { BaseError } from '@notifica-ufba/errors'
+import {
+  IDisciplineGroup,
+  IDisciplineGroupMessage,
+  IDisciplineGroupPost,
+} from '@notifica-ufba/domain/entities'
 
-import api from '@/api'
-import { useAuth } from '@/contexts/auth'
-
-import React, { useContext, useState } from 'react'
-import Toast from 'react-native-toast-message'
-import { StackScreenProps } from '@react-navigation/stack'
+import {
+  useGetDisciplineGroup,
+  useGetDisciplineGroupMessages,
+  useGetDisciplineGroupPosts,
+} from '@/api/discipline-group'
 import { AppNavigation } from '@/types/navigation'
+import { IPaginatedList } from '@/types/list'
+
+import { StackScreenProps } from '@react-navigation/stack'
+import React, { useContext } from 'react'
+
+interface DisciplineGroupTabsPresenterProps {
+  disciplineGroupId: string
+  initialTab?: 'mural' | 'chat'
+}
 
 export interface DisciplineGroupTabsPresenterContextData {
-  fetching: boolean
+  initialIndex: number
+  loading: boolean
+  loadingPosts: boolean
+  loadingMessages: boolean
   disciplineGroup: IDisciplineGroup | undefined
-  getDisciplineGroupById(): Promise<void>
+  disciplineGroupPosts: IPaginatedList<IDisciplineGroupPost>
+  disciplineGroupMessages: IPaginatedList<IDisciplineGroupMessage>
 }
 
 const DisciplineGroupTabsPresenterContext = React.createContext(
   {} as DisciplineGroupTabsPresenterContextData,
 )
 
-export const DisciplineGroupTabsPresenter: React.FC<{
-  disciplineGroupId: string
-}> = ({ disciplineGroupId, children }) => {
-  const auth = useAuth()
+export const DisciplineGroupTabsPresenter: React.FC<
+  DisciplineGroupTabsPresenterProps
+> = ({ disciplineGroupId, initialTab, children }) => {
+  const { data: disciplineGroup, loading } =
+    useGetDisciplineGroup(disciplineGroupId)
 
-  const [fetching, setFetching] = useState(false)
+  const { data: disciplineGroupPosts, loading: loadingPosts } =
+    useGetDisciplineGroupPosts(disciplineGroupId)
 
-  const [disciplineGroup, setDisciplineGroup] = useState<IDisciplineGroup>()
-
-  const getDisciplineGroupById = async () => {}
-
-  const subscribeStudent = async (disciplineGroup: IDisciplineGroup) => {
-    if (!auth.user || !auth.user.student) return
-
-    setFetching(true)
-
-    try {
-      await api.disciplineGroup.subscribeStudent({
-        disciplineGroupId: disciplineGroup.id,
-        studentId: auth.user.student.id,
-      })
-
-      disciplineGroup.studentIds?.push(auth.user.student.id)
-    } catch (err) {
-      const error = err as BaseError
-
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao inscrever estudante.',
-        text2: error.message,
-      })
-    } finally {
-      setFetching(false)
-    }
-  }
+  const { data: disciplineGroupMessages, loading: loadingMessages } =
+    useGetDisciplineGroupMessages(disciplineGroupId)
 
   return (
     <DisciplineGroupTabsPresenterContext.Provider
       value={{
-        fetching,
+        initialIndex: initialTab === 'chat' ? 1 : 0,
+        loading,
+        loadingPosts,
+        loadingMessages,
         disciplineGroup,
-        getDisciplineGroupById,
+        disciplineGroupPosts,
+        disciplineGroupMessages,
       }}
     >
       {children}
@@ -68,17 +63,13 @@ export const DisciplineGroupTabsPresenter: React.FC<{
   )
 }
 
-export const withDisciplineGroupTabsPresenter = (
-  Component: React.FC<any>,
-) => {
+export const withDisciplineGroupTabsPresenter = (Component: React.FC<any>) => {
   return ({
     route,
     ...props
   }: StackScreenProps<AppNavigation, 'DisciplineGroupTabsScreen'>) => {
-    const { disciplineGroupId } = route.params
-
     return (
-      <DisciplineGroupTabsPresenter disciplineGroupId={disciplineGroupId}>
+      <DisciplineGroupTabsPresenter {...route.params}>
         <Component {...props} />
       </DisciplineGroupTabsPresenter>
     )

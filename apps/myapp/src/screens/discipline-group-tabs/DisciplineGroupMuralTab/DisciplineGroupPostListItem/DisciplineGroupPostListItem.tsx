@@ -1,9 +1,11 @@
-import { IDiscipline, IDisciplineGroup } from '@notifica-ufba/domain/entities'
+import { IDisciplineGroupPost } from '@notifica-ufba/domain/entities'
 
-import { useNavigation } from '@/helpers'
+import { Spacer } from '@/components'
 
-import { Avatar, Icon, ListItem, useTheme } from '@rneui/themed'
-import React, { useState } from 'react'
+import { Avatar, Icon, useTheme } from '@rneui/themed'
+import { format } from 'date-fns'
+import React from 'react'
+import { View } from 'react-native'
 
 import {
   Container,
@@ -13,27 +15,20 @@ import {
   CreatedAt,
   ContentBody,
 } from './DisciplineGroupPostListItemStyles'
-import { Spacer } from '@/components'
-import { View } from 'react-native'
 
 export interface DisciplineGroupPostListItemProps {
-  disciplineGroup: IDisciplineGroup
+  disciplineGroupPost: IDisciplineGroupPost
 }
 
 const DisciplineGroupPostListItem: React.FC<
   DisciplineGroupPostListItemProps
-> = ({ disciplineGroup }) => {
+> = ({ disciplineGroupPost }) => {
   const { theme } = useTheme()
-  const navigation = useNavigation()
+
+  const createdAt = format(disciplineGroupPost.createdAt, 'dd/MM/yyyy HH:mm')
 
   return (
-    <Container
-      onPress={() =>
-        navigation.navigate('DisciplineGroupTabsScreen', {
-          disciplineGroupId: disciplineGroup.id,
-        })
-      }
-    >
+    <Container>
       <TopContainer>
         <Avatar
           size={32}
@@ -45,8 +40,8 @@ const DisciplineGroupPostListItem: React.FC<
         <Spacer d="horizontal" s={4} />
 
         <View style={{ flex: 1 }}>
-          <AuthorName>Igor de Almeida</AuthorName>
-          <CreatedAt>5 minutos atrás</CreatedAt>
+          <AuthorName>{disciplineGroupPost.author?.name}</AuthorName>
+          <CreatedAt>{createdAt}</CreatedAt>
         </View>
 
         <Spacer d="horizontal" s={4} />
@@ -57,7 +52,7 @@ const DisciplineGroupPostListItem: React.FC<
       <Spacer />
 
       <BottomContainer>
-        <ContentBody>Lorem ipsum</ContentBody>
+        <ContentBody>{disciplineGroupPost.content}</ContentBody>
       </BottomContainer>
     </Container>
   )

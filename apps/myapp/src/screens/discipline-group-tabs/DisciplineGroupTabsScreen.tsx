@@ -1,12 +1,12 @@
-import { useAuth } from '@/contexts/auth'
+import { FullLoading } from '@/components'
 import { useStatusBar } from '@/contexts/status-bar'
 import { useNavigation } from '@/helpers'
-import { DisciplineGroupChatTab } from '@/screens/discipline-group-tabs/DisciplineGroupChatTab'
-import { DisciplineGroupMuralTab } from '@/screens/discipline-group-tabs/DisciplineGroupMuralTab'
-import { Tab, TabView } from '@rneui/themed'
 
-import React, { useLayoutEffect, useState } from 'react'
+import { Tab, TabView, useTheme } from '@rneui/themed'
+import React, { useState } from 'react'
 
+import { DisciplineGroupChatTab } from './DisciplineGroupChatTab'
+import { DisciplineGroupMuralTab } from './DisciplineGroupMuralTab'
 import {
   useDisciplineGroupTabsPresenter,
   withDisciplineGroupTabsPresenter,
@@ -14,58 +14,70 @@ import {
 import { Container } from './DisciplineGroupTabsStyles'
 
 const DisciplineGroupTabsScreen: React.FC = () => {
-  const presenter = useDisciplineGroupTabsPresenter()
-
-  const disciplineGroup = presenter.disciplineGroup
-  const discipline = presenter.disciplineGroup?.discipline
+  const { initialIndex, loading, disciplineGroup } =
+    useDisciplineGroupTabsPresenter()
 
   const navigation = useNavigation()
-
-  const [index, setIndex] = useState(0)
+  const { theme } = useTheme()
+  const [index, setIndex] = useState(initialIndex)
 
   useStatusBar('primary')
 
-  return (
-    <Container
-      headerProps={{
-        title: 'MATA02 - T010000',
-        subtitle: 'Cálculo A',
-        titleAlign: 'center',
-        rightAction: {
-          icon: 'information-outline',
-        },
-      }}
-    >
-      <Tab
-        value={index}
-        onChange={e => setIndex(e)}
-        indicatorStyle={{
-          backgroundColor: 'white',
-          height: 3,
-        }}
-        variant="primary"
-      >
-        <Tab.Item
-          title="Mural"
-          titleStyle={{ fontSize: 12 }}
-          icon={{ name: 'rss', type: 'material-community', color: 'white' }}
-        />
-        <Tab.Item
-          title="Chat"
-          titleStyle={{ fontSize: 12 }}
-          icon={{ name: 'chat', type: 'material-community', color: 'white' }}
-        />
-      </Tab>
+  const disciplineGroupCode = disciplineGroup?.code
+  const disciplineCode = disciplineGroup?.discipline?.code
+  const disciplineName = disciplineGroup?.discipline?.name
 
-      <TabView value={index} onChange={setIndex} animationType="spring">
-        <TabView.Item style={{ width: '100%' }}>
-          <DisciplineGroupMuralTab />
-        </TabView.Item>
-        <TabView.Item style={{ width: '100%' }}>
-          <DisciplineGroupChatTab />
-        </TabView.Item>
-      </TabView>
-    </Container>
+  return (
+    <FullLoading loading={loading}>
+      <Container
+        headerProps={{
+          title: `${disciplineCode} - ${disciplineGroupCode}`,
+          subtitle: disciplineName,
+          titleAlign: 'center',
+          rightAction: {
+            icon: 'information-outline',
+            onPress: () => {
+              if (disciplineGroup)
+                navigation.navigate('DisciplineGroupInfoScreen', {
+                  disciplineGroupId: disciplineGroup.id,
+                })
+            },
+          },
+        }}
+      >
+        <Tab
+          value={index}
+          onChange={e => setIndex(e)}
+          indicatorStyle={{
+            backgroundColor: 'white',
+            height: 3,
+          }}
+          variant="primary"
+        >
+          <Tab.Item
+            containerStyle={{ backgroundColor: theme.colors.primary }}
+            title="Mural"
+            titleStyle={{ fontSize: 12 }}
+            icon={{ name: 'rss', type: 'material-community', color: 'white' }}
+          />
+          <Tab.Item
+            containerStyle={{ backgroundColor: theme.colors.primary }}
+            title="Chat"
+            titleStyle={{ fontSize: 12 }}
+            icon={{ name: 'chat', type: 'material-community', color: 'white' }}
+          />
+        </Tab>
+
+        <TabView value={index} onChange={setIndex} animationType="spring">
+          <TabView.Item style={{ width: '100%' }}>
+            <DisciplineGroupMuralTab />
+          </TabView.Item>
+          <TabView.Item style={{ width: '100%' }}>
+            <DisciplineGroupChatTab />
+          </TabView.Item>
+        </TabView>
+      </Container>
+    </FullLoading>
   )
 }
 
