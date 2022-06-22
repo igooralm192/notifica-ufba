@@ -1,19 +1,21 @@
 import { IDisciplineGroup } from '@notifica-ufba/domain/entities'
-import { BaseError } from '@notifica-ufba/errors'
 
-import api from '@/api'
-import { useAuth } from '@/contexts/auth'
-
-import React, { useContext, useState } from 'react'
-import Toast from 'react-native-toast-message'
-import { StackScreenProps } from '@react-navigation/stack'
+import {
+  useGetDisciplineGroup,
+  useSubscribeStudent,
+} from '@/api/discipline-group'
+import { useNavigation } from '@/helpers'
 import { AppNavigation } from '@/types/navigation'
 
+import { StackActions } from '@react-navigation/native'
+import { StackScreenProps } from '@react-navigation/stack'
+import React, { useContext } from 'react'
+
 export interface DisciplineGroupInfoPresenterContextData {
-  fetching: boolean
+  loading: boolean
+  subscribing: boolean
   disciplineGroup: IDisciplineGroup | undefined
-  getDisciplineGroupById(): Promise<void>
-  subscribeStudent(disciplineGroup: IDisciplineGroup): Promise<void>
+  subscribeStudent(): Promise<void>
 }
 
 const DisciplineGroupInfoPresenterContext = React.createContext(
@@ -23,45 +25,35 @@ const DisciplineGroupInfoPresenterContext = React.createContext(
 export const DisciplineGroupInfoPresenter: React.FC<{
   disciplineGroupId: string
 }> = ({ disciplineGroupId, children }) => {
-  const auth = useAuth()
+  const navigation = useNavigation()
 
-  const [fetching, setFetching] = useState(false)
+  const { data: disciplineGroup, loading } =
+    useGetDisciplineGroup(disciplineGroupId)
 
-  const [disciplineGroup, setDisciplineGroup] = useState<IDisciplineGroup>()
+  const {
+    subscribe,
+    loading: subscribing,
+    response,
+  } = useSubscribeStudent(disciplineGroupId)
 
-  const getDisciplineGroupById = async () => {}
+  const subscribeStudent = async () => {
+    await subscribe()
 
-  const subscribeStudent = async (disciplineGroup: IDisciplineGroup) => {
-    if (!auth.user || !auth.user.student) return
-
-    setFetching(true)
-
-    try {
-      await api.disciplineGroup.subscribeStudent({
-        disciplineGroupId: disciplineGroup.id,
-        studentId: auth.user.student.id,
-      })
-
-      disciplineGroup.studentIds?.push(auth.user.student.id)
-    } catch (err) {
-      const error = err as BaseError
-
-      Toast.show({
-        type: 'error',
-        text1: 'Erro ao inscrever estudante.',
-        text2: error.message,
-      })
-    } finally {
-      setFetching(false)
+    if (response.ok) {
+      navigation.dispatch(
+        StackActions.replace('DisciplineGroupTabsScreen', {
+          disciplineGroupId,
+        }),
+      )
     }
   }
 
   return (
     <DisciplineGroupInfoPresenterContext.Provider
       value={{
-        fetching,
+        loading,
+        subscribing,
         disciplineGroup,
-        getDisciplineGroupById,
         subscribeStudent,
       }}
     >

@@ -1,10 +1,8 @@
-import { Button } from '@/components'
+import { Button, Layout } from '@/components'
 import { Text } from '@rneui/themed'
 import styled from 'styled-components/native'
 
-export const Container = styled.View`
-  flex: 1;
-`
+export const Container = styled(Layout)``
 
 export const ScrollContainer = styled.ScrollView.attrs({
   contentContainerStyle: {
