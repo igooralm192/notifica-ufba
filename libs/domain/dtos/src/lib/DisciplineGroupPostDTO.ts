@@ -7,10 +7,10 @@ export interface IDisciplineGroupPostDTO {
   content: string
 
   author?: IUserDTO
-  authorId: string
+  authorId?: string
 
   disciplineGroup?: IDisciplineGroupDTO
-  disciplineGroupId: string
+  disciplineGroupId?: string
 
   createdAt: Date
   updatedAt: Date

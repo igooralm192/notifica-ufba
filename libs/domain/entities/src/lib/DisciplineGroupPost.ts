@@ -7,10 +7,10 @@ export interface IDisciplineGroupPost {
   content: string
 
   author?: IUser
-  authorId: string
+  authorId?: string
 
   disciplineGroup?: IDisciplineGroup
-  disciplineGroupId: string
+  disciplineGroupId?: string
 
   createdAt: Date
   updatedAt: Date
