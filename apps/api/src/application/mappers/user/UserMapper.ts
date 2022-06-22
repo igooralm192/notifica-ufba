@@ -10,6 +10,7 @@ export class UserMapper {
       name: user.name,
       email: user.email,
       type: user.type,
+      pushToken: user.pushToken,
 
       teacher: user.teacher ? TeacherMapper.toDTO(user.teacher) : undefined,
       student: user.student ? StudentMapper.toDTO(user.student) : undefined,
