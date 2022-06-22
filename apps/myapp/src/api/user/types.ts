@@ -11,17 +11,13 @@ export namespace ILoginEndpoint {
   }
 }
 
-export namespace IRegisterEndpoint {
+export namespace IPatchMyUserEndpoint {
   export interface Request {
-    name: string
-    email: string
-    password: string
-    matriculation: string
-    course: string
+    pushToken?: string
   }
 
   export interface Response {
-    student: IStudent
+    user: IUser
   }
 }
 
