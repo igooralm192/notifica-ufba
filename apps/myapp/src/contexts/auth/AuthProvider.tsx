@@ -1,37 +1,26 @@
-import { IUser } from '@notifica-ufba/domain/entities'
 
 import api from '@/api'
 import { useDispatch, useSelector, listenerMiddleware } from '@/store'
-import {
-  cleanAuth,
-  stateChanged,
-  tokenFetched,
-  userFetched,
-} from '@/store/auth'
+import { cleanAuth, stateChanged, tokenFetched } from '@/store/auth'
+import { AuthState } from '@/store/auth/types'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { isAnyOf } from '@reduxjs/toolkit'
 import React, { useContext, useEffect, useState } from 'react'
 
-export enum AuthState {
-  UNKNOWN = 'unknown',
-  AUTHENTICATED = 'authenticated',
-  UNAUTHENTICATED = 'unauthenticated',
-}
-
 export interface AuthContextData {
   loading: boolean
   state: AuthState
-  user: IUser | null
 
   login(email: string, password: string): Promise<void>
+  logout(): Promise<void>
 }
 
 const AuthContext = React.createContext({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
   const dispatch = useDispatch()
-  const { state, token, user } = useSelector(state => state.auth)
+  const { state, token } = useSelector(state => state.auth)
 
   const [loading, setLoading] = useState(true)
 
@@ -45,6 +34,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     changeToken(token)
   }
 
+  const logout = async () => {
+    changeToken(null)
+  }
+
   useEffect(() => {
     const getToken = async () => {
       const token = await AsyncStorage.getItem('TOKEN')
@@ -53,31 +46,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     }
 
     getToken().finally(() => setLoading(false))
-  }, [])
-
-  useEffect(() => {
-    const unsubscribe = listenerMiddleware.startListening({
-      predicate: (_, currentState, prevState) => {
-        return (
-          prevState.auth.state !== currentState.auth.state &&
-          currentState.auth.state === AuthState.AUTHENTICATED
-        )
-      },
-      effect: async (_, { dispatch }) => {
-        setLoading(true)
-
-        await api.user
-          .getMyUser()
-          .then(({ user }) => {
-            dispatch(userFetched(user))
-
-            return user
-          })
-          .finally(() => setLoading(false))
-      },
-    })
-
-    return () => unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -93,14 +61,6 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     return () => unsubscribe()
   }, [])
-
-  // useEffect(() => {
-  //   if (state === AuthState.AUTHENTICATED && user) {
-  //     OneSignal.setExternalUserId(user.id)
-  //   } else {
-  //     OneSignal.removeExternalUserId()
-  //   }
-  // }, [state, user])
 
   useEffect(() => {
     if (token) AsyncStorage.setItem('TOKEN', token)
@@ -143,7 +103,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   // }, [])
 
   return (
-    <AuthContext.Provider value={{ loading, state, user, login }}>
+    <AuthContext.Provider value={{ loading, state, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
