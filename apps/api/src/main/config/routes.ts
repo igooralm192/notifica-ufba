@@ -1,6 +1,9 @@
 import { makeReadDisciplinesRoute } from '@/main/routes/discipline'
 import {
+  makeCreateDisciplineGroupPostRoute,
   makePostMessageRoute,
+  makeReadDisciplineGroupPostsRoute,
+  makeReadDisciplineGroupRoute,
   makeReadDisciplineGroupsRoute,
   makeReadLastMessagesRoute,
   makeSubscribeStudentToDisciplineGroupRoute,
@@ -9,6 +12,7 @@ import { makeCreateStudentRoute } from '@/main/routes/student'
 import {
   makeAuthenticateUserRoute,
   makeGetMyUserRoute,
+  makePatchMyUserRoute,
 } from '@/main/routes/user'
 
 import { Express, Router } from 'express'
@@ -19,11 +23,15 @@ export const makeRoutes = (app: Express) => {
   app.use('/api', router)
 
   makeAuthenticateUserRoute(router)
+  makeCreateDisciplineGroupPostRoute(router)
   makeCreateStudentRoute(router)
   makeGetMyUserRoute(router)
+  makePatchMyUserRoute(router)
   makePostMessageRoute(router)
-  makeReadDisciplineGroupsRoute(router)
-  makeReadDisciplinesRoute(router)
   makeReadLastMessagesRoute(router)
+  makeReadDisciplineGroupPostsRoute(router)
+  makeReadDisciplineGroupsRoute(router)
+  makeReadDisciplineGroupRoute(router)
+  makeReadDisciplinesRoute(router)
   makeSubscribeStudentToDisciplineGroupRoute(router)
 }
